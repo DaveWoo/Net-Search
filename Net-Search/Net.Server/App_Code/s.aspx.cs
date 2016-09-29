@@ -13,6 +13,9 @@ namespace Net.Server
 		protected IEnumerable<SitePage> pages = new List<SitePage>();
 		protected string pageIndexString;
 		protected DateTime begin;
+		protected string processLinksCount;
+		protected string siteInfoCount;
+		protected string sitePageCount;
 
 		protected override void OnLoad(EventArgs e)
 		{
@@ -118,6 +121,15 @@ namespace Net.Server
 			pageIndexString += string.Format(nextIndexStr, name, nextIndex);
 			#endregion
 
+			var processLinks = SDB.SearchLinkDB.Select<ProcessLink>(string.Format(Constants.LIKESQL, Constants.TABLE_PROCESSLINK));
+			processLinksCount = processLinks.Count().ToString();
+			var siteInfo = SDB.SearchDB.Select<SiteInfo>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEINFO));
+			siteInfoCount=siteInfo.Count().ToString();
+			var sitePage = SDB.SearchDB.Select<SitePage>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEPAGE));
+			sitePageCount = sitePage.Count().ToString();
+
 		}
+
+
 	}
 }

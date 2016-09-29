@@ -25,70 +25,78 @@ namespace Spider
 			//GetAlllinksFromSite();
 
 			// Step 3: 1
-			GrabLinksContent();
+			// GrabLinksContent();
 
 
 			// Step 3 : 2
-			//GrabLinks();
+			GrabLinks();
 		}
 
 		private static void GrabLinks()
 		{
-			long count = 1;
 			var configList = SDB.SearchLinkDB.Select<ProcessLinkConfig>(string.Format(Constants.LIKESQL, Constants.TABLE_PROCESSLINKCONFIG));
 			List<string> sitePageList = new List<string>();
 
-			ProcessLinkConfig processLinkConfig = Common.GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABLINKS);
+			ProcessLinkConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABLINKS);
 
 			try
 			{
 				string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_PROCESSLINK);
-				foreach (ProcessLink link in SDB.SearchLinkDB.Select<ProcessLink>(likeSqlProcessLink, processLinkConfig.ProcessedLinkId))
+				var processLinks = SDB.SearchLinkDB.Select<ProcessLink>(likeSqlProcessLink, processLinkConfig.ProcessedLinkAnchorId);
+				for (int i = 0; i < processLinks.Count(); i = i + Constants.takeCount)
 				{
-					var sds = SDB.SearchLinkDB.Select<ProcessLink>(likeSqlProcessLink, (long)0);
+					var prepareProcessLinks = processLinks.Where(p => p.Id > processLinkConfig.ProcessedLinkAnchorId).Take(1);
 
-					GrabLinksToDB(sitePageList, link.Url);
-					var sds2 = SDB.SearchLinkDB.Select<ProcessLink>(likeSqlProcessLink, (long)0);
-
-					TraceLog.PrintLn(count++ + " processed: " + link.Url);
-
-					processLinkConfig.ProcessedLinkId = link.Id;
-					processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-					SDB.SearchLinkDB.Update(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
-				}
-			}
-			catch (Exception ex)
-			{
-				TraceLog.Error("Error: " + ex.Message);
-			}
-			finally
-			{
-			}
-		}
-
-		private static void GrabLinksContent()
-		{
-			long count = 1;
-			int takeCount = 10;
-			ProcessLinkConfig processLinkConfig = Common.GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS);
-			try
-			{
-				string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_PROCESSLINK);
-				var processLinks = SDB.SearchLinkDB.Select<ProcessLink>(likeSqlProcessLink, processLinkConfig.ProcessedLinkId);
-				for (int i = 0; i < processLinks.Count(); i = i + takeCount)
-				{
-					var prepareProcessLinks = processLinks.Where(p => p.Id > processLinkConfig.ProcessedLinkId).Take(takeCount);
+					if (prepareProcessLinks.LastOrDefault().Url == "http://baby.sina.com.cn")
+					{
+					}
 
 					if (prepareProcessLinks != null && prepareProcessLinks.LastOrDefault() != null)
 					{
 						Parallel.ForEach<ProcessLink>(prepareProcessLinks,
 						(e) =>
 						{
-							TraceLog.PrintLn(count++ + " processing: " + e.Url);
-							SearchResource.IndexText(e.Url, false);
-							TraceLog.PrintLn(count++ + " processed: " + e.Url);
+							TraceLog.PrintLn(processLinkConfig.ProcessedLinkAnchorId + " link processing: " + e.Url);
+							GrabLinksToDB(sitePageList, e.Url);
+							TraceLog.PrintLn(processLinkConfig.ProcessedLinkAnchorId + " link processed: " + e.Url);
 						});
-						processLinkConfig.ProcessedLinkId = prepareProcessLinks.LastOrDefault().Id;
+					}
+
+					processLinkConfig.ProcessedLinkAnchorId = prepareProcessLinks.LastOrDefault().Id;
+					processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+					SDB.SearchLinkDB.Update(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
+				}
+			}
+			catch (Exception ex)
+			{
+				processLinkConfig.ProcessedLinkAnchorId += 1;
+				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+				SDB.SearchLinkDB.Update(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
+				TraceLog.Error("Error: " + ex.Message);
+			}
+		}
+
+		private static void GrabLinksContent()
+		{
+			ProcessLinkConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS);
+			try
+			{
+				string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_PROCESSLINK);
+				var processLinks = SDB.SearchLinkDB.Select<ProcessLink>(likeSqlProcessLink, processLinkConfig.ProcessedLinkAnchorId);
+				for (int i = 0; i < processLinks.Count(); i = i + Constants.takeCount)
+				{
+					var prepareProcessLinks = processLinks.Where(p => p.Id > processLinkConfig.ProcessedLinkAnchorId).Take(Constants.takeCount);
+
+					if (prepareProcessLinks != null && prepareProcessLinks.LastOrDefault() != null)
+					{
+						Parallel.ForEach<ProcessLink>(prepareProcessLinks,
+						(e) =>
+						{
+							TraceLog.PrintLn(e.Id + " processing: " + e.Url);
+							SearchResource.IndexText(e.Url, false);
+							TraceLog.PrintLn(e.Id + " processed: " + e.Url);
+						});
+						processLinkConfig.ProcessedLinkAnchorId = prepareProcessLinks.LastOrDefault().Id;
 						processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
 						SDB.SearchLinkDB.Update(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
 					}
@@ -96,6 +104,9 @@ namespace Spider
 			}
 			catch (Exception ex)
 			{
+				processLinkConfig.ProcessedLinkAnchorId += 1;
+				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+				SDB.SearchLinkDB.Update(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
 				TraceLog.Error("Error: " + ex.Message);
 			}
 		}
@@ -357,6 +368,70 @@ namespace Spider
 			}
 		}
 
+		private static void Summary()
+		{
+			var processLinks = SDB.SearchLinkDB.Select<ProcessLink>(string.Format(Constants.LIKESQL, Constants.TABLE_PROCESSLINK));
+			var siteInfo = SDB.SearchLinkDB.Select<SiteInfo>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEINFO));
+			var sitePage = SDB.SearchLinkDB.Select<SitePage>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEPAGE));
+		}
+
+
+		#region public
+
+		private static void ResetProcessLinkConfig()
+		{
+			// Reset ProcessLinkConfig
+			ResetProcessLink(Constants.PROCESSLINKCONFIG_NAME_GRABLINKS);
+			ResetProcessLink(Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS);
+		}
+
+		/// <summary>
+		/// PROCESSLINKCONFIG_NAME_GRABCONTENTS = 'GrabLinks' or PROCESSLINKCONFIG_NAME_GRABLINKS = 'GrabContents'
+		/// </summary>
+		/// <param name="name">PROCESSLINKCONFIG_NAME_GRABCONTENTS = 'GrabLinks'
+		/// or PROCESSLINKCONFIG_NAME_GRABLINKS = 'GrabContents'
+		/// </param>
+		private static void ResetProcessLink(string name)
+		{
+			var configList = SDB.SearchLinkDB.Select<ProcessLinkConfig>(string.Format(Constants.LIKESQL, Constants.TABLE_PROCESSLINKCONFIG));
+
+			ProcessLinkConfig processLinkConfig = null;
+			if (configList != null)
+			{
+				processLinkConfig = configList.Where(p => p.Name == name).FirstOrDefault();
+				processLinkConfig.ProcessedLinkAnchorId = 0;
+				SDB.SearchLinkDB.Update(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
+			}
+			if (processLinkConfig == null)
+			{
+				processLinkConfig = new ProcessLinkConfig();
+				processLinkConfig.ProcessedLinkAnchorId = 0;
+				processLinkConfig.Name = Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS;
+				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+				SDB.SearchLinkDB.Insert(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
+			}
+		}
+
+		public static ProcessLinkConfig GetCurrentProcessLinkAnchorID(string name)
+		{
+			var configList = SDB.SearchLinkDB.Select<ProcessLinkConfig>(string.Format(Constants.LIKESQL, Constants.TABLE_PROCESSLINKCONFIG));
+
+			ProcessLinkConfig processLinkConfig = null;
+			if (configList != null)
+			{
+				processLinkConfig = configList.Where(p => p.Name == name).FirstOrDefault();
+			}
+			if (processLinkConfig == null)
+			{
+				processLinkConfig = new ProcessLinkConfig();
+				processLinkConfig.ProcessedLinkAnchorId = 0;
+				processLinkConfig.Name = Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS;
+				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+				SDB.SearchLinkDB.Insert(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
+			}
+			return processLinkConfig;
+		}
+		#endregion
 
 	}
 }

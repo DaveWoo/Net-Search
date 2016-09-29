@@ -19,6 +19,7 @@ namespace Net.Api
 		public const int PAGECOUNT = 9;
 		public const int PAGECOUNTLIMIT = 100;
 		public const int PAGEINDEXS = 10;
+		public const int takeCount = 10;
 
 
 		public static string SERVERDATA_PATH = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal) + Constants.SERVERDATA_NAME;

@@ -8,7 +8,7 @@ namespace Net.Models
 {
 	public class ProcessLinkConfig
 	{
-		public long ProcessedLinkId { get; set; }
+		public long ProcessedLinkAnchorId { get; set; }
 		public DateTime ModifiedTimeStamp { get; set; }
 		public string Name { get; set; }
 	}

@@ -48,7 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
-    <Compile Include="iBoxDB291.cs" />
     <Compile Include="KeyWord.cs" />
     <Compile Include="KeyWordE.cs" />
     <Compile Include="KeyWordN.cs" />
@@ -58,7 +57,6 @@
     <Compile Include="SiteInfo.cs" />
     <Compile Include="StringUtil.cs" />
     <Compile Include="Util.cs" />
-    <Compile Include="WSDatabaseConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

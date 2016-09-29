@@ -7,8 +7,8 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta charset="utf-8">
-    <meta name="description" content="<%=name%> what is? iBoxDB NoSQL Database Full Text Search">
-    <title><%=name%>, what is? iBoxDB Full Text Search</title>
+    <meta name="description" content="<%=name%>">
+    <title><%=name%>,</title>
 
     <link rel="stylesheet" type="text/css" href="css/semantic.min.css">
 
@@ -311,6 +311,7 @@
                     list-style: none;
                 }
     </style>
+
     <script>
         function highlight() {
             var txt = document.title.substr(0, document.title.indexOf(','));
@@ -450,16 +451,6 @@
                
                 </div>--%>
 
-                <%
-                    String tcontent = (DateTime.Now - begin).TotalSeconds + "s, "
-                            + "MEM:" + (System.GC.GetTotalMemory(false) / 1024 / 1024) + "MB ";
-                %>
-                <%--<div class="ui segment">
-                    <h4>Time</h4>
-                    <%= tcontent%>
-                </div>--%>
-
-
                 <div id="so_feb">
                     <dl id="soSafe" class="open">
                         <dt class="" onclick='collapsed()'>
@@ -502,6 +493,24 @@
                         else { showorhidden.style.display = 'none' }
                     }
                 </script>
+
+                <%
+                    String tcontent = (DateTime.Now - begin).TotalSeconds + "s, "
+                            + "MEM:" + (System.GC.GetTotalMemory(false) / 1024 / 1024) + "MB ";
+                %>
+                <div class="ui segment">
+                    Time: 
+                    <%= tcontent%> |
+           
+                    Collected links: 
+                    <%= processLinksCount%><br/>
+               
+                    Verified site: 
+                    <%= siteInfoCount%> |
+                
+                    Collected pages: 
+                    <%= sitePageCount%>
+                </div>
             </div>
             <%--right side end--%>
         </div>
