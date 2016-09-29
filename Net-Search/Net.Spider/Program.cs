@@ -12,8 +12,7 @@ namespace Spider
 	internal class Program
 	{
 		private static HttpHelper _hh1 = new HttpHelper();
-		private const string likeSql = "from {0}";
-		private const string linkPattern = @"(href)[ ]*=[ ]*[""']*(http)?[^""'#>]+[""']*";
+
 
 		private static void Main(string[] args)
 		{
@@ -26,9 +25,8 @@ namespace Spider
 			//GetAlllinksFromSite();
 
 			// Step 3: 1
-			//ProcessLinksToSitePage();
+			GrabLinksContent();
 
-			ProcessLinksToSitePage();
 
 			// Step 3 : 2
 			//GrabLinks();
@@ -37,22 +35,11 @@ namespace Spider
 		private static void GrabLinks()
 		{
 			long count = 1;
-			var configList = SDB.SearchLinkDB.Select<ProcessLinkConfig>(string.Format(likeSql, Constants.TABLE_PROCESSLINKCONFIG));
+			var configList = SDB.SearchLinkDB.Select<ProcessLinkConfig>(string.Format(Constants.LIKESQL, Constants.TABLE_PROCESSLINKCONFIG));
 			List<string> sitePageList = new List<string>();
 
-			ProcessLinkConfig processLinkConfig = null;
-			if (configList != null)
-			{
-				processLinkConfig = configList.Where(p => p.Name == Constants.PROCESSLINKCONFIG_NAME_GRABLINKS).FirstOrDefault();
-			}
-			if (processLinkConfig == null)
-			{
-				processLinkConfig = new ProcessLinkConfig();
-				processLinkConfig.ProcessedLinkId = 0;
-				processLinkConfig.Name = Constants.PROCESSLINKCONFIG_NAME_GRABLINKS;
-				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-				SDB.SearchLinkDB.Insert(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
-			}
+			ProcessLinkConfig processLinkConfig = Common.GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABLINKS);
+
 			try
 			{
 				string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_PROCESSLINK);
@@ -79,11 +66,11 @@ namespace Spider
 			}
 		}
 
-		private static void ProcessLinksToSitePage()
+		private static void GrabLinksContent()
 		{
 			long count = 1;
 			int takeCount = 10;
-			ProcessLinkConfig processLinkConfig = GetCurrentProcessLinkID();
+			ProcessLinkConfig processLinkConfig = Common.GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS);
 			try
 			{
 				string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_PROCESSLINK);
@@ -111,26 +98,6 @@ namespace Spider
 			{
 				TraceLog.Error("Error: " + ex.Message);
 			}
-		}
-
-		private static ProcessLinkConfig GetCurrentProcessLinkID()
-		{
-			var configList = SDB.SearchLinkDB.Select<ProcessLinkConfig>(string.Format(likeSql, Constants.TABLE_PROCESSLINKCONFIG));
-
-			ProcessLinkConfig processLinkConfig = null;
-			if (configList != null)
-			{
-				processLinkConfig = configList.Where(p => p.Name == Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS).FirstOrDefault();
-			}
-			if (processLinkConfig == null)
-			{
-				processLinkConfig = new ProcessLinkConfig();
-				processLinkConfig.ProcessedLinkId = 0;
-				processLinkConfig.Name = Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS;
-				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-				SDB.SearchLinkDB.Insert(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
-			}
-			return processLinkConfig;
 		}
 
 		private static void Test1()
@@ -361,7 +328,7 @@ namespace Spider
 				var contents = _hh1.Get(url);
 				ProcessLink link = null;
 
-				Regex reg = new Regex(linkPattern, RegexOptions.IgnoreCase);
+				Regex reg = new Regex(Constants.LINKPATTERN, RegexOptions.IgnoreCase);
 				MatchCollection matchList = reg.Matches(contents);
 				if (matchList != null)
 				{
@@ -390,38 +357,6 @@ namespace Spider
 			}
 		}
 
-		private static void ResetProcessLinkConfig()
-		{
-			// Reset ProcessLinkConfig
-			ResetProcessLink(Constants.PROCESSLINKCONFIG_NAME_GRABLINKS);
-			ResetProcessLink(Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS);
-		}
 
-		/// <summary>
-		/// PROCESSLINKCONFIG_NAME_GRABCONTENTS = 'GrabLinks' or PROCESSLINKCONFIG_NAME_GRABLINKS = 'GrabContents'
-		/// </summary>
-		/// <param name="name">PROCESSLINKCONFIG_NAME_GRABCONTENTS = 'GrabLinks'
-		/// or PROCESSLINKCONFIG_NAME_GRABLINKS = 'GrabContents'
-		/// </param>
-		private static void ResetProcessLink(string name)
-		{
-			var configList = SDB.SearchLinkDB.Select<ProcessLinkConfig>(string.Format(likeSql, Constants.TABLE_PROCESSLINKCONFIG));
-
-			ProcessLinkConfig processLinkConfig = null;
-			if (configList != null)
-			{
-				processLinkConfig = configList.Where(p => p.Name == name).FirstOrDefault();
-				processLinkConfig.ProcessedLinkId = 0;
-				SDB.SearchLinkDB.Update(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
-			}
-			if (processLinkConfig == null)
-			{
-				processLinkConfig = new ProcessLinkConfig();
-				processLinkConfig.ProcessedLinkId = 0;
-				processLinkConfig.Name = Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS;
-				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-				SDB.SearchLinkDB.Insert(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
-			}
-		}
 	}
 }
