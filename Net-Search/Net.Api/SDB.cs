@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Concurrent;
-using System.Text.RegularExpressions;
-using System.Threading;
-using CsQuery;
 using iBoxDB.LocalServer;
 using Net.Models;
 
@@ -13,7 +9,7 @@ namespace Net.Api
 		private static DB.AutoBox searchDB = null;
 		private static object lockObject = new object();
 
-		public static DB.AutoBox SearchDB
+		public static DB.AutoBox SearchBox
 		{
 			get
 			{
@@ -21,7 +17,7 @@ namespace Net.Api
 				{
 					lock (lockObject)
 					{
-						InitSearchDB(Constants.SERVERDATA_PATH, false);
+						InitSearchBox(Constants.SERVERDATA_PATH, false);
 					}
 				}
 				return searchDB;
@@ -30,13 +26,13 @@ namespace Net.Api
 
 		private static DB.AutoBox searchLinkDB = null;
 
-		public static DB.AutoBox SearchLinkDB
+		public static DB.AutoBox AssistBox
 		{
 			get
 			{
 				if (searchLinkDB == null)
 				{
-					InitSearchLinkDB(Constants.SERVERDATA_PATH, false);
+					InitAssistBox(Constants.SERVERDATA_PATH, false);
 				}
 				return searchLinkDB;
 			}
@@ -44,7 +40,7 @@ namespace Net.Api
 
 		public bool IsInit { get; set; }
 
-		private static void InitSearchDB(String path, bool isVM)
+		private static void InitSearchBox(String path, bool isVM)
 		{
 			try
 			{
@@ -63,20 +59,16 @@ namespace Net.Api
 				server.GetConfig().EnsureTable<SitePage>(Constants.TABLE_SITEPAGE, "Id");
 				server.GetConfig().EnsureIndex<SitePage>(Constants.TABLE_SITEPAGE, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
 				//server.GetConfig().EnsureIndex<SitePage>(Constants.TABLE_SITEPAGE, true, "Url");
-				server.GetConfig().EnsureTable<SiteInfo>(Constants.TABLE_SITEINFO, "Url");
-				//server.GetConfig().EnsureIndex<SiteInfo>("siteInfo", true, "url(" + SitePage.MAX_URL_LENGTH + ")");
+
 				if (searchDB == null)
 					searchDB = server.Open();
-
 			}
 			catch (Exception ex)
 			{
-
 			}
-
 		}
 
-		private static void InitSearchLinkDB(String path, bool isVM)
+		private static void InitAssistBox(String path, bool isVM)
 		{
 			try
 			{
@@ -92,19 +84,20 @@ namespace Net.Api
 				server.GetConfig().DBConfig.SwapFileBuffer = (int)server.GetConfig().DBConfig.MB(4);
 				server.GetConfig().DBConfig.FileIncSize = (int)server.GetConfig().DBConfig.MB(16);
 				new Engine().Config(server.GetConfig().DBConfig);
-				server.GetConfig().EnsureTable<ProcessLink>(Constants.TABLE_PROCESSLINK, "Id");
-				server.GetConfig().EnsureIndex<ProcessLink>(Constants.TABLE_PROCESSLINK, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
-				server.GetConfig().EnsureTable<ProcessLinkConfig>(Constants.TABLE_PROCESSLINKCONFIG, "Name");
+				server.GetConfig().EnsureTable<Link>(Constants.TABLE_LINK, "Id");
+				server.GetConfig().EnsureIndex<Link>(Constants.TABLE_LINK, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
+				server.GetConfig().EnsureTable<NetServerConfig>(Constants.TABLE_NETSERVERCONFIG, "Name");
+				server.GetConfig().EnsureTable<SiteInfo>(Constants.TABLE_SITEINFO, "Url");
+				//server.GetConfig().EnsureIndex<SiteInfo>("siteInfo", true, "url(" + SitePage.MAX_URL_LENGTH + ")");
+				server.GetConfig().EnsureTable<SitePage>(Constants.TABLE_AD, "Id");
+				server.GetConfig().EnsureIndex<SitePage>(Constants.TABLE_AD, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
 
 				searchLinkDB = server.Open();
 			}
 			catch (Exception ex)
 			{
-
 			}
-
 		}
-
 
 		public static void Close()
 		{
@@ -122,5 +115,4 @@ namespace Net.Api
 			Console.WriteLine("DBClosed");
 		}
 	}
-
 }

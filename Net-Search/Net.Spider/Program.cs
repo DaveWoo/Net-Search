@@ -13,13 +13,15 @@ namespace Spider
 	{
 		private static HttpHelper _hh1 = new HttpHelper();
 
-
 		private static void Main(string[] args)
 		{
 			//iBoxDB.LocalServer.DB.Root("/tmp/");
 			//var text = iBoxDB.NDB.RunALL();
+
 			// Step 1:
 			//GetAllSiteInfoFromChinaZ();
+			//var sds = SDB.SearchDB.Select<SiteInfo>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEINFO));
+
 			// Step 2:
 			//SearchBy360();
 			//GetAlllinksFromSite();
@@ -27,22 +29,44 @@ namespace Spider
 			// Step 3: 1
 			// GrabLinksContent();
 
-
 			// Step 3 : 2
-			GrabLinks();
+			//GrabLinks();
+
+			// Step 4 : Add ad
+			AddAd("abc.com",
+				"这是您的第一份免费广告",
+				"这是您的第一份免费广告,我们将竭诚为您服务",
+				"广告",
+				"新闻；news");
+		}
+
+		private static void AddAd(string url, string title, string description, string company, string tag)
+		{
+			SitePage sitePage = new SitePage();
+			sitePage.Title = title;
+			sitePage.Description = description;
+
+			sitePage.Url = url;
+
+			sitePage.VerifiedCompmany = company;
+			sitePage.CreatedTimeStamp = System.DateTime.Now;
+			sitePage.ModifiedTimeStamp = System.DateTime.Now;
+			sitePage.Tag = tag;
+			SDB.AssistBox.Insert(Constants.TABLE_AD, sitePage);
+			TraceLog.PrintLn("Add ad: " + sitePage.Title);
 		}
 
 		private static void GrabLinks()
 		{
-			var configList = SDB.SearchLinkDB.Select<ProcessLinkConfig>(string.Format(Constants.LIKESQL, Constants.TABLE_PROCESSLINKCONFIG));
+			var configList = SDB.AssistBox.Select<NetServerConfig>(string.Format(Constants.LIKESQL, Constants.TABLE_NETSERVERCONFIG));
 			List<string> sitePageList = new List<string>();
 
-			ProcessLinkConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABLINKS);
+			NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABLINKS);
 
 			try
 			{
-				string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_PROCESSLINK);
-				var processLinks = SDB.SearchLinkDB.Select<ProcessLink>(likeSqlProcessLink, processLinkConfig.ProcessedLinkAnchorId);
+				string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_LINK);
+				var processLinks = SDB.AssistBox.Select<Link>(likeSqlProcessLink, processLinkConfig.ProcessedLinkAnchorId);
 				for (int i = 0; i < processLinks.Count(); i = i + Constants.takeCount)
 				{
 					var prepareProcessLinks = processLinks.Where(p => p.Id > processLinkConfig.ProcessedLinkAnchorId).Take(1);
@@ -53,7 +77,7 @@ namespace Spider
 
 					if (prepareProcessLinks != null && prepareProcessLinks.LastOrDefault() != null)
 					{
-						Parallel.ForEach<ProcessLink>(prepareProcessLinks,
+						Parallel.ForEach<Link>(prepareProcessLinks,
 						(e) =>
 						{
 							TraceLog.PrintLn(processLinkConfig.ProcessedLinkAnchorId + " link processing: " + e.Url);
@@ -64,32 +88,32 @@ namespace Spider
 
 					processLinkConfig.ProcessedLinkAnchorId = prepareProcessLinks.LastOrDefault().Id;
 					processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-					SDB.SearchLinkDB.Update(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
+					SDB.AssistBox.Update(Constants.TABLE_NETSERVERCONFIG, processLinkConfig);
 				}
 			}
 			catch (Exception ex)
 			{
 				processLinkConfig.ProcessedLinkAnchorId += 1;
 				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-				SDB.SearchLinkDB.Update(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
+				SDB.AssistBox.Update(Constants.TABLE_NETSERVERCONFIG, processLinkConfig);
 				TraceLog.Error("Error: " + ex.Message);
 			}
 		}
 
 		private static void GrabLinksContent()
 		{
-			ProcessLinkConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS);
+			NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS);
 			try
 			{
-				string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_PROCESSLINK);
-				var processLinks = SDB.SearchLinkDB.Select<ProcessLink>(likeSqlProcessLink, processLinkConfig.ProcessedLinkAnchorId);
+				string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_LINK);
+				var processLinks = SDB.AssistBox.Select<Link>(likeSqlProcessLink, processLinkConfig.ProcessedLinkAnchorId);
 				for (int i = 0; i < processLinks.Count(); i = i + Constants.takeCount)
 				{
 					var prepareProcessLinks = processLinks.Where(p => p.Id > processLinkConfig.ProcessedLinkAnchorId).Take(Constants.takeCount);
 
 					if (prepareProcessLinks != null && prepareProcessLinks.LastOrDefault() != null)
 					{
-						Parallel.ForEach<ProcessLink>(prepareProcessLinks,
+						Parallel.ForEach<Link>(prepareProcessLinks,
 						(e) =>
 						{
 							TraceLog.PrintLn(e.Id + " processing: " + e.Url);
@@ -98,7 +122,7 @@ namespace Spider
 						});
 						processLinkConfig.ProcessedLinkAnchorId = prepareProcessLinks.LastOrDefault().Id;
 						processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-						SDB.SearchLinkDB.Update(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
+						SDB.AssistBox.Update(Constants.TABLE_NETSERVERCONFIG, processLinkConfig);
 					}
 				}
 			}
@@ -106,14 +130,13 @@ namespace Spider
 			{
 				processLinkConfig.ProcessedLinkAnchorId += 1;
 				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-				SDB.SearchLinkDB.Update(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
+				SDB.AssistBox.Update(Constants.TABLE_NETSERVERCONFIG, processLinkConfig);
 				TraceLog.Error("Error: " + ex.Message);
 			}
 		}
 
 		private static void Test1()
 		{
-			HttpHelper _hh1 = new HttpHelper();
 			string pattern = "<a href=hit.php+(.*)+</a>";
 			string temp = "http://www.cwrank.com/main/rank.php?geo=all&page=";
 			Dictionary<string, string> siteDic = new Dictionary<string, string>();
@@ -183,7 +206,6 @@ namespace Spider
 
 		private static void GetAllSiteInfoFromChinaZ()
 		{
-			HttpHelper _hh1 = new HttpHelper();
 			string pattern = "<a href=hit.php+(.*)+</a>";
 			string temp = "http://top.chinaz.com/all/index_";
 
@@ -192,8 +214,8 @@ namespace Spider
 
 			List<string> allPages = new List<string>();
 			allPages.Add("http://top.chinaz.com/all/index.html");
-			//for (int i = 1; i <= 1727; i++)
-			for (int i = 2; i <= 1; i++)
+			for (int i = 1; i <= 1727; i++)
+			//for (int i = 2; i <= 10; i++)
 			{
 				allPages.Add(temp + i + ".html");
 			}
@@ -220,21 +242,15 @@ namespace Spider
 						info.CreatedTimeStamp = System.DateTime.Now;
 						info.UpdatedTimeStamp = System.DateTime.Now;
 						siteDic.Add(info.Url, info);
+						SDB.AssistBox.Insert(Constants.TABLE_SITEINFO, info);
+						Console.WriteLine("Processing... " + info.Name);
 					}
 				}
-			}
-
-			foreach (var item in siteDic)
-			{
-				//var sds = SDB.SearchDB.Select<SiteInfo>(string.Format("from {0}", Constants.TABLE_SITEINFO));
-				//SDB.SearchDB.Insert(Constants.TABLE_SITEINFO, item.Value);
-				Console.WriteLine("Processing... " + item.Value.Name);
 			}
 		}
 
 		private static void SearchBy360()
 		{
-			HttpHelper _hh1 = new HttpHelper();
 			string pattern = "<a href=hit.php+(.*)+</a>";
 			//string temp = "https://www.baidu.com/s?wd=site:{0}&pn={1}";
 			string temp = "https://www.so.com/s?q=site:{0}&pn={1}";
@@ -244,7 +260,7 @@ namespace Spider
 			List<string> toProcessList = new List<string>();
 			SitePage sitePage = null;
 			List<SitePage> sitePageList = new List<SitePage>();
-			foreach (SiteInfo p in SDB.SearchDB.Select<SiteInfo>("from SiteInfo"))
+			foreach (SiteInfo p in SDB.AssistBox.Select<SiteInfo>("from SiteInfo"))
 			{
 				if (p.Score != 4999)
 				{
@@ -304,7 +320,7 @@ namespace Spider
 
 			foreach (var item in sitePageList)
 			{
-				item.Id = SDB.SearchDB.NewId();
+				item.Id = SDB.SearchBox.NewId();
 
 				SearchResource.InsertSitePage(item, true);
 				Console.WriteLine("Processing... " + item.VerifiedCompmany);
@@ -314,7 +330,7 @@ namespace Spider
 		private static void GetAlllinksFromSite()
 		{
 			List<string> sitePageList = new List<string>();
-			foreach (SiteInfo p in SDB.SearchDB.Select<SiteInfo>(string.Format("from {0}", Constants.TABLE_SITEINFO)))
+			foreach (SiteInfo p in SDB.AssistBox.Select<SiteInfo>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEINFO)))
 			{
 				try
 				{
@@ -337,7 +353,7 @@ namespace Spider
 			try
 			{
 				var contents = _hh1.Get(url);
-				ProcessLink link = null;
+				Link link = null;
 
 				Regex reg = new Regex(Constants.LINKPATTERN, RegexOptions.IgnoreCase);
 				MatchCollection matchList = reg.Matches(contents);
@@ -347,16 +363,16 @@ namespace Spider
 					{
 						var insideUrl = item.Value.Replace('\'', '"');
 						var pos = insideUrl.IndexOf("\"");
-						link = new ProcessLink();
+						link = new Link();
 						link.Url = item.Value.Substring(pos + 1, item.Length - pos - 2);
 						link.CreatedTimeStamp = System.DateTime.Now;
 						link.ModifiedTimeStamp = System.DateTime.Now;
 						if (!sitePageList.Contains(link.Url))
 						{
 							sitePageList.Add(link.Url);
-							link.Id = SDB.SearchLinkDB.NewId();
+							link.Id = SDB.AssistBox.NewId();
 
-							SDB.SearchLinkDB.Insert(Constants.TABLE_PROCESSLINK, link);
+							SDB.AssistBox.Insert(Constants.TABLE_LINK, link);
 							Console.WriteLine(string.Format("Host:{0}	Url:{1}", link.Host, link.Url));
 						}
 					}
@@ -367,14 +383,6 @@ namespace Spider
 				TraceLog.Error("Error: " + ex.Message);
 			}
 		}
-
-		private static void Summary()
-		{
-			var processLinks = SDB.SearchLinkDB.Select<ProcessLink>(string.Format(Constants.LIKESQL, Constants.TABLE_PROCESSLINK));
-			var siteInfo = SDB.SearchLinkDB.Select<SiteInfo>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEINFO));
-			var sitePage = SDB.SearchLinkDB.Select<SitePage>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEPAGE));
-		}
-
 
 		#region public
 
@@ -393,45 +401,45 @@ namespace Spider
 		/// </param>
 		private static void ResetProcessLink(string name)
 		{
-			var configList = SDB.SearchLinkDB.Select<ProcessLinkConfig>(string.Format(Constants.LIKESQL, Constants.TABLE_PROCESSLINKCONFIG));
+			var configList = SDB.AssistBox.Select<NetServerConfig>(string.Format(Constants.LIKESQL, Constants.TABLE_NETSERVERCONFIG));
 
-			ProcessLinkConfig processLinkConfig = null;
+			NetServerConfig processLinkConfig = null;
 			if (configList != null)
 			{
 				processLinkConfig = configList.Where(p => p.Name == name).FirstOrDefault();
 				processLinkConfig.ProcessedLinkAnchorId = 0;
-				SDB.SearchLinkDB.Update(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
+				SDB.AssistBox.Update(Constants.TABLE_NETSERVERCONFIG, processLinkConfig);
 			}
 			if (processLinkConfig == null)
 			{
-				processLinkConfig = new ProcessLinkConfig();
+				processLinkConfig = new NetServerConfig();
 				processLinkConfig.ProcessedLinkAnchorId = 0;
 				processLinkConfig.Name = Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS;
 				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-				SDB.SearchLinkDB.Insert(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
+				SDB.AssistBox.Insert(Constants.TABLE_NETSERVERCONFIG, processLinkConfig);
 			}
 		}
 
-		public static ProcessLinkConfig GetCurrentProcessLinkAnchorID(string name)
+		public static NetServerConfig GetCurrentProcessLinkAnchorID(string name)
 		{
-			var configList = SDB.SearchLinkDB.Select<ProcessLinkConfig>(string.Format(Constants.LIKESQL, Constants.TABLE_PROCESSLINKCONFIG));
+			var configList = SDB.AssistBox.Select<NetServerConfig>(string.Format(Constants.LIKESQL, Constants.TABLE_NETSERVERCONFIG));
 
-			ProcessLinkConfig processLinkConfig = null;
+			NetServerConfig processLinkConfig = null;
 			if (configList != null)
 			{
 				processLinkConfig = configList.Where(p => p.Name == name).FirstOrDefault();
 			}
 			if (processLinkConfig == null)
 			{
-				processLinkConfig = new ProcessLinkConfig();
+				processLinkConfig = new NetServerConfig();
 				processLinkConfig.ProcessedLinkAnchorId = 0;
 				processLinkConfig.Name = Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS;
 				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-				SDB.SearchLinkDB.Insert(Constants.TABLE_PROCESSLINKCONFIG, processLinkConfig);
+				SDB.AssistBox.Insert(Constants.TABLE_NETSERVERCONFIG, processLinkConfig);
 			}
 			return processLinkConfig;
 		}
-		#endregion
 
+		#endregion public
 	}
 }

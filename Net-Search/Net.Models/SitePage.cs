@@ -30,6 +30,19 @@ namespace Net.Models
 				}
 			}
 		}
+		public string Tag { get; set; }
+		public string Verified
+		{
+			get
+			{
+				string content = string.Empty;
+				if (!string.IsNullOrWhiteSpace(VerifiedCompmany))
+				{
+					content += string.Format("<span class=\"tip-v\"> </span> <span>{0}</span>", VerifiedCompmany);
+				}
+				return content;
+			}
+		}
 		[NotColumn]
 		public long RankUpId()
 		{

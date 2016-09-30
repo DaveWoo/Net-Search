@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Net.Models
 {
-	public class ProcessLinkConfig
+	public class NetServerConfig
 	{
 		public long ProcessedLinkAnchorId { get; set; }
 		public DateTime ModifiedTimeStamp { get; set; }

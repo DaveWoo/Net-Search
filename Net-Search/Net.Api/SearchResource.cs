@@ -20,11 +20,11 @@ namespace Net.Api
 			{
 				String url = getUrl(name);
 
-				foreach (SitePage p in SDB.SearchDB.Select<SitePage>("from SitePage where url==?", url))
+				foreach (SitePage p in SDB.SearchBox.Select<SitePage>("from SitePage where url==?", url))
 				{
-					Engine.indexTextNoTran(SDB.SearchDB, commitCount, p.Id, p.Content.ToString(), true);
-					Engine.indexTextNoTran(SDB.SearchDB, commitCount, p.RankUpId(), p.RankUpDescription(), true);
-					SDB.SearchDB.Delete(Constants.TABLE_SITEPAGE, p.Id);
+					Engine.indexTextNoTran(SDB.SearchBox, commitCount, p.Id, p.Content.ToString(), true);
+					Engine.indexTextNoTran(SDB.SearchBox, commitCount, p.RankUpId(), p.RankUpDescription(), true);
+					SDB.SearchBox.Delete(Constants.TABLE_SITEPAGE, p.Id);
 				}
 
 				if (isDelete)
@@ -39,7 +39,7 @@ namespace Net.Api
 					}
 					else
 					{
-						p.Id = SDB.SearchDB.NewId();
+						p.Id = SDB.SearchBox.NewId();
 						InsertSitePage(p, isDelete);
 						urlList.Enqueue(p.Url);
 						while (urlList.Count > 3)
@@ -66,17 +66,17 @@ namespace Net.Api
 			}
 			if (isDeleteCurrentThenAddNew)
 			{
-				foreach (SitePage sitePage in SDB.SearchDB.Select<SitePage>("from SitePage where Url==?", p.Url))
+				foreach (SitePage sitePage in SDB.SearchBox.Select<SitePage>("from SitePage where Url==?", p.Url))
 				{
-					Engine.indexTextNoTran(SDB.SearchDB, commitCount, sitePage.Id, sitePage.Content.ToString(), true);
-					Engine.indexTextNoTran(SDB.SearchDB, commitCount, sitePage.RankUpId(), sitePage.RankUpDescription(), true);
-					SDB.SearchDB.Delete(Constants.TABLE_SITEPAGE, sitePage.Id);
+					Engine.indexTextNoTran(SDB.SearchBox, commitCount, sitePage.Id, sitePage.Content.ToString(), true);
+					Engine.indexTextNoTran(SDB.SearchBox, commitCount, sitePage.RankUpId(), sitePage.RankUpDescription(), true);
+					SDB.SearchBox.Delete(Constants.TABLE_SITEPAGE, sitePage.Id);
 				}
 			}
 
-			SDB.SearchDB.Insert(Constants.TABLE_SITEPAGE, p);
-			Engine.indexTextNoTran(SDB.SearchDB, commitCount, p.Id, p.Content.ToString(), false);
-			Engine.indexTextNoTran(SDB.SearchDB, commitCount, p.RankUpId(), p.RankUpDescription(), false);
+			SDB.SearchBox.Insert(Constants.TABLE_SITEPAGE, p);
+			Engine.indexTextNoTran(SDB.SearchBox, commitCount, p.Id, p.Content.ToString(), false);
+			Engine.indexTextNoTran(SDB.SearchBox, commitCount, p.RankUpId(), p.RankUpDescription(), false);
 		}
 
 		private static String getUrl(String name)

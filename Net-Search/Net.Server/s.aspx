@@ -398,13 +398,16 @@
         <div class="flex-container">
             <%--left side start--%>
             <div id="body_left">
-                <% foreach (var p in pages)
+                <% foreach (var p in pagesAll)
                    {
                        String content = null;
-                       if (pages.Count() == 1 || p.keyWord == null)
+                       if (pagesAll.Count() == 1 || p.keyWord == null)
                        {
                            content = p.Description + "...";
-                           content += p.Content.ToString();
+                           if (p.Content!= null)
+                           { 
+                                content += p.Content.ToString();
+                           }
                        }
                        else if (p.Id != p.keyWord.ID)
                        {
@@ -416,7 +419,8 @@
                        }
                        else
                        {
-                           content = SearchResource.Engine.getDesc(p.Content.ToString(), p.keyWord, 80);
+                           var c1 = p.Content !=null ? p.Content.ToString():p.Description;
+                           content = SearchResource.Engine.getDesc(c1, p.keyWord, 80);
                            if (content.Length < 100)
                            {
                                content += p.GetRandomContent();
@@ -430,16 +434,18 @@
                                content = content.Substring(0, 200) + "..";
                            }
                        }
-                    %>
-                <h3 class="res-title">
-                    <a class="stext" target="_blank" href="<%=p.Url%>"><%= p.Title%></a>
-                </h3>
-                <span class="stext"><%=content%> </span>
-                <br />
-                <div class="res-linkinfo">
-                    <cite><%=p.Url%> </cite>&nbsp;&nbsp;<a href="#"><span class="tip-v"> </span><%=p.VerifiedCompmany%></a>
-                </div>
-                <% }%>
+                        %>
+                        <h3 class="res-title">
+                            <a class="stext" target="_blank" href="<%=p.Url%>"><%= p.Title%></a>
+                        </h3>
+                        <span class="stext"><%=content%> </span>
+                        <br />
+                        <div class="res-linkinfo">
+                            <cite><%=p.Url%> </cite>&nbsp;&nbsp;<%=p.Verified%>
+                        </div>
+                        <% 
+                    }
+                %>
             </div>
             <%--left side end--%>
 
@@ -457,9 +463,9 @@
                             <div id="collapse-button">收起</div>
                             <span class="safe-guard-logo"></span><span>Net Search · 安全保障</span></dt>
                         <dd id="ad-home" style="display: none;">
-                            <p class="txt">如您加入Net Search推广赔付计划，在Net Search推广网站中因遭遇欺诈、钓鱼、假冒网站并造成经济损失，在符合《Net Search推广赔付协议》的赔付条件时，可向Net Search申请赔付。<a href="http://www.so.com/link?url=http%3A%2F%2Fwww.so.com%2Fhelp%2Flipei.html&amp;q=css+%E5%B8%83%E5%B1%80+%E6%9C%80%E4%BD%8E%E7%AB%AF&amp;ts=1474597650&amp;t=87509d4d63d7f71166684dca587c5b4&amp;src=haosou" target="_blank" class="join">我要加入&gt;&gt;</a></p>
-                            <p><strong>了解详情：</strong>        <a href="http://www.so.com/link?url=http%3A%2F%2Fwww.so.com%2Fhelp%2Flipei.html&amp;q=css+%E5%B8%83%E5%B1%80+%E6%9C%80%E4%BD%8E%E7%AB%AF&amp;ts=1474597650&amp;t=87509d4d63d7f71166684dca587c5b4&amp;src=haosou" target="_blank">推广赔付</a><span class="line">|</span>        <a href="http://www.so.com/link?url=http%3A%2F%2Fwww.so.com%2Fhelp%2Fwgxp.html&amp;q=css+%E5%B8%83%E5%B1%80+%E6%9C%80%E4%BD%8E%E7%AB%AF&amp;ts=1474597650&amp;t=2284a53a15d9b116fee7f8241390f09&amp;src=haosou" target="_blank">网购先赔</a></p>
-                            <p><strong>举报入口：</strong> <a href="https://110.360.cn" target="_blank">猎网平台&gt;&gt;</a></p>
+                            <p class="txt">如您加入Net Search推广赔付计划，在Net Search推广网站中因遭遇欺诈、钓鱼、假冒网站并造成经济损失，在符合《Net Search推广赔付协议》的赔付条件时，可向Net Search申请赔付。<a href="#src=#" target="_blank" class="join">我要加入&gt;&gt;</a></p>
+                            <p><strong>了解详情：</strong>        <a href="#src=#" target="_blank">网购先赔</a></p>
+                            <p><strong>举报入口：</strong> <a href="https://110.xxx.cn" target="_blank">猎网平台&gt;&gt;</a></p>
                         </dd>
                     </dl>
                 </div>
@@ -498,7 +504,7 @@
                     String tcontent = (DateTime.Now - begin).TotalSeconds + "s, "
                             + "MEM:" + (System.GC.GetTotalMemory(false) / 1024 / 1024) + "MB ";
                 %>
-                <div class="ui segment">
+             <%--   <div class="ui segment">
                     Time: 
                     <%= tcontent%> |
            
@@ -510,7 +516,7 @@
                 
                     Collected pages: 
                     <%= sitePageCount%>
-                </div>
+                </div>--%>
             </div>
             <%--right side end--%>
         </div>

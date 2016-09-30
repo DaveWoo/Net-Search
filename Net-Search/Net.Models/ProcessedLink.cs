@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Net.Models
 {
-	public class ProcessLink
+	public class Link
 	{
 		public long Id { get; set; }
 		public String Url { get; set; }

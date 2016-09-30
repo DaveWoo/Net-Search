@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Net.Api;
@@ -10,7 +10,8 @@ namespace Net.Server
 	{
 		protected string name;
 		protected string searchResult;
-		protected IEnumerable<SitePage> pages = new List<SitePage>();
+		protected List<SitePage> pagesAll = new List<SitePage>();
+		List<SitePage> pagesAd = null;
 		protected string pageIndexString;
 		protected DateTime begin;
 		protected string processLinksCount;
@@ -53,9 +54,20 @@ namespace Net.Server
 			#region Calc
 			List<SitePage> pageList = new List<SitePage>();
 
+			#region Ad query
+
+			var ads = SDB.AssistBox.Select<SitePage>(string.Format(Constants.LIKESQL, Constants.TABLE_AD));
+			if (ads != null)
+			{
+				pagesAd = ads.Where(p => p.Tag.Split(new char[] { ';', '；' }).Contains(name)).ToList<SitePage>();
+			}
+			#endregion
+
 			begin = DateTime.Now;
 
-			using (var box = SDB.SearchDB.Cube())
+			#region body query
+
+			using (var box = SDB.SearchBox.Cube())
 			{
 				var results = SearchResource.Engine.SearchDistinct(box, name).OrderBy(p => p.Position);
 				if (results != null)
@@ -73,14 +85,15 @@ namespace Net.Server
 							continue;
 						page.keyWord = kw;
 						pageList.Add(page);
-						if (pageList.Count > Constants.PAGECOUNTLIMIT)
+						if (pageList.Count >= Constants.PAGECOUNTLIMIT)
 						{
 							break;
 						}
 					}
 				}
 			}
-			pages = pageList.Skip((pageNumber - 1) * 10).Take(Constants.PAGECOUNT);
+
+			var pages = pageList.Skip((pageNumber - 1) * 10).Take(Constants.PAGECOUNT);
 			if (pages == null || pages.Count() == 0)
 			{
 				SitePage p = new SitePage();
@@ -92,7 +105,35 @@ namespace Net.Server
 			}
 			#endregion
 
+			if (pagesAd != null)
+			{
+				pagesAll.AddRange(pagesAd);
+
+			}
+			pagesAll.AddRange(pages);
+			#endregion
+
 			#region Pange index
+			GenerateNextPage(pageNumber);
+			#endregion
+
+			#region Summary
+			GenerateSummaryInfo();
+			#endregion
+		}
+
+		private void GenerateSummaryInfo()
+		{
+			var processLinks = SDB.AssistBox.Select<Link>(string.Format(Constants.LIKESQL, Constants.TABLE_LINK));
+			processLinksCount = processLinks.Count().ToString();
+			var siteInfo = SDB.SearchBox.Select<SiteInfo>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEINFO));
+			siteInfoCount = siteInfo.Count().ToString();
+			var sitePage = SDB.SearchBox.Select<SitePage>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEPAGE));
+			sitePageCount = sitePage.Count().ToString();
+		}
+
+		private void GenerateNextPage(int pageNumber)
+		{
 			string index = "<a href=\"\\s.aspx?q={0}&pn={1}\">{2}</a>";
 			string indexCurrent = "<strong>{0}</strong>";
 			string nextIndexStr = "<a id=\"snext\" href=\"\\s.aspx?q={0}&pn={1}\">Next</a>";
@@ -119,15 +160,6 @@ namespace Net.Server
 			}
 			int nextIndex = pageNumber + 1;
 			pageIndexString += string.Format(nextIndexStr, name, nextIndex);
-			#endregion
-
-			var processLinks = SDB.SearchLinkDB.Select<ProcessLink>(string.Format(Constants.LIKESQL, Constants.TABLE_PROCESSLINK));
-			processLinksCount = processLinks.Count().ToString();
-			var siteInfo = SDB.SearchDB.Select<SiteInfo>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEINFO));
-			siteInfoCount=siteInfo.Count().ToString();
-			var sitePage = SDB.SearchDB.Select<SitePage>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEPAGE));
-			sitePageCount = sitePage.Count().ToString();
-
 		}
 
 
