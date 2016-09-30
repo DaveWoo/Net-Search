@@ -38,7 +38,7 @@ namespace Net.Models
 				string content = string.Empty;
 				if (!string.IsNullOrWhiteSpace(VerifiedCompmany))
 				{
-					content += string.Format("<span class=\"tip-v\"> </span> <span>{0}</span>", VerifiedCompmany);
+					content += string.Format("<a href='{0}' class=\"mingpian\" target=\"_blank\"><span class=\"tip-v\"  ></span><span>{1}</span>", Url, VerifiedCompmany);
 				}
 				return content;
 			}

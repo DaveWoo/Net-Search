@@ -163,11 +163,26 @@
             line-height: 20px;
         }
 
+        .mingpian {
+            color: #666;
+            margin-left: -2px;
+            text-align:center;
+             font-size: 10px;
+        }
+
+            .mingpian:visited {
+                color: #666;
+            }
+
+            .mingpian:hover {
+                color: #00bb3c;
+            }
+
         .tip-v {
-            background: url(https://p.ssl.qhimg.com/t01d22b041a3d7ece00.png) no-repeat 0 0;
-            background-image: -webkit-image-set(url(https://p.ssl.qhimg.com/t01d22b041a3d7ece00.png) 1x,url(https://p.ssl.qhimg.com/t0142c6829c70b4d004.png) 2x);
+            background: url(src/v_16.png) no-repeat 0 0;
+            background-image: -webkit-image-set(url(src/v_16.png) 1x,url(src/v_32.png) 2x);
             display: inline-block;
-            height: 10px;
+            height: 12px;
             overflow: hidden;
             vertical-align: middle;
             width: 12px;
@@ -404,9 +419,9 @@
                        if (pagesAll.Count() == 1 || p.keyWord == null)
                        {
                            content = p.Description + "...";
-                           if (p.Content!= null)
-                           { 
-                                content += p.Content.ToString();
+                           if (p.Content != null)
+                           {
+                               content += p.Content.ToString();
                            }
                        }
                        else if (p.Id != p.keyWord.ID)
@@ -419,7 +434,7 @@
                        }
                        else
                        {
-                           var c1 = p.Content !=null ? p.Content.ToString():p.Description;
+                           var c1 = p.Content != null ? p.Content.ToString() : p.Description;
                            content = SearchResource.Engine.getDesc(c1, p.keyWord, 80);
                            if (content.Length < 100)
                            {
@@ -435,16 +450,16 @@
                            }
                        }
                         %>
-                        <h3 class="res-title">
-                            <a class="stext" target="_blank" href="<%=p.Url%>"><%= p.Title%></a>
-                        </h3>
-                        <span class="stext"><%=content%> </span>
-                        <br />
-                        <div class="res-linkinfo">
-                            <cite><%=p.Url%> </cite>&nbsp;&nbsp;<%=p.Verified%>
-                        </div>
-                        <% 
-                    }
+                <h3 class="res-title">
+                    <a class="stext" target="_blank" href="<%=p.Url%>"><%= p.Title%></a>
+                </h3>
+                <span class="stext"><%=content%> </span>
+                <br />
+                <div class="res-linkinfo">
+                    <cite><%=p.Url%> </cite>&nbsp;&nbsp;<%=p.Verified%>
+                </div>
+                <% 
+                   }
                 %>
             </div>
             <%--left side end--%>
@@ -504,7 +519,7 @@
                     String tcontent = (DateTime.Now - begin).TotalSeconds + "s, "
                             + "MEM:" + (System.GC.GetTotalMemory(false) / 1024 / 1024) + "MB ";
                 %>
-             <%--   <div class="ui segment">
+                <%--   <div class="ui segment">
                     Time: 
                     <%= tcontent%> |
            
