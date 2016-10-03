@@ -72,6 +72,13 @@ namespace Net.Api
 		{
 			try
 			{
+                try
+                {
+                    System.IO.Directory.CreateDirectory(path);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                }
 				Console.WriteLine("DBPath=" + path);
 
 				DB.Root(path);

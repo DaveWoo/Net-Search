@@ -13,7 +13,7 @@ namespace Net.Api
 
 		public const string PROCESSLINKCONFIG_NAME_GRABCONTENTS = "GrabContents";
 		public const string PROCESSLINKCONFIG_NAME_GRABLINKS = "GrabLinks";
-		public const string SERVERDATA_NAME = "/ftsdata7/";
+		public const string SERVERDATA_NAME = "/NetServerData/";
 
 		public const string LIKESQL = "from {0}";
 		public const string LINKPATTERN = @"(href)[ ]*=[ ]*[""']*(http)?[^""'#>]+[""']*";

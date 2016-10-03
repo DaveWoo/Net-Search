@@ -126,7 +126,7 @@ namespace Net.Server
 		{
 			var processLinks = SDB.AssistBox.Select<Link>(string.Format(Constants.LIKESQL, Constants.TABLE_LINK));
 			processLinksCount = processLinks.Count().ToString();
-			var siteInfo = SDB.SearchBox.Select<SiteInfo>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEINFO));
+            var siteInfo = SDB.AssistBox.Select<SiteInfo>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEINFO));
 			siteInfoCount = siteInfo.Count().ToString();
 			var sitePage = SDB.SearchBox.Select<SitePage>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEPAGE));
 			sitePageCount = sitePage.Count().ToString();

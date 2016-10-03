@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IManager.cs" />
+    <Compile Include="Manager.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="SDB.cs" />
     <Compile Include="Engine.cs" />
