@@ -1,14 +1,20 @@
+using log4net;
+using log4net.Repository.Hierarchy;
+using Net.Api;
+using Net.Models;
+using Net.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Net.Api;
-using Net.Models;
-using Net.Utils;
+using log4net;
+using Net.Utils.Common.TankAction.SystemLog;
+using System.IO;
 
 namespace Spider
 {
+
     internal class Program
     {
         private static HttpHelper _hh1 = new HttpHelper();
@@ -16,37 +22,45 @@ namespace Spider
 
         private static void Main(string[] args)
         {
+            try
+            {
+                Log.Info("Begin running...");
 
-            //iBoxDB.LocalServer.DB.Root("/tmp/");
-            //var text = iBoxDB.NDB.RunALL();
+                //iBoxDB.LocalServer.DB.Root("/tmp/");
+                //var text = iBoxDB.NDB.RunALL();
 
-            // Step 1:1 Get all basic url and site name
-            // GetAllSiteInfoFromChinaZ();
-            var SiteInfoList = manager.Select<SiteInfo>();
-            var processSiteInfoConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_CHINAZINDEX);
+                // Step 1:1 Get all basic url and site name
+                // GetAllSiteInfoFromChinaZ();
+                var SiteInfoList = manager.Select<SiteInfo>();
+                var processSiteInfoConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_CHINAZINDEX);
 
-            // Step 1:2 Get links from basic url
-            // GetBasicLinks();
-            var processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABBASICLINKS);
+                // Step 1:2 Get links from basic url
+                // GetBasicLinks();
+                var processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABBASICLINKS);
 
+                // Step 2:
+                //SearchBy360();
+                // GetAlllinksFromSite();
 
-            // Step 2:
-            //SearchBy360();
-            // GetAlllinksFromSite();
+                // Step 3: 1
+                // GrabLinks();
 
-            // Step 3: 1
-           // GrabLinks();
+                // Step 3 : 2
+                GrabLinksContent();
 
-            // Step 3 : 2
-            GrabLinksContent();
+                // Step 4 : Add ad
+                AddAd("abc.com",
+                    "这是您的第一份免费广告",
+                    "这是您的第一份免费广告,我们将竭诚为您服务",
+                    "广告",
+                    "新闻；news");
 
+            }
+            catch (Exception)
+            {
 
-            // Step 4 : Add ad
-            AddAd("abc.com",
-                "这是您的第一份免费广告",
-                "这是您的第一份免费广告,我们将竭诚为您服务",
-                "广告",
-                "新闻；news");
+                throw;
+            }
         }
 
         private static void GetBasicLinks()
@@ -77,7 +91,7 @@ namespace Spider
             sitePage.ModifiedTimeStamp = System.DateTime.Now;
             sitePage.Tag = tag;
             manager.Create<SitePage>(sitePage);
-            TraceLog.PrintLn("Add ad: " + sitePage.Title);
+            Log.Info("Add ad: " + sitePage.Title);
         }
 
         private static void GrabLinks()
@@ -105,9 +119,9 @@ namespace Spider
                         Parallel.ForEach<Link>(prepareProcessLinks,
                         (e) =>
                         {
-                            TraceLog.PrintLn(processLinkConfig.ProcessedLinkAnchorId + " link processing: " + e.Url);
+                            Log.Info(processLinkConfig.ProcessedLinkAnchorId + " link processing: " + e.Url);
                             GrabLinksToDB(sitePageList, e.Url);
-                            TraceLog.PrintLn(processLinkConfig.ProcessedLinkAnchorId + " link processed: " + e.Url);
+                            Log.Info(processLinkConfig.ProcessedLinkAnchorId + " link processed: " + e.Url);
                         });
                     }
 
@@ -141,9 +155,9 @@ namespace Spider
                         Parallel.ForEach<Link>(prepareProcessLinks,
                         (e) =>
                         {
-                            TraceLog.PrintLn(e.Id + " processing: " + e.Url);
+                            Log.Info(e.Id + " processing: " + e.Url);
                             SearchResource.IndexText(e.Url, false);
-                            TraceLog.PrintLn(e.Id + " processed: " + e.Url);
+                            Log.Info(e.Id + " processed: " + e.Url);
                         });
                         processLinkConfig.ProcessedLinkAnchorId = prepareProcessLinks.LastOrDefault().Id;
                         processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
@@ -285,7 +299,7 @@ namespace Spider
                                 manager.Update<NetServerConfig>(processLinkConfig);
                             }
 
-                            Console.WriteLine(page.Key + " Processing... " + info.Name);
+                            Log.Info(page.Key + " Processing... " + info.Name);
                         }
                     }
                 }
@@ -367,7 +381,7 @@ namespace Spider
                 item.Id = SDB.SearchBox.NewId();
 
                 SearchResource.InsertSitePage(item, true);
-                Console.WriteLine("Processing... " + item.VerifiedCompmany);
+                Log.Info("Processing... " + item.VerifiedCompmany);
             }
         }
 
@@ -419,7 +433,7 @@ namespace Spider
 
                             //DB.AssistBox.Insert(Constants.TABLE_LINK, link);
                             manager.Create<Link>(link);
-                            Console.WriteLine(string.Format("Host:{0}	Url:{1}", link.Host, link.Url));
+                            Log.Info(string.Format("Host:{0}	Url:{1}", link.Host, link.Url));
                         }
                     }
                 }
