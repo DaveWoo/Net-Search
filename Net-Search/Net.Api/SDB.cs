@@ -95,6 +95,7 @@ namespace Net.Api
 				server.GetConfig().EnsureIndex<Link>(Constants.TABLE_LINK, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
 				server.GetConfig().EnsureTable<NetServerConfig>(Constants.TABLE_NETSERVERCONFIG, "Name");
 				server.GetConfig().EnsureTable<SiteInfo>(Constants.TABLE_SITEINFO, "Url");
+                server.GetConfig().EnsureUpdateIncrementIndex<SiteInfo>(Constants.TABLE_SITEINFO, "Id");
 				//server.GetConfig().EnsureIndex<SiteInfo>("siteInfo", true, "url(" + SitePage.MAX_URL_LENGTH + ")");
 				server.GetConfig().EnsureTable<SitePage>(Constants.TABLE_AD, "Id");
 				server.GetConfig().EnsureIndex<SitePage>(Constants.TABLE_AD, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");

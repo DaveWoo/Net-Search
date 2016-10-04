@@ -8,6 +8,7 @@ namespace Net.Models
 {
 	public class SiteInfo
 	{
+        public long Id { get; set; }
 		public String Url { get; set; }
 		public String Name { get; set; }
 		public int Alexa { get; set; }
