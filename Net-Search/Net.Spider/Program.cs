@@ -1,486 +1,465 @@
-using log4net;
-using log4net.Repository.Hierarchy;
-using Net.Api;
-using Net.Models;
-using Net.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using log4net;
+using Net.Api;
+using Net.Models;
+using Net.Utils;
 using Net.Utils.Common.TankAction.SystemLog;
-using System.IO;
 
 namespace Spider
 {
+	internal class Program
+	{
+		private static HttpHelper _hh1 = new HttpHelper();
+		private static Manager manager = new Manager();
 
-    internal class Program
-    {
-        private static HttpHelper _hh1 = new HttpHelper();
-        private static Manager manager = new Manager();
+		private static void Main(string[] args)
+		{
+			try
+			{
+				Log.Info("Begin running...");
+				//Log.Warn("Warn running...");
+				//Log.Fatal("Fatal running...");
+				//iBoxDB.LocalServer.DB.Root("/tmp/");
+				//var text = iBoxDB.NDB.RunALL();
 
-        private static void Main(string[] args)
-        {
-            try
-            {
-                Log.Info("Begin running...");
+				// Step 1:1 Get all basic url and site name
+				//GetAllSiteInfoFromChinaZ();
+				var SiteInfoList = manager.Select<SiteInfo>();
+				var processSiteInfoConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_CHINAZINDEX);
 
-                //iBoxDB.LocalServer.DB.Root("/tmp/");
-                //var text = iBoxDB.NDB.RunALL();
+				// Step 1:2 Get links from basic url
+				// GetBasicLinks();
+				var processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABBASICLINKS);
 
-                // Step 1:1 Get all basic url and site name
-                // GetAllSiteInfoFromChinaZ();
-                var SiteInfoList = manager.Select<SiteInfo>();
-                var processSiteInfoConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_CHINAZINDEX);
+				// Step 2:
+				//SearchBy360();
 
-                // Step 1:2 Get links from basic url
-                // GetBasicLinks();
-                var processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABBASICLINKS);
+				// Step 3: 1
+				// GrabLinks();
 
-                // Step 2:
-                //SearchBy360();
-                // GetAlllinksFromSite();
+				// Step 3 : 2
+				// GrabLinksContent();
 
-                // Step 3: 1
-                // GrabLinks();
+				// Step 4 : Add ad
+				AddAd("abc.com",
+					"这是您的第一份免费广告",
+					"这是您的第一份免费广告,我们将竭诚为您服务",
+					"广告",
+					"新闻；news");
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
 
-                // Step 3 : 2
-                GrabLinksContent();
+		private static void GetBasicLinks()
+		{
+			NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABBASICLINKS);
+			var SiteInfoList = manager.Select<SiteInfo>();
+			List<string> sitePageList = new List<string>();
+			var toBeProcessed = SiteInfoList.OrderBy(p => p.Id).Where(p => p.Id > processLinkConfig.ProcessedLinkAnchorId);
+			foreach (var item in toBeProcessed)
+			{
+				GrabLinksToDB(sitePageList, item.Url);
+				processLinkConfig.ProcessedLinkAnchorId = item.Id;
+				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+				manager.Update<NetServerConfig>(processLinkConfig);
+			}
+		}
 
-                // Step 4 : Add ad
-                AddAd("abc.com",
-                    "这是您的第一份免费广告",
-                    "这是您的第一份免费广告,我们将竭诚为您服务",
-                    "广告",
-                    "新闻；news");
+		private static void AddAd(string url, string title, string description, string company, string tag)
+		{
+			SitePage sitePage = new SitePage();
+			sitePage.Title = title;
+			sitePage.Description = description;
 
-            }
-            catch (Exception)
-            {
+			sitePage.Url = url;
 
-                throw;
-            }
-        }
+			sitePage.VerifiedCompmany = company;
+			sitePage.CreatedTimeStamp = System.DateTime.Now;
+			sitePage.ModifiedTimeStamp = System.DateTime.Now;
+			sitePage.Tag = tag;
+			manager.Create<SitePage>(sitePage);
+			Log.Info("Add ad: " + sitePage.Title);
+		}
 
-        private static void GetBasicLinks()
-        {
-            NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABBASICLINKS);
-            var SiteInfoList = manager.Select<SiteInfo>();
-            List<string> sitePageList = new List<string>();
-            var toBeProcessed = SiteInfoList.OrderBy(p => p.Id).Where(p => p.Id > processLinkConfig.ProcessedLinkAnchorId);
-            foreach (var item in toBeProcessed)
-            {
-                GrabLinksToDB(sitePageList, item.Url);
-                processLinkConfig.ProcessedLinkAnchorId = item.Id;
-                processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-                manager.Update<NetServerConfig>(processLinkConfig);
-            }
-        }
+		private static void GrabLinks()
+		{
+			var configList = manager.Select<NetServerConfig>();
+			List<string> sitePageList = new List<string>();
 
-        private static void AddAd(string url, string title, string description, string company, string tag)
-        {
-            SitePage sitePage = new SitePage();
-            sitePage.Title = title;
-            sitePage.Description = description;
+			NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABLINKS);
 
-            sitePage.Url = url;
+			try
+			{
+				string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_LINK);
+				var processLinks = manager.Select<Link>(likeSqlProcessLink, processLinkConfig.ProcessedLinkAnchorId);
+				for (int i = 0; i < processLinks.Count(); i = i + Constants.TAKECOUNT)
+				{
+					var prepareProcessLinks = processLinks.Where(p => p.Id > processLinkConfig.ProcessedLinkAnchorId).Take(1);
 
-            sitePage.VerifiedCompmany = company;
-            sitePage.CreatedTimeStamp = System.DateTime.Now;
-            sitePage.ModifiedTimeStamp = System.DateTime.Now;
-            sitePage.Tag = tag;
-            manager.Create<SitePage>(sitePage);
-            Log.Info("Add ad: " + sitePage.Title);
-        }
+					if (prepareProcessLinks.LastOrDefault().Url == "http://baby.sina.com.cn")
+					{
+					}
 
-        private static void GrabLinks()
-        {
-            //var configList = manager.Select<NetServerConfig>(string.Format(Constants.LIKESQL, Constants.TABLE_NETSERVERCONFIG));
-            var configList = manager.Select<NetServerConfig>();
-            List<string> sitePageList = new List<string>();
+					if (prepareProcessLinks != null && prepareProcessLinks.LastOrDefault() != null)
+					{
+						Parallel.ForEach<Link>(prepareProcessLinks,
+						(e) =>
+						{
+							Log.Info(processLinkConfig.ProcessedLinkAnchorId + " link processing: " + e.Url);
+							GrabLinksToDB(sitePageList, e.Url);
+							Log.Info(processLinkConfig.ProcessedLinkAnchorId + " link processed: " + e.Url);
+						});
+					}
 
-            NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABLINKS);
+					processLinkConfig.ProcessedLinkAnchorId = prepareProcessLinks.LastOrDefault().Id;
+					processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+					manager.Update<NetServerConfig>(processLinkConfig);
+				}
+			}
+			catch (Exception ex)
+			{
+				processLinkConfig.ProcessedLinkAnchorId += 1;
+				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+				manager.Update<NetServerConfig>(processLinkConfig);
+				TraceLog.Error("Error: " + ex.Message);
+			}
+		}
 
-            try
-            {
-                string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_LINK);
-                var processLinks = manager.Select<Link>(likeSqlProcessLink, processLinkConfig.ProcessedLinkAnchorId);
-                for (int i = 0; i < processLinks.Count(); i = i + Constants.takeCount)
-                {
-                    var prepareProcessLinks = processLinks.Where(p => p.Id > processLinkConfig.ProcessedLinkAnchorId).Take(1);
+		private static void GrabLinksContent()
+		{
+			NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS);
+			try
+			{
+				string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_LINK);
+				var processLinks = manager.Select<Link>(likeSqlProcessLink, processLinkConfig.ProcessedLinkAnchorId);
+				for (int i = 0; i < processLinks.Count(); i = i + Constants.TAKECOUNT)
+				{
+					var prepareProcessLinks = processLinks.Where(p => p.Id > processLinkConfig.ProcessedLinkAnchorId).Take(Constants.TAKECOUNT);
 
-                    if (prepareProcessLinks.LastOrDefault().Url == "http://baby.sina.com.cn")
-                    {
-                    }
+					if (prepareProcessLinks != null && prepareProcessLinks.LastOrDefault() != null)
+					{
+						Parallel.ForEach<Link>(prepareProcessLinks,
+						(e) =>
+						{
+							Log.Info(e.Id + " processing: " + e.Url);
+							SearchResource.IndexText(e.Url, false);
+							Log.Info(e.Id + " processed: " + e.Url);
+						});
+						processLinkConfig.ProcessedLinkAnchorId = prepareProcessLinks.LastOrDefault().Id;
+						processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+						manager.Update<NetServerConfig>(processLinkConfig);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				processLinkConfig.ProcessedLinkAnchorId += 1;
+				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+				manager.Update<NetServerConfig>(processLinkConfig);
+				TraceLog.Error("Error: " + ex.Message);
+			}
+		}
 
-                    if (prepareProcessLinks != null && prepareProcessLinks.LastOrDefault() != null)
-                    {
-                        Parallel.ForEach<Link>(prepareProcessLinks,
-                        (e) =>
-                        {
-                            Log.Info(processLinkConfig.ProcessedLinkAnchorId + " link processing: " + e.Url);
-                            GrabLinksToDB(sitePageList, e.Url);
-                            Log.Info(processLinkConfig.ProcessedLinkAnchorId + " link processed: " + e.Url);
-                        });
-                    }
+		private static void Test1()
+		{
+			string pattern = "<a href=hit.php+(.*)+</a>";
+			string temp = "http://www.cwrank.com/main/rank.php?geo=all&page=";
+			Dictionary<string, string> siteDic = new Dictionary<string, string>();
+			List<string> items = new List<string>();
+			for (int i = 10; i < 62; i++)
+			{
+				var page = temp + i;
+				var contents = _hh1.Get(page);
+				var body = ContentHelper.GetMidString(contents, "<tr bgcolor=ffffff height=15>", "</table></td></tr>");
+				var bodyItemList = body.Split('\n');
 
-                    processLinkConfig.ProcessedLinkAnchorId = prepareProcessLinks.LastOrDefault().Id;
-                    processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-                    manager.Update<NetServerConfig>(processLinkConfig);
-                }
-            }
-            catch (Exception ex)
-            {
-                processLinkConfig.ProcessedLinkAnchorId += 1;
-                processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-                manager.Update<NetServerConfig>(processLinkConfig);
-                TraceLog.Error("Error: " + ex.Message);
-            }
-        }
+				foreach (var item in bodyItemList)
+				{
+					var siteItem = ContentHelper.GetMidString(item, "<a href=hit.php", "/a>");
+					if (siteItem != null)
+					{
+						var site = ContentHelper.GetMidString(siteItem, "title=", "target");
+						if (site != null)
+						{
+							var siteName = ContentHelper.GetMidString(siteItem, "_blank>", "<");
+							siteDic.Add(site, siteName);
+						}
+					}
+				}
+			}
 
-        private static void GrabLinksContent()
-        {
-            NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS);
-            try
-            {
-                string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_LINK);
-                var processLinks = manager.Select<Link>(likeSqlProcessLink, processLinkConfig.ProcessedLinkAnchorId);
-                for (int i = 0; i < processLinks.Count(); i = i + Constants.takeCount)
-                {
-                    var prepareProcessLinks = processLinks.Where(p => p.Id > processLinkConfig.ProcessedLinkAnchorId).Take(Constants.takeCount);
+			foreach (var item in siteDic)
+			{
+				var name = item.Key;
 
-                    if (prepareProcessLinks != null && prepareProcessLinks.LastOrDefault() != null)
-                    {
-                        Parallel.ForEach<Link>(prepareProcessLinks,
-                        (e) =>
-                        {
-                            Log.Info(e.Id + " processing: " + e.Url);
-                            SearchResource.IndexText(e.Url, false);
-                            Log.Info(e.Id + " processed: " + e.Url);
-                        });
-                        processLinkConfig.ProcessedLinkAnchorId = prepareProcessLinks.LastOrDefault().Id;
-                        processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-                        manager.Update<NetServerConfig>(processLinkConfig);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                processLinkConfig.ProcessedLinkAnchorId += 1;
-                processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-                manager.Update<NetServerConfig>(processLinkConfig);
-                TraceLog.Error("Error: " + ex.Message);
-            }
-        }
+				if (name.Length > 500)
+				{
+					name = "";
+					return;
+				}
+				name = name.Replace("<", " ").Replace(">", " ")
+					.Replace("\"", " ").Replace(",", " ")
+						.Replace("\\$", " ").Trim();
 
-        private static void Test1()
-        {
-            string pattern = "<a href=hit.php+(.*)+</a>";
-            string temp = "http://www.cwrank.com/main/rank.php?geo=all&page=";
-            Dictionary<string, string> siteDic = new Dictionary<string, string>();
-            List<string> items = new List<string>();
-            for (int i = 10; i < 62; i++)
-            {
-                var page = temp + i;
-                var contents = _hh1.Get(page);
-                var body = ContentHelper.GetMidString(contents, "<tr bgcolor=ffffff height=15>", "</table></td></tr>");
-                var bodyItemList = body.Split('\n');
+				bool? isdelete = null;
 
-                foreach (var item in bodyItemList)
-                {
-                    var siteItem = ContentHelper.GetMidString(item, "<a href=hit.php", "/a>");
-                    if (siteItem != null)
-                    {
-                        var site = ContentHelper.GetMidString(siteItem, "title=", "target");
-                        if (site != null)
-                        {
-                            var siteName = ContentHelper.GetMidString(siteItem, "_blank>", "<");
-                            siteDic.Add(site, siteName);
-                        }
-                    }
-                }
-            }
+				if (name.StartsWith("http://") || name.StartsWith("https://"))
+				{
+					isdelete = false;
+				}
+				else if (name.StartsWith("delete")
+				  && (name.Contains("http://") || name.Contains("https://")))
+				{
+					isdelete = true;
+				}
+				if (!isdelete.HasValue)
+				{
+					SearchResource.searchList.Enqueue(name);
+					while (SearchResource.searchList.Count > 15)
+					{
+						String t;
+						SearchResource.searchList.TryDequeue(out t);
+					}
+				}
+				else
+				{
+					name = SearchResource.IndexText(name, isdelete.Value);
+					System.GC.Collect();
+				}
+			}
+		}
 
-            foreach (var item in siteDic)
-            {
-                var name = item.Key;
+		private static void GetAllSiteInfoFromChinaZ()
+		{
+			NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_CHINAZINDEX);
 
-                if (name.Length > 500)
-                {
-                    name = "";
-                    return;
-                }
-                name = name.Replace("<", " ").Replace(">", " ")
-                    .Replace("\"", " ").Replace(",", " ")
-                        .Replace("\\$", " ").Trim();
+			string temp = "http://top.chinaz.com/all/index_";
+			Dictionary<long, string> allPages = new Dictionary<long, string>();
+			allPages.Add(1, "http://top.chinaz.com/all/index.html");
+			// for (long i = processLinkConfig.ProcessedLinkAnchorId + 2; i <= 1727; i++)
+			for (long i = 2; i <= 1727; i++)
+			{
+				allPages.Add(i, temp + i + ".html");
+			}
 
-                bool? isdelete = null;
+			var toBeProcessedLinks = allPages.Where(page => page.Key > processLinkConfig.ProcessedLinkAnchorId);
 
-                if (name.StartsWith("http://") || name.StartsWith("https://"))
-                {
-                    isdelete = false;
-                }
-                else if (name.StartsWith("delete")
-                  && (name.Contains("http://") || name.Contains("https://")))
-                {
-                    isdelete = true;
-                }
-                if (!isdelete.HasValue)
-                {
-                    SearchResource.searchList.Enqueue(name);
-                    while (SearchResource.searchList.Count > 15)
-                    {
-                        String t;
-                        SearchResource.searchList.TryDequeue(out t);
-                    }
-                }
-                else
-                {
-                    name = SearchResource.IndexText(name, isdelete.Value);
-                    System.GC.Collect();
-                }
-            }
-        }
+			for (int i = 0; i < toBeProcessedLinks.Count(); i = i + Constants.TAKECOUNTCHINAZ)
+			{
+				var prepareProcessLinks = toBeProcessedLinks.Where(p => p.Key > processLinkConfig.ProcessedLinkAnchorId).Take(Constants.TAKECOUNTCHINAZ);
 
-        private static void GetAllSiteInfoFromChinaZ()
-        {
-            NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_CHINAZINDEX);
-            if (processLinkConfig.ProcessedLinkAnchorId == 0)
-            {
-                processLinkConfig.ProcessedLinkAnchorId = 1;
-            }
-            string temp = "http://top.chinaz.com/all/index_";
+				if (prepareProcessLinks != null && prepareProcessLinks.Count() > 0)
+				{
+					Parallel.ForEach<KeyValuePair<long, string>>(prepareProcessLinks,
+					(e) =>
+					{
+						Log.Info(e.Key + " processing: " + e.Value);
+						GrabChinaZ(processLinkConfig, e);
+						Log.Info(e.Key + " processed: " + e.Value);
+					});
+				}
+			}
+		}
 
-            SiteInfo info = null;
-            Dictionary<string, SiteInfo> siteDic = new Dictionary<string, SiteInfo>();
+		private static void GrabChinaZ(NetServerConfig processLinkConfig, KeyValuePair<long, string> page)
+		{
+			string alexa = "http://alexa.chinaz.com/?domain=";
+			string linkedR = "http://outlink.chinaz.com/?h=";
 
-            Dictionary<long, string> allPages = new Dictionary<long, string>();
-            allPages.Add(1, "http://top.chinaz.com/all/index.html");
-            // for (long i = processLinkConfig.ProcessedLinkAnchorId + 2; i <= 1727; i++)
-            for (long i = 2; i <= 1727; i++)
-            {
-                allPages.Add(i, temp + i + ".html");
-            }
-            string alexa = "http://alexa.chinaz.com/?domain=";
-            string linkedR = "http://outlink.chinaz.com/?h=";
+			var contents = _hh1.Get(page.Value);
+			var body = ContentHelper.GetMidString(contents, "<ul class=\"listCentent\">", "</ul>");
+			if (body != null)
+			{
+				var bodyItemList = body.Split(new string[] { "</li>" }, StringSplitOptions.None);
 
-            foreach (var page in allPages)
-            {
-                if (page.Key < processLinkConfig.ProcessedLinkAnchorId)
-                    continue;
-                var contents = _hh1.Get(page.Value);
-                var body = ContentHelper.GetMidString(contents, "<ul class=\"listCentent\">", "</ul>");
-                if (body != null)
-                {
-                    var bodyItemList = body.Split(new string[] { "</li>" }, StringSplitOptions.None);
+				foreach (var item in bodyItemList)
+				{
+					if (!string.IsNullOrWhiteSpace(item))
+					{
+						var info = new SiteInfo();
+						//site name
+						info.Name = ContentHelper.GetMidString(item, "class=\"pr10 fz14\">", "</a>");
+						info.Url = ContentHelper.GetMidString(item, "class=\"col-gray\">", "</span>");
+						info.Alexa = ContentHelper.GetMidInteger(item, alexa + info.Url + "\">", "</a>");
+						info.LinkedReversed = ContentHelper.GetMidInteger(item, linkedR + info.Url + "\">", "</a>");
+						info.Description = ContentHelper.GetMidString(item, "<p class=\"RtCInfo\">", "</p>");
+						info.Score = ContentHelper.GetMidInteger(item, "<span>得分:", "</span>");
+						info.CreatedTimeStamp = System.DateTime.Now;
+						info.UpdatedTimeStamp = System.DateTime.Now;
+						//manager.Insert(Constants.TABLE_SITEINFO, info);
+						bool isSucceed = manager.Create<SiteInfo>(info);
+						if (isSucceed && processLinkConfig.ProcessedLinkAnchorId != page.Key)
+						{
+							processLinkConfig.ProcessedLinkAnchorId = page.Key;
+							processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+							manager.Update<NetServerConfig>(processLinkConfig);
+						}
 
-                    foreach (var item in bodyItemList)
-                    {
-                        if (!string.IsNullOrWhiteSpace(item))
-                        {
-                            info = new SiteInfo();
-                            //site name
-                            info.Name = ContentHelper.GetMidString(item, "class=\"pr10 fz14\">", "</a>");
-                            info.Url = ContentHelper.GetMidString(item, "class=\"col-gray\">", "</span>");
-                            info.Alexa = ContentHelper.GetMidInteger(item, alexa + info.Url + "\">", "</a>");
-                            info.LinkedReversed = ContentHelper.GetMidInteger(item, linkedR + info.Url + "\">", "</a>");
-                            info.Description = ContentHelper.GetMidString(item, "<p class=\"RtCInfo\">", "</p>");
-                            info.Score = ContentHelper.GetMidInteger(item, "<span>得分:", "</span>");
-                            info.CreatedTimeStamp = System.DateTime.Now;
-                            info.UpdatedTimeStamp = System.DateTime.Now;
-                            siteDic.Add(info.Url, info);
-                            //manager.Insert(Constants.TABLE_SITEINFO, info);
-                            bool isSucceed = manager.Create<SiteInfo>(info);
-                            if (isSucceed && processLinkConfig.ProcessedLinkAnchorId != page.Key)
-                            {
-                                processLinkConfig.ProcessedLinkAnchorId = page.Key;
-                                processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-                                manager.Update<NetServerConfig>(processLinkConfig);
-                            }
+						Log.Info(page.Key + " Processing... " + info.Name);
+					}
+				}
+			}
+		}
 
-                            Log.Info(page.Key + " Processing... " + info.Name);
-                        }
-                    }
-                }
-            }
-        }
+		private static void SearchBy360()
+		{
+			string pattern = "<a href=hit.php+(.*)+</a>";
+			//string temp = "https://www.baidu.com/s?wd=site:{0}&pn={1}";
+			string temp = "https://www.so.com/s?q=site:{0}&pn={1}";
 
-        private static void SearchBy360()
-        {
-            string pattern = "<a href=hit.php+(.*)+</a>";
-            //string temp = "https://www.baidu.com/s?wd=site:{0}&pn={1}";
-            string temp = "https://www.so.com/s?q=site:{0}&pn={1}";
+			Engine engine = new Engine();
+			int pangeCounts = 1; //Max 200
+			List<string> toProcessList = new List<string>();
+			SitePage sitePage = null;
+			List<SitePage> sitePageList = new List<SitePage>();
+			// foreach (SiteInfo p in manager.Select<SiteInfo>("from SiteInfo"))
+			foreach (SiteInfo p in manager.Select<SiteInfo>())
+			{
+				if (p.Score != 4999)
+				{
+					continue;
+				}
+				for (int i = 1; i <= pangeCounts; i = i + 1)
+				{
+					string searchUrl = string.Format(temp, p.Url, i);
 
-            Engine engine = new Engine();
-            int pangeCounts = 1; //Max 200
-            List<string> toProcessList = new List<string>();
-            SitePage sitePage = null;
-            List<SitePage> sitePageList = new List<SitePage>();
-            // foreach (SiteInfo p in manager.Select<SiteInfo>("from SiteInfo"))
-            foreach (SiteInfo p in manager.Select<SiteInfo>())
-            {
-                if (p.Score != 4999)
-                {
-                    continue;
-                }
-                for (int i = 1; i <= pangeCounts; i = i + 1)
-                {
-                    string searchUrl = string.Format(temp, p.Url, i);
+					var contents = _hh1.Get(searchUrl);
 
-                    var contents = _hh1.Get(searchUrl);
+					var body = ContentHelper.GetMidString(contents, "<ul id=\"m-result\" class=\"result\">", "<div id=\"side\">");
+					if (!string.IsNullOrWhiteSpace(body))
+					{
+						var bodyItemList = body.Split(new string[] { "</li>" }, StringSplitOptions.None);
 
-                    var body = ContentHelper.GetMidString(contents, "<ul id=\"m-result\" class=\"result\">", "<div id=\"side\">");
-                    if (!string.IsNullOrWhiteSpace(body))
-                    {
-                        var bodyItemList = body.Split(new string[] { "</li>" }, StringSplitOptions.None);
+						foreach (var item in bodyItemList)
+						{
+							if (!string.IsNullOrWhiteSpace(item))
+							{
+								sitePage = new SitePage();
+								sitePage.Title = ContentHelper.GetMidString(item, "target=\"_blank\">", "</a></h3>");
+								sitePage.Description = ContentHelper.GetMidString(item, "data-sabv=\"1\"> ", "<div");
+								if (string.IsNullOrWhiteSpace(sitePage.Description))
+								{
+									sitePage.Description = ContentHelper.GetMidString(item, "<p class=\"res-desc\">", "</p");
+								}
+								sitePage.Url = ContentHelper.GetMidString(item, "<cite>", "</cite>");
 
-                        foreach (var item in bodyItemList)
-                        {
-                            if (!string.IsNullOrWhiteSpace(item))
-                            {
-                                sitePage = new SitePage();
-                                sitePage.Title = ContentHelper.GetMidString(item, "target=\"_blank\">", "</a></h3>");
-                                sitePage.Description = ContentHelper.GetMidString(item, "data-sabv=\"1\"> ", "<div");
-                                if (string.IsNullOrWhiteSpace(sitePage.Description))
-                                {
-                                    sitePage.Description = ContentHelper.GetMidString(item, "<p class=\"res-desc\">", "</p");
-                                }
-                                sitePage.Url = ContentHelper.GetMidString(item, "<cite>", "</cite>");
+								if (string.IsNullOrWhiteSpace(sitePage.Url))
+								{
+									sitePage.Url = ContentHelper.GetMidString(item, "<a href=\"", "\" rel=");
+								}
+								sitePage.Content = sitePage.Description;
+								sitePage.VerifiedCompmany = p.Name;
+								sitePage.CreatedTimeStamp = System.DateTime.Now;
+								sitePage.ModifiedTimeStamp = System.DateTime.Now;
 
-                                if (string.IsNullOrWhiteSpace(sitePage.Url))
-                                {
-                                    sitePage.Url = ContentHelper.GetMidString(item, "<a href=\"", "\" rel=");
-                                }
-                                sitePage.Content = sitePage.Description;
-                                sitePage.VerifiedCompmany = p.Name;
-                                sitePage.CreatedTimeStamp = System.DateTime.Now;
-                                sitePage.ModifiedTimeStamp = System.DateTime.Now;
+								if (!string.IsNullOrWhiteSpace(sitePage.Title)
+									&& !string.IsNullOrWhiteSpace(sitePage.Description)
+									&& !string.IsNullOrWhiteSpace(sitePage.Url))
+									sitePageList.Add(sitePage);
+							}
+						}
+					}
+				}
+			}
 
-                                if (!string.IsNullOrWhiteSpace(sitePage.Title)
-                                    && !string.IsNullOrWhiteSpace(sitePage.Description)
-                                    && !string.IsNullOrWhiteSpace(sitePage.Url))
-                                    sitePageList.Add(sitePage);
-                            }
-                        }
-                    }
-                }
-            }
+			try
+			{
+				System.IO.Directory.CreateDirectory(Constants.SERVERDATA_PATH);
+			}
+			catch (UnauthorizedAccessException ex)
+			{
+				System.IO.Directory.CreateDirectory(Constants.SERVERDATA_PATH);
+			}
 
-            try
-            {
-                System.IO.Directory.CreateDirectory(Constants.SERVERDATA_PATH);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                System.IO.Directory.CreateDirectory(Constants.SERVERDATA_PATH);
-            }
+			foreach (var item in sitePageList)
+			{
+				item.Id = SDB.SearchBox.NewId();
 
-            foreach (var item in sitePageList)
-            {
-                item.Id = SDB.SearchBox.NewId();
+				SearchResource.InsertSitePage(item, true);
+				Log.Info("Processing... " + item.VerifiedCompmany);
+			}
+		}
 
-                SearchResource.InsertSitePage(item, true);
-                Log.Info("Processing... " + item.VerifiedCompmany);
-            }
-        }
+		private static void GrabLinksToDB(List<string> sitePageList, string url)
+		{
+			try
+			{
+				var contents = _hh1.Get(url);
+				Link link = null;
 
-        private static void GetAlllinksFromSite()
-        {
-            List<string> sitePageList = new List<string>();
-            // foreach (SiteInfo p in manager.Select<SiteInfo>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEINFO)))
-            foreach (SiteInfo p in manager.Select<SiteInfo>())
-            {
-                try
-                {
-                    //if (p.Score != 4932) //qq
-                    //{
-                    //    continue;
-                    //}
+				Regex reg = new Regex(Constants.LINKPATTERN, RegexOptions.IgnoreCase);
+				MatchCollection matchList = reg.Matches(contents);
+				if (matchList != null)
+				{
+					foreach (Capture item in matchList)
+					{
+						var insideUrl = item.Value.Replace('\'', '"');
+						var pos = insideUrl.IndexOf("\"");
+						link = new Link();
+						link.Url = item.Value.Substring(pos + 1, item.Length - pos - 2);
+						link.CreatedTimeStamp = System.DateTime.Now;
+						link.ModifiedTimeStamp = System.DateTime.Now;
+						if (!sitePageList.Contains(link.Url))
+						{
+							sitePageList.Add(link.Url);
+							link.Id = SDB.AssistBox.NewId();
 
-                    GrabLinksToDB(sitePageList, p.Url);
-                }
-                catch (Exception ex)
-                {
-                    TraceLog.Error("Error: " + ex.Message);
-                }
-            }
-        }
+							//DB.AssistBox.Insert(Constants.TABLE_LINK, link);
+							manager.Create<Link>(link);
+							Log.Info(string.Format("Host:{0}	Url:{1}", link.Host, link.Url));
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				TraceLog.Error("Error: " + ex.Message);
+			}
+		}
 
-        private static void GrabLinksToDB(List<string> sitePageList, string url)
-        {
-            try
-            {
-                var contents = _hh1.Get(url);
-                Link link = null;
+		#region public
 
-                Regex reg = new Regex(Constants.LINKPATTERN, RegexOptions.IgnoreCase);
-                MatchCollection matchList = reg.Matches(contents);
-                if (matchList != null)
-                {
-                    foreach (Capture item in matchList)
-                    {
-                        var insideUrl = item.Value.Replace('\'', '"');
-                        var pos = insideUrl.IndexOf("\"");
-                        link = new Link();
-                        link.Url = item.Value.Substring(pos + 1, item.Length - pos - 2);
-                        link.CreatedTimeStamp = System.DateTime.Now;
-                        link.ModifiedTimeStamp = System.DateTime.Now;
-                        if (!sitePageList.Contains(link.Url))
-                        {
-                            sitePageList.Add(link.Url);
-                            link.Id = SDB.AssistBox.NewId();
+		private static void ResetProcessLinkConfig()
+		{
+			// Reset ProcessLinkConfig
+			GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABLINKS);
+			GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS);
+		}
 
-                            //DB.AssistBox.Insert(Constants.TABLE_LINK, link);
-                            manager.Create<Link>(link);
-                            Log.Info(string.Format("Host:{0}	Url:{1}", link.Host, link.Url));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                TraceLog.Error("Error: " + ex.Message);
-            }
-        }
+		/// <summary>
+		/// PROCESSLINKCONFIG_NAME_GRABCONTENTS = 'GrabLinks' or PROCESSLINKCONFIG_NAME_GRABLINKS = 'GrabContents'
+		/// </summary>
+		/// <param name="name">PROCESSLINKCONFIG_NAME_GRABCONTENTS = 'GrabLinks'
+		/// or PROCESSLINKCONFIG_NAME_GRABLINKS = 'GrabContents'
+		/// </param>
+		public static NetServerConfig GetCurrentProcessLinkAnchorID(string name)
+		{
+			// var configList = manager.Select<NetServerConfig>(string.Format(Constants.LIKESQL, Constants.TABLE_NETSERVERCONFIG));
+			var configList = manager.Select<NetServerConfig>();
 
-        #region public
+			NetServerConfig processLinkConfig = null;
+			if (configList != null)
+			{
+				processLinkConfig = configList.Where(p => p.Name == name).FirstOrDefault();
+			}
+			if (processLinkConfig == null)
+			{
+				processLinkConfig = new NetServerConfig();
+				processLinkConfig.ProcessedLinkAnchorId = 0;
+				processLinkConfig.Name = name;
+				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+				//manager.Insert(Constants.TABLE_NETSERVERCONFIG, processLinkConfig);
+				manager.Create<NetServerConfig>(processLinkConfig);
+			}
+			return processLinkConfig;
+		}
 
-        private static void ResetProcessLinkConfig()
-        {
-            // Reset ProcessLinkConfig
-            GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABLINKS);
-            GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS);
-        }
-
-        /// <summary>
-        /// PROCESSLINKCONFIG_NAME_GRABCONTENTS = 'GrabLinks' or PROCESSLINKCONFIG_NAME_GRABLINKS = 'GrabContents'
-        /// </summary>
-        /// <param name="name">PROCESSLINKCONFIG_NAME_GRABCONTENTS = 'GrabLinks'
-        /// or PROCESSLINKCONFIG_NAME_GRABLINKS = 'GrabContents'
-        /// </param>
-        public static NetServerConfig GetCurrentProcessLinkAnchorID(string name)
-        {
-            // var configList = manager.Select<NetServerConfig>(string.Format(Constants.LIKESQL, Constants.TABLE_NETSERVERCONFIG));
-            var configList = manager.Select<NetServerConfig>();
-
-            NetServerConfig processLinkConfig = null;
-            if (configList != null)
-            {
-                processLinkConfig = configList.Where(p => p.Name == name).FirstOrDefault();
-            }
-            if (processLinkConfig == null)
-            {
-                processLinkConfig = new NetServerConfig();
-                processLinkConfig.ProcessedLinkAnchorId = 0;
-                processLinkConfig.Name = name;
-                processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
-                //manager.Insert(Constants.TABLE_NETSERVERCONFIG, processLinkConfig);
-                manager.Create<NetServerConfig>(processLinkConfig);
-            }
-            return processLinkConfig;
-        }
-
-        #endregion public
-    }
+		#endregion public
+	}
 }

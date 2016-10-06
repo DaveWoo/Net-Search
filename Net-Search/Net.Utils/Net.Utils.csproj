@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logging\CallContextPatternConverter.cs" />
+    <Compile Include="Logging\CallContextPredefinedProperties.cs" />
     <Compile Include="Common\Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\ContentHelper.cs" />
