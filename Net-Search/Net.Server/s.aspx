@@ -2,6 +2,7 @@
 
 <%@ Import Namespace="Net.Server" %>
 <%@ Import Namespace="Net.Api" %>
+<%@ Import Namespace="Net.Models" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +11,7 @@
     <meta name="description" content="<%=name%>">
     <title><%=name%>,</title>
 
-    <link rel="stylesheet" type="text/css" href="css/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="content/semantic.min.css">
 
     <style>
         body {
@@ -66,36 +67,26 @@
             width: 340px;
         }
 
-        #soSafe {
+        #soSafe {     
             border-top: 2px solid #aef0c6;
-            border-bottom: 2px solid #aef0c6;
+            border-bottom: 2px solid #aef0c6;     
             font-size: 13px;
             margin-bottom: 15px;
         }
 
-            #soSafe span.safe-guard-logo {
-                background: url(src/safe_16.png) no-repeat;
-                background-image: -webkit-image-set(url(src/safe_16.png) 1x,url(src/safe_32.png) 2x);
-                display: inline-block;
-                height: 13px;
-                margin-right: 3px;
-                vertical-align: -2px;
-                width: 13px;
-            }
-
-            #soSafe dt span {
-                color: #46c878;
-                font: 13px/22px "Microsoft YaHei";
-                vertical-align: middle;
-            }
-
-            #soSafe dt {
-                border-top: 1px solid #fff;
-                border-bottom: 1px solid #fff;
+            #soSafe dt {    
+                  
                 cursor: pointer;
                 height: 22px;
                 line-height: 22px;
             }
+
+                #soSafe dt span {
+                    color: #46c878;
+                    font: 13px/22px "Microsoft YaHei";
+                    vertical-align: middle;
+                }
+
 
                 #soSafe dt div {
                     background-position: -177px -366px;
@@ -105,9 +96,13 @@
                     padding-right: 14px;
                 }
 
-            #soSafe.open dt.hover {
+                #soSafe:hover {
+                    border-color: #cef0c6;
+                }
+
+            /*#soSafe.open dt.hover {
                 border-color: #fff;
-            }
+            }*/
 
             #soSafe.open dt div {
                 background-position: -177px -387px;
@@ -115,6 +110,16 @@
 
             #soSafe.open dd {
                 display: block;
+            }
+
+            #soSafe span.safe-guard-logo {
+                background: url(src/safe_16.png) no-repeat;
+                background-image: -webkit-image-set(url(src/safe_16.png) 1x,url(src/safe_32.png) 2x);
+                display: inline-block;
+                height: 13px;
+                margin-right: 3px;
+                vertical-align: -2px;
+                width: 13px;
             }
 
             #soSafe dd {
@@ -166,8 +171,8 @@
         .mingpian {
             color: #666;
             margin-left: -2px;
-            text-align:center;
-             font-size: 10px;
+            text-align: center;
+            font-size: 20px;
         }
 
             .mingpian:visited {
@@ -176,6 +181,9 @@
 
             .mingpian:hover {
                 color: #00bb3c;
+            }
+            .mingpian span {
+               font-size:12px;
             }
 
         .tip-v {
@@ -371,6 +379,37 @@
             }
         };
     </script>
+
+      <script>
+          var objA = null, intrval = null;
+          var div_tip_ID = null;
+          function show(obj) {
+              if (!obj) {
+                  obj = objA;
+              }
+              else objA = obj;
+
+              if (intrval) {
+                  window.clearTimeout(intrval);
+                  intrval = null;
+              }
+              div_tip_ID = objA.id;
+
+              var div_tip = document.getElementById(div_tip_ID);
+              div_tip.style.display = "block";
+              div_tip.style.left = (obj.offsetLeft + 20) + "px";
+              div_tip.style.top = (obj.offsetTop - div_tip.offsetHeight) + "px";
+          }
+          function hide() {
+              //现在这个demo提示框和超链接没重叠部分，所以延时50毫秒隐藏提示框,以解决移出超链接到移入提示框这个过程之间提示框隐藏掉。
+              //大部分时候可能是做成有重叠的，就不需要延时隐藏。
+              intrval = window.setTimeout(function () {
+                  document.getElementById(div_tip_ID).style.display = "none";
+              }, 50);
+
+          }
+  </script>
+ 
 </head>
 <body onload="highlight()">
 
@@ -455,7 +494,17 @@
                 </h3>
                 <span class="stext"><%=content%> </span>
                 <br />
-                <div class="res-linkinfo">
+                  <% if(p.Tag!=null)%>
+                    <% 
+                    {
+                    %>
+                    <div id="<%=p.Id%>" style='width:300px;height:200px;display:none;background:#aef0c6;position:absolute;' onmouseover="show()" onmouseout="this.style.display='none';">
+                        <div class=\"m-title\"><%=((SiteInfo)p.Tag).Name%></div><div class=\"m-1\"><%=((SiteInfo)p.Tag).Description %>></div><div  class=\"m-2\">网站信用:</div><div  class=\"m-3\"><%=((SiteInfo)p.Tag).IsGuard %>加入上网保障计划</div>  
+                    </div>
+                    <% 
+                    }
+                    %>
+                <div class="res-linkinfo" >
                     <cite><%=p.Url%> </cite>&nbsp;&nbsp;<%=p.Verified%>
                 </div>
                 <% 

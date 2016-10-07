@@ -5,7 +5,7 @@
  <%
      List<String> discoveries = new List<String> ();
      
-     using (var box = SDB.SearchDB.Cube()) {
+     using (var box = SDB.SearchBox.Cube()) {
      	foreach (String skw in SearchResource.Engine.discover(box, 'a', 'z', 4,
 				                                       '\u2E80', '\u9fa5', 1)) {
 			discoveries.Add (skw);
@@ -19,7 +19,7 @@
         <meta name="description" content="iBoxDB NoSQL Database Full Text Search Server FTS" />
         <title>Full Text Search Server</title>
 
-        <link rel="stylesheet" type="text/css" href="css/semantic.min.css" /> 
+        <link rel="stylesheet" type="text/css" href="Content/semantic.min.css" /> 
 
         <style>
             td{ 

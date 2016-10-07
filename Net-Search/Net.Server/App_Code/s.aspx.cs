@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Net.Api;
@@ -17,6 +17,7 @@ namespace Net.Server
 		protected string processLinksCount;
 		protected string siteInfoCount;
 		protected string sitePageCount;
+		private static Manager manager = new Manager();
 
 		protected override void OnLoad(EventArgs e)
 		{
@@ -59,7 +60,7 @@ namespace Net.Server
 			var ads = SDB.AssistBox.Select<SitePage>(string.Format(Constants.LIKESQL, Constants.TABLE_AD));
 			if (ads != null)
 			{
-				pagesAd = ads.Where(p => p.Tag.Split(new char[] { ';', '；' }).Contains(name)).ToList<SitePage>();
+				pagesAd = ads.Where(p => p.Tag.ToString().Split(new string[] { ";", "；" }, StringSplitOptions.RemoveEmptyEntries).Contains(name)).ToList<SitePage>();
 			}
 			#endregion
 
@@ -110,26 +111,28 @@ namespace Net.Server
 				pagesAll.AddRange(pagesAd);
 
 			}
-			pagesAll.AddRange(pages);
+			if (pages != null)
+			{
+				foreach (var page in pages)
+				{
+					var host = page.Host.Replace("www", string.Empty);
+					if (host != null)
+					{
+						var siteInfo = manager.Select<SiteInfo>().Where(p => p.Url.IndexOf(host) != -1).FirstOrDefault();
+						if (siteInfo != null)
+						{
+							page.Tag = siteInfo;
+							page.VerifiedSiteName = siteInfo.Name;
+						}
+					}
+				}
+				pagesAll.AddRange(pages);
+			}
 			#endregion
 
 			#region Pange index
 			GenerateNextPage(pageNumber);
 			#endregion
-
-			#region Summary
-			GenerateSummaryInfo();
-			#endregion
-		}
-
-		private void GenerateSummaryInfo()
-		{
-			var processLinks = SDB.AssistBox.Select<Link>(string.Format(Constants.LIKESQL, Constants.TABLE_LINK));
-			processLinksCount = processLinks.Count().ToString();
-            var siteInfo = SDB.AssistBox.Select<SiteInfo>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEINFO));
-			siteInfoCount = siteInfo.Count().ToString();
-			var sitePage = SDB.SearchBox.Select<SitePage>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEPAGE));
-			sitePageCount = sitePage.Count().ToString();
 		}
 
 		private void GenerateNextPage(int pageNumber)

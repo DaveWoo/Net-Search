@@ -8,13 +8,14 @@ namespace Net.Models
 {
 	public class SiteInfo
 	{
-        public long Id { get; set; }
+		public long Id { get; set; }
 		public String Url { get; set; }
 		public String Name { get; set; }
 		public int Alexa { get; set; }
 		public int RankBaidu { get; set; }
 		public int PR { get; set; }
 		public int Linked { get; set; }
+		public bool IsGuard { get; set; }
 		public int LinkedReversed { get; set; }
 		public String Description { get; set; }
 		public int Score { get; set; }

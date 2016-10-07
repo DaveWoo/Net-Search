@@ -12,7 +12,7 @@ namespace Net.Models
 		public String Url { get; set; }
 		public String Title { get; set; }
 		public String Description { get; set; }
-		public String VerifiedCompmany { get; set; }
+		public String VerifiedSiteName { get; set; }
 		public String Rank { get; set; }
 		public UString Content { get; set; }
 		public DateTime CreatedTimeStamp { get; set; }
@@ -29,16 +29,20 @@ namespace Net.Models
 					return new Uri(Url).Host;
 				}
 			}
+			set
+			{
+				Host = value;
+			}
 		}
-		public string Tag { get; set; }
+		public object Tag { get; set; }
 		public string Verified
 		{
 			get
 			{
 				string content = string.Empty;
-				if (!string.IsNullOrWhiteSpace(VerifiedCompmany))
+				if (!string.IsNullOrWhiteSpace(VerifiedSiteName))
 				{
-					content += string.Format("<a href='{0}' class=\"mingpian\" target=\"_blank\"><span class=\"tip-v\"  ></span><span>{1}</span>", Url, VerifiedCompmany);
+					content += string.Format("<a href='#' id=\"{0}\" onmouseover=\"show(this)\" onmouseout=\"hide()\"class=\"mingpian\" target=\"_blank\"><span class=\"tip-v\"  ></span><span>{1}</span></a>", Id, VerifiedSiteName);
 				}
 				return content;
 			}
