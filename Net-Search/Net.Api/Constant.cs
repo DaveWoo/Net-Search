@@ -8,6 +8,7 @@ namespace Net.Api
 		public const string TABLE_SITEINFO = "SiteInfo";
 		public const string TABLE_LINK = "Link";
 		public const string TABLE_AD = "AD";
+        public const string TABLE_WORDS= "Words";
 
         public const string TABLE_FIELD_ID = "Id";
         public const string TABLE_FIELD_URL = "Url";

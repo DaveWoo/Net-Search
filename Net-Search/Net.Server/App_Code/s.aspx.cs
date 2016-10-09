@@ -57,10 +57,11 @@ namespace Net.Server
 
             #region Ad query
 
-            var ads = SDB.ADBox.Select<SitePage>(string.Format(Constants.LIKESQL, Constants.TABLE_AD));
+            var ads = SDB.ADBox.Select<AD>(string.Format(Constants.LIKESQL, Constants.TABLE_AD));
             if (ads != null)
             {
-                pagesAd = ads.Where(p => p.Tag.ToString().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Contains(name)).ToList<SitePage>();
+                pagesAd = ads.Where(p => (p.Tag!=null)&&p.Tag.ToString().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Contains(name)).ToList<SitePage>();
+
             }
             #endregion
 

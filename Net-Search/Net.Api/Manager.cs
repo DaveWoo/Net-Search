@@ -23,6 +23,14 @@ namespace Net.Api
             {
                 return SDB.LinkBox.Insert<T>(Constants.TABLE_LINK, (T[])values);
             }
+            else if (typeof(T).Name == Constants.TABLE_AD)
+            {
+                return SDB.ADBox.Insert<T>(Constants.TABLE_AD, (T[])values);
+            }
+            else if (typeof(T).Name == Constants.TABLE_WORDS)
+            {
+                return SDB.WordsBox.Insert<T>(Constants.TABLE_WORDS, (T[])values);
+            }
             return false;
         }
 
@@ -43,6 +51,14 @@ namespace Net.Api
             else if (typeof(T).Name == Constants.TABLE_LINK)
             {
                 return SDB.LinkBox.Select<T>(string.Format(Constants.LIKESQL, Constants.TABLE_LINK));
+            }
+            else if (typeof(T).Name == Constants.TABLE_AD)
+            {
+                return SDB.ADBox.Select<T>(string.Format(Constants.LIKESQL, Constants.TABLE_AD));
+            }
+            else if (typeof(T).Name == Constants.TABLE_WORDS)
+            {
+                return SDB.WordsBox.Select<T>(string.Format(Constants.LIKESQL, Constants.TABLE_WORDS));
             }
             return null;
         }
@@ -65,6 +81,14 @@ namespace Net.Api
             {
                 return SDB.LinkBox.Select<T>(ql, args);
             }
+            else if (typeof(T).Name == Constants.TABLE_AD)
+            {
+                return SDB.ADBox.Select<T>(ql, args);
+            }
+            else if (typeof(T).Name == Constants.TABLE_WORDS)
+            {
+                return SDB.WordsBox.Select<T>(ql, args);
+            }
             return null;
         }
 
@@ -86,6 +110,14 @@ namespace Net.Api
             {
                 return SDB.LinkBox.Update<T>(Constants.TABLE_LINK, (T[])values);
             }
+            else if (typeof(T).Name == Constants.TABLE_AD)
+            {
+                return SDB.ADBox.Update<T>(Constants.TABLE_AD, (T[])values);
+            }
+            else if (typeof(T).Name == Constants.TABLE_WORDS)
+            {
+                return SDB.WordsBox.Update<T>(Constants.TABLE_WORDS, (T[])values);
+            }
             return false;
         }
 
@@ -106,6 +138,14 @@ namespace Net.Api
             else if (typeof(T).Name == Constants.TABLE_LINK)
             {
                 return SDB.LinkBox.Delete(Constants.TABLE_LINK, (T[])values);
+            }
+            else if (typeof(T).Name == Constants.TABLE_AD)
+            {
+                return SDB.ADBox.Delete(Constants.TABLE_LINK, (T[])values);
+            }
+            else if (typeof(T).Name == Constants.TABLE_WORDS)
+            {
+                return SDB.WordsBox.Delete(Constants.TABLE_WORDS, (T[])values);
             }
             return false;
         }

@@ -42,11 +42,11 @@ namespace Spider
                 //var linkList = manager.Select<Link>();
 
 				// Step 3 : 2
-				Site.GrabLinksContent();
+				//Site.GrabLinksContent();
                 var pages = manager.Select<SitePage>();
 
 				// Step 4 : Add ad
-				Site.AddAd("abc.com",
+				Site.AddAd("www.abcde.com",
 					"这是您的第一份免费广告",
 					"这是您的第一份免费广告,我们将竭诚为您服务",
 					"广告",

@@ -18,6 +18,7 @@ namespace Net.Api
                 InitLinkBox();
                 InitNetServerConfigBox();
                 InitADBox();
+                InitWordsBox();
             }
         }
 
@@ -26,6 +27,7 @@ namespace Net.Api
         public static DB.AutoBox LinkBox { get; internal set; }
         public static DB.AutoBox ADBox { get; internal set; }
         public static DB.AutoBox NetServerConfigBox { get; internal set; }
+        public static DB.AutoBox WordsBox { get; internal set; }
 
         public bool IsInit { get; set; }
 
@@ -102,6 +104,7 @@ namespace Net.Api
                 Log.Error("Error: InitADBox", ex);
             }
         }
+
         //NetServerConfigBox
         private static void InitNetServerConfigBox()
         {
@@ -117,6 +120,23 @@ namespace Net.Api
                 Log.Error("Error: InitNetServerConfigBox", ex);
             }
         }
+
+        //NetServerConfigBox
+        private static void InitWordsBox()
+        {
+            try
+            {
+                DB server = InitServer(6);
+                server.GetConfig().EnsureTable<Words>(Constants.TABLE_WORDS, "Name");
+                if (WordsBox == null)
+                    WordsBox = server.Open();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error: InitWordsBox", ex);
+            }
+        }
+
         private static void CreateServerPath(String path)
         {
             try
@@ -184,6 +204,12 @@ namespace Net.Api
                 ADBox.GetDatabase().Close();
             }
             ADBox = null;
+
+            if (WordsBox != null)
+            {
+                WordsBox.GetDatabase().Close();
+            }
+            WordsBox = null;
 
             Log.Info("DBClosed");
         }

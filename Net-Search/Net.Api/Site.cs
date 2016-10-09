@@ -52,19 +52,21 @@ namespace Net.Api
 
         public static void AddAd(string url, string title, string description, string company, string tag)
         {
-            SitePage sitePage = new SitePage();
-            sitePage.Id = SDB.ADBox.NewId();
-            sitePage.Title = title;
-            sitePage.Description = description;
+            if (string.IsNullOrWhiteSpace(tag))
+                throw new ArgumentNullException("tag");
+            AD adSitePage = new AD();
+            adSitePage.Id = SDB.ADBox.NewId();
+            adSitePage.Title = title;
+            adSitePage.Description = description;
 
-            sitePage.Url = url;
+            adSitePage.Url = url;
 
-            sitePage.VerifiedSiteName = company;
-            sitePage.CreatedTimeStamp = System.DateTime.Now;
-            sitePage.ModifiedTimeStamp = System.DateTime.Now;
-            sitePage.Tag = tag;
-            manager.Create<SitePage>(sitePage);
-            Log.Info("Add ad: " + sitePage.Title);
+            adSitePage.VerifiedSiteName = company;
+            adSitePage.CreatedTimeStamp = System.DateTime.Now;
+            adSitePage.ModifiedTimeStamp = System.DateTime.Now;
+            adSitePage.Tag = tag;
+            manager.Create<AD>(adSitePage);
+            Log.Info("Add ad: " + adSitePage.Title);
         }
 
         public static void GrabLinks()
@@ -134,7 +136,7 @@ namespace Net.Api
                             }
                             else
                             {
-                                Log.Info(e.Id + " processed: " + e.Url);
+                                Log.Info(e.Id + " grabed contents: " + e.Url);
                             }
                         });
                         processLinkConfig.ProcessedLinkAnchorId = prepareProcessLinks.LastOrDefault().Id;
