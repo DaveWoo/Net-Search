@@ -26,7 +26,7 @@ namespace Spider
 				//var text = iBoxDB.NDB.RunALL();
 
 				// Step 1:1 Get all basic url and site name
-				Site.GetAllSiteInfoFromChinaZ();
+				//Site.GetAllSiteInfoFromChinaZ();
 				var SiteInfoList = manager.Select<SiteInfo>();
 				var processSiteInfoConfig = Site.GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_CHINAZINDEX);
 
@@ -38,10 +38,11 @@ namespace Spider
 				//SearchBy360();
 
 				// Step 3: 1
-				// GrabLinks();
+                //Site.GrabLinks();
+                //var linkList = manager.Select<Link>();
 
 				// Step 3 : 2
-				//Site.GrabLinksContent();
+				Site.GrabLinksContent();
                 var pages = manager.Select<SitePage>();
 
 				// Step 4 : Add ad

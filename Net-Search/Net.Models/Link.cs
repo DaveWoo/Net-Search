@@ -27,7 +27,6 @@ namespace Net.Models
 					}
 					catch (Exception ex)
 					{
-
 						return null;
 					}
 

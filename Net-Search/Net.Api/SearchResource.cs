@@ -18,12 +18,12 @@ namespace Net.Api
             {
                 String url = getUrl(name);
 
-                foreach (SitePage p in SDB.SitePageBox.Select<SitePage>("from SitePage where url==?", url))
-                {
-                    Engine.indexTextNoTran(SDB.SitePageBox, commitCount, p.Id, p.Content.ToString(), true);
-                    Engine.indexTextNoTran(SDB.SitePageBox, commitCount, p.RankUpId(), p.RankUpDescription(), true);
-                    SDB.SitePageBox.Delete(Constants.TABLE_SITEPAGE, p.Id);
-                }
+                //foreach (SitePage p in SDB.SitePageBox.Select<SitePage>("from SitePage where url==?", url))
+                //{
+                //    Engine.indexTextNoTran(SDB.SitePageBox, commitCount, p.Id, p.Content.ToString(), true);
+                //    Engine.indexTextNoTran(SDB.SitePageBox, commitCount, p.RankUpId(), p.RankUpDescription(), true);
+                //    SDB.SitePageBox.Delete(Constants.TABLE_SITEPAGE, p.Id);
+                //}
 
                 if (isDelete)
                 {

@@ -37,10 +37,6 @@ namespace Net.Models
                     }
                 }
             }
-            set
-            {
-                Host = value;
-            }
         }
 
         public object Tag { get; set; }

@@ -17,6 +17,7 @@ namespace Net.Api
         private static object objectLock = new object();
         private static int currentGrabedBaiscLinksCount = 0;
         private static object objectLockBasicLink = new object();
+        private static object objectLockGrabContents = new object();
 
         public static void GetBasicLinks()
         {
@@ -36,7 +37,10 @@ namespace Net.Api
                     (e) =>
                     {
                         GrabLinksToDB(sitePageList, e.Url);
-                        Log.Info(currentGrabedSiteCount++ + "Grabed basic link name: " + e.Name);
+                        lock (objectLockGrabContents)
+                        {
+                            Log.Info(currentGrabedSiteCount++ + "Grabed basic link name: " + e.Name);
+                        }
                     });
                     processLinkConfig.ProcessedLinkAnchorId = prepareProcessLinks.LastOrDefault().Id;
                     processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
@@ -123,9 +127,15 @@ namespace Net.Api
                         Parallel.ForEach<Link>(prepareProcessLinks,
                         (e) =>
                         {
-                            Log.Info(e.Id + " processing: " + e.Url);
-                            SearchResource.IndexText(e.Url, false);
-                            Log.Info(e.Id + " processed: " + e.Url);
+                            string contents = SearchResource.IndexText(e.Url, false);
+                            if (contents == "temporarily unreachable")
+                            {
+                                Log.Warn(contents + "Url: " + e.Url);
+                            }
+                            else
+                            {
+                                Log.Info(e.Id + " processed: " + e.Url);
+                            }
                         });
                         processLinkConfig.ProcessedLinkAnchorId = prepareProcessLinks.LastOrDefault().Id;
                         processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
@@ -156,7 +166,10 @@ namespace Net.Api
             }
 
             var toBeProcessedLinks = allPages.Where(page => page.Key > processLinkConfig.ProcessedLinkAnchorId);
-
+            if (manager.Select<SiteInfo>() != null)
+            {
+                currentGrabedSiteCount = manager.Select<SiteInfo>().Count();
+            }
             for (int i = 0; i < toBeProcessedLinks.Count(); i = i + Constants.TAKECOUNTCHINAZ)
             {
                 var prepareProcessLinks = toBeProcessedLinks.Where(p => p.Key > processLinkConfig.ProcessedLinkAnchorId).Take(Constants.TAKECOUNTCHINAZ);
@@ -207,7 +220,7 @@ namespace Net.Api
                         bool isSucceed = manager.Create<SiteInfo>(info);
                         lock (objectLock)
                         {
-                            Log.Info("Grabed site name: " + info.Name + "Count: " + currentGrabedSiteCount++);
+                            Log.Info("Grabing site Index: " + currentGrabedSiteCount++ + "Name: " + info.Name);
                         }
                     }
                 }

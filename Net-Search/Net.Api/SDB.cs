@@ -2,164 +2,62 @@ using iBoxDB.LocalServer;
 using Net.Models;
 using Net.Utils.Common;
 using System;
-using System.Threading;
 
 namespace Net.Api
 {
     public class SDB
     {
-        private static DB.AutoBox sitePageBox = null;
-        private static DB.AutoBox siteInfoBox = null;
-        private static DB.AutoBox linkBox = null;
-        private static DB.AutoBox adBox = null;
-        private static DB.AutoBox netServerConfigBox = null;
-
         private static object lockObject = new object();
 
         static SDB()
         {
-          
-        }
-
-        public static DB.AutoBox SitePageBox
-        {
-            get
+            lock (lockObject)
             {
-                if (sitePageBox == null)
-                {
-                    lock (lockObject)
-                    {
-                        InitSitePageBox(Constants.SERVERDATA_PATH, false);
-                    }
-                }
-                return sitePageBox;
+                InitSitePageBox();
+                InitSiteInfoBox();
+                InitLinkBox();
+                InitNetServerConfigBox();
+                InitADBox();
             }
         }
 
-        public static DB.AutoBox SiteInfoBox
-        {
-            get
-            {
-                if (siteInfoBox == null)
-                {
-                    InitSiteInfoBox(Constants.SERVERDATA_PATH, false);
-                }
-                return siteInfoBox;
-            }
-        }
-
-        public static DB.AutoBox LinkBox
-        {
-            get
-            {
-                if (linkBox == null)
-                {
-                    InitLinkBox(Constants.SERVERDATA_PATH, false);
-                }
-                return linkBox;
-            }
-        }
-
-        public static DB.AutoBox ADBox
-        {
-            get
-            {
-                if (adBox == null)
-                {
-                    InitADBox(Constants.SERVERDATA_PATH, false);
-                }
-                return adBox;
-            }
-        }
-
-        public static DB.AutoBox NetServerConfigBox
-        {
-            get
-            {
-                if (netServerConfigBox == null)
-                {
-                    InitNetServerConfigBox(Constants.SERVERDATA_PATH, false);
-                }
-                return netServerConfigBox;
-            }
-        }
+        public static DB.AutoBox SitePageBox { get; internal set; }
+        public static DB.AutoBox SiteInfoBox { get; internal set; }
+        public static DB.AutoBox LinkBox { get; internal set; }
+        public static DB.AutoBox ADBox { get; internal set; }
+        public static DB.AutoBox NetServerConfigBox { get; internal set; }
 
         public bool IsInit { get; set; }
 
         //SitePage
-        private static void InitSitePageBox(String path, bool isVM)
+        private static void InitSitePageBox()
         {
             try
             {
-                CreateServerPath(path);
-                DB server = InitServer(1, path, isVM);
+                DB server = InitServer(1);
                 server.GetConfig().EnsureTable<SitePage>(Constants.TABLE_SITEPAGE, Constants.TABLE_FIELD_ID);
                 server.GetConfig().EnsureIndex<SitePage>(Constants.TABLE_SITEPAGE, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
 
-                if (sitePageBox == null)
-                    sitePageBox = server.Open();
+                if (SitePageBox == null)
+                    SitePageBox = server.Open();
             }
             catch (Exception ex)
             {
                 Log.Error("Error: InitSitePageBox", ex);
             }
         }
-
-        //NetServerConfigBox
-        private static void InitNetServerConfigBox(String path, bool isVM)
-        {
-            try
-            {
-                CreateServerPath(path);
-                DB server = InitServer(2, path, isVM);
-                server.GetConfig().EnsureTable<NetServerConfig>(Constants.TABLE_NETSERVERCONFIG, "Name");
-                if (netServerConfigBox == null)
-                    netServerConfigBox = server.Open();
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Error: InitNetServerConfigBox", ex);
-            }
-        }
-
-        //link
-        private static void InitLinkBox(String path, bool isVM)
-        {
-            try
-            {
-                CreateServerPath(path);
-
-                DB.Root(path);
-
-                CreateServerPath(path);
-                DB server = InitServer(3, path, isVM);
-                server.GetConfig().EnsureTable<Link>(Constants.TABLE_LINK, "Url");
-                server.GetConfig().EnsureIndex<Link>(Constants.TABLE_LINK, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
-                if (linkBox == null)
-                    linkBox = server.Open();
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Error: InitLinkBox", ex);
-            }
-        }
-
         //siteInfoBox
-        private static void InitSiteInfoBox(String path, bool isVM)
+        private static void InitSiteInfoBox()
         {
             try
             {
-                Monitor.Enter(lockObject);
-
-                CreateServerPath(path);
-                DB server = InitServer(4, path, isVM);
+                DB server = InitServer(2);
 
                 server.GetConfig().EnsureTable<SiteInfo>(Constants.TABLE_SITEINFO, Constants.TABLE_FIELD_ID);
                 //server.GetConfig().EnsureUpdateIncrementIndex<SiteInfo>(Constants.TABLE_SITEINFO, Constants.TABLE_FIELD_ID);
                 server.GetConfig().EnsureIndex<SiteInfo>(Constants.TABLE_SITEINFO, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
-                if (siteInfoBox == null)
-                    siteInfoBox = server.Open();
-
+                if (SiteInfoBox == null)
+                    SiteInfoBox = server.Open();
             }
             catch (Exception ex)
             {
@@ -167,29 +65,58 @@ namespace Net.Api
             }
             finally
             {
-                Monitor.Exit(lockObject);
+            }
+        }
+
+        //link
+        private static void InitLinkBox()
+        {
+            try
+            {
+                DB server = InitServer(3);
+                server.GetConfig().EnsureTable<Link>(Constants.TABLE_LINK, Constants.TABLE_FIELD_ID);
+                server.GetConfig().EnsureIndex<Link>(Constants.TABLE_LINK, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
+                if (LinkBox == null)
+                    LinkBox = server.Open();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error: InitLinkBox", ex);
             }
         }
 
         //ad
-        private static void InitADBox(String path, bool isVM)
+        private static void InitADBox()
         {
             try
             {
-                CreateServerPath(path);
-                DB server = InitServer(5, path, isVM);
+                DB server = InitServer(4);
 
                 server.GetConfig().EnsureTable<SitePage>(Constants.TABLE_AD, Constants.TABLE_FIELD_ID);
                 server.GetConfig().EnsureIndex<SitePage>(Constants.TABLE_AD, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
-                if (sitePageBox == null)
-                    adBox = server.Open();
+                if (ADBox == null)
+                    ADBox = server.Open();
             }
             catch (Exception ex)
             {
                 Log.Error("Error: InitADBox", ex);
             }
         }
-
+        //NetServerConfigBox
+        private static void InitNetServerConfigBox()
+        {
+            try
+            {
+                DB server = InitServer(5);
+                server.GetConfig().EnsureTable<NetServerConfig>(Constants.TABLE_NETSERVERCONFIG, "Name");
+                if (NetServerConfigBox == null)
+                    NetServerConfigBox = server.Open();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error: InitNetServerConfigBox", ex);
+            }
+        }
         private static void CreateServerPath(String path)
         {
             try
@@ -206,8 +133,13 @@ namespace Net.Api
             }
         }
 
+        private static DB InitServer(long dbID)
+        {
+            return InitServer(dbID, Constants.SERVERDATA_PATH, false);
+        }
         private static DB InitServer(long dbID, string path, bool isVM)
         {
+            CreateServerPath(path);
             DB.Root(path);
 
             DB server = new DB(dbID);
@@ -223,35 +155,35 @@ namespace Net.Api
 
         public static void Close()
         {
-            if (sitePageBox != null)
+            if (SitePageBox != null)
             {
-                sitePageBox.GetDatabase().Close();
+                SitePageBox.GetDatabase().Close();
             }
-            sitePageBox = null;
+            SitePageBox = null;
 
-            if (siteInfoBox != null)
+            if (SiteInfoBox != null)
             {
-                siteInfoBox.GetDatabase().Close();
+                SiteInfoBox.GetDatabase().Close();
             }
-            siteInfoBox = null;
+            SiteInfoBox = null;
 
-            if (linkBox != null)
+            if (LinkBox != null)
             {
-                linkBox.GetDatabase().Close();
+                LinkBox.GetDatabase().Close();
             }
-            linkBox = null;
+            LinkBox = null;
 
-            if (netServerConfigBox != null)
+            if (NetServerConfigBox != null)
             {
-                netServerConfigBox.GetDatabase().Close();
+                NetServerConfigBox.GetDatabase().Close();
             }
-            netServerConfigBox = null;
+            NetServerConfigBox = null;
 
-            if (adBox != null)
+            if (ADBox != null)
             {
-                adBox.GetDatabase().Close();
+                ADBox.GetDatabase().Close();
             }
-            adBox = null;
+            ADBox = null;
 
             Log.Info("DBClosed");
         }
