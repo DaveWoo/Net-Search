@@ -9,19 +9,19 @@ namespace Net.Api
         {
             if (typeof(T).Name == Constants.TABLE_SITEPAGE)
             {
-                return SDB.SearchBox.Insert<T>(Constants.TABLE_SITEPAGE, (T[])values);
+                return SDB.SitePageBox.Insert<T>(Constants.TABLE_SITEPAGE, (T[])values);
             }
             else if (typeof(T).Name == Constants.TABLE_SITEINFO)
             {
-                return SDB.AssistBox.Insert<T>(Constants.TABLE_SITEINFO, (T[])values);
+                return SDB.SiteInfoBox.Insert<T>(Constants.TABLE_SITEINFO, (T[])values);
             }
             else if (typeof(T).Name == Constants.TABLE_NETSERVERCONFIG)
             {
-                return SDB.AssistBox.Insert<T>(Constants.TABLE_NETSERVERCONFIG, (T[])values);
+                return SDB.NetServerConfigBox.Insert<T>(Constants.TABLE_NETSERVERCONFIG, (T[])values);
             }
             else if (typeof(T).Name == Constants.TABLE_LINK)
             {
-                return SDB.AssistBox.Insert<T>(Constants.TABLE_LINK, (T[])values);
+                return SDB.LinkBox.Insert<T>(Constants.TABLE_LINK, (T[])values);
             }
             return false;
         }
@@ -30,19 +30,19 @@ namespace Net.Api
         {
             if (typeof(T).Name == Constants.TABLE_SITEPAGE)
             {
-                return SDB.SearchBox.Select<T>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEPAGE));
+                return SDB.SitePageBox.Select<T>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEPAGE));
             }
             else if (typeof(T).Name == Constants.TABLE_SITEINFO)
             {
-                return SDB.AssistBox.Select<T>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEINFO));
+                return SDB.SiteInfoBox.Select<T>(string.Format(Constants.LIKESQL, Constants.TABLE_SITEINFO));
             }
             else if (typeof(T).Name == Constants.TABLE_NETSERVERCONFIG)
             {
-                return SDB.AssistBox.Select<T>(string.Format(Constants.LIKESQL, Constants.TABLE_NETSERVERCONFIG));
+                return SDB.NetServerConfigBox.Select<T>(string.Format(Constants.LIKESQL, Constants.TABLE_NETSERVERCONFIG));
             }
             else if (typeof(T).Name == Constants.TABLE_LINK)
             {
-                return SDB.AssistBox.Select<T>(string.Format(Constants.LIKESQL, Constants.TABLE_LINK));
+                return SDB.LinkBox.Select<T>(string.Format(Constants.LIKESQL, Constants.TABLE_LINK));
             }
             return null;
         }
@@ -51,19 +51,19 @@ namespace Net.Api
         {
             if (typeof(T).Name == Constants.TABLE_SITEPAGE)
             {
-                return SDB.SearchBox.Select<T>(ql, args);
+                return SDB.SitePageBox.Select<T>(ql, args);
             }
             else if (typeof(T).Name == Constants.TABLE_SITEINFO)
             {
-                return SDB.AssistBox.Select<T>(ql, args);
+                return SDB.SiteInfoBox.Select<T>(ql, args);
             }
             else if (typeof(T).Name == Constants.TABLE_NETSERVERCONFIG)
             {
-                return SDB.AssistBox.Select<T>(ql, args);
+                return SDB.NetServerConfigBox.Select<T>(ql, args);
             }
             else if (typeof(T).Name == Constants.TABLE_LINK)
             {
-                return SDB.AssistBox.Select<T>(ql,args);
+                return SDB.LinkBox.Select<T>(ql, args);
             }
             return null;
         }
@@ -72,19 +72,19 @@ namespace Net.Api
         {
             if (typeof(T).Name == Constants.TABLE_SITEPAGE)
             {
-                return SDB.SearchBox.Update<T>(Constants.TABLE_SITEPAGE, (T[])values);
+                return SDB.SitePageBox.Update<T>(Constants.TABLE_SITEPAGE, (T[])values);
             }
             else if (typeof(T).Name == Constants.TABLE_SITEINFO)
             {
-                return SDB.AssistBox.Update<T>(Constants.TABLE_SITEINFO, (T[])values);
+                return SDB.SiteInfoBox.Update<T>(Constants.TABLE_SITEINFO, (T[])values);
             }
             else if (typeof(T).Name == Constants.TABLE_NETSERVERCONFIG)
             {
-                return SDB.AssistBox.Update<T>(Constants.TABLE_NETSERVERCONFIG, (T[])values);
+                return SDB.NetServerConfigBox.Update<T>(Constants.TABLE_NETSERVERCONFIG, (T[])values);
             }
             else if (typeof(T).Name == Constants.TABLE_LINK)
             {
-                return SDB.AssistBox.Update<T>(Constants.TABLE_LINK, (T[])values);
+                return SDB.LinkBox.Update<T>(Constants.TABLE_LINK, (T[])values);
             }
             return false;
         }
@@ -93,19 +93,19 @@ namespace Net.Api
         {
             if (typeof(T).Name == Constants.TABLE_SITEPAGE)
             {
-                return SDB.AssistBox.Delete(Constants.TABLE_SITEPAGE, (T[])values);
+                return SDB.SiteInfoBox.Delete(Constants.TABLE_SITEPAGE, (T[])values);
             }
             else if (typeof(T).Name == Constants.TABLE_SITEINFO)
             {
-                return SDB.AssistBox.Delete(Constants.TABLE_SITEINFO, (T[])values);
+                return SDB.SiteInfoBox.Delete(Constants.TABLE_SITEINFO, (T[])values);
             }
             else if (typeof(T).Name == Constants.TABLE_NETSERVERCONFIG)
             {
-                return SDB.AssistBox.Delete(Constants.TABLE_NETSERVERCONFIG, (T[])values);
+                return SDB.NetServerConfigBox.Delete(Constants.TABLE_NETSERVERCONFIG, (T[])values);
             }
             else if (typeof(T).Name == Constants.TABLE_LINK)
             {
-                return SDB.AssistBox.Delete(Constants.TABLE_LINK, (T[])values);
+                return SDB.LinkBox.Delete(Constants.TABLE_LINK, (T[])values);
             }
             return false;
         }

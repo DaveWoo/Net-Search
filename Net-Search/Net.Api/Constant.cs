@@ -9,6 +9,9 @@ namespace Net.Api
 		public const string TABLE_LINK = "Link";
 		public const string TABLE_AD = "AD";
 
+        public const string TABLE_FIELD_ID = "Id";
+        public const string TABLE_FIELD_URL = "Url";
+
 		public const string TABLE_NETSERVERCONFIG = "NetServerConfig";
 
 		public const string PROCESSLINKCONFIG_NAME_GRABCONTENTS = "GrabContents";
@@ -25,7 +28,9 @@ namespace Net.Api
 		public const int PAGECOUNTLIMIT = 100;
 		public const int PAGEINDEXS = 10;
 		public const int TAKECOUNT = 10;
-		public const int TAKECOUNTCHINAZ = 10;
+        public const int TAKECOUNTCHINAZ = 20;
+        public const int TAKECOUNTBASICLINKS = 5;
+        public const int URLLENGTH = 200;
 
 
 		public static string SERVERDATA_PATH = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal) + Constants.SERVERDATA_NAME;

@@ -57,7 +57,7 @@ namespace Net.Server
 
 			#region Ad query
 
-			var ads = SDB.AssistBox.Select<SitePage>(string.Format(Constants.LIKESQL, Constants.TABLE_AD));
+			var ads = SDB.SiteInfoBox.Select<SitePage>(string.Format(Constants.LIKESQL, Constants.TABLE_AD));
 			if (ads != null)
 			{
 				pagesAd = ads.Where(p => p.Tag.ToString().Split(new string[] { ";", "；" }, StringSplitOptions.RemoveEmptyEntries).Contains(name)).ToList<SitePage>();
@@ -68,7 +68,7 @@ namespace Net.Server
 
 			#region body query
 
-			using (var box = SDB.SearchBox.Cube())
+			using (var box = SDB.SitePageBox.Cube())
 			{
 				var results = SearchResource.Engine.SearchDistinct(box, name).OrderBy(p => p.Position);
 				if (results != null)

@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interface1.cs" />
     <Compile Include="NetServerConfig.cs" />
     <Compile Include="KeyWord.cs" />
     <Compile Include="KeyWordE.cs" />

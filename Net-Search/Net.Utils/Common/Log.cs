@@ -27,35 +27,67 @@ namespace Net.Utils.Common
 			log4net.Config.DOMConfigurator.Configure(configFile);
 		}
 
-		public static void Info(string info, Exception ex = null)
+        public static void Info(string message)
 		{
 			if (loginfo.IsInfoEnabled)
 			{
-				loginfo.Info(info, ex);
+                loginfo.Info(message);
 			}
 		}
 
-		public static void Error(string info, Exception ex = null)
+        public static void Info(string message, Exception ex)
+		{
+			if (loginfo.IsInfoEnabled)
+			{
+                loginfo.Info(message, ex);
+			}
+		}
+
+        public static void Error(string message)
 		{
 			if (loginfo.IsErrorEnabled)
 			{
-				loginfo.Error(info, ex);
+                loginfo.Error(message);
 			}
 		}
 
-		public static void Warn(string info, Exception ex = null)
+		public static void Error(string message, Exception ex)
+		{
+			if (loginfo.IsErrorEnabled)
+			{
+				loginfo.Error(message, ex);
+			}
+		}
+
+		public static void Warn(string message)
 		{
 			if (loginfo.IsWarnEnabled)
 			{
-				loginfo.Warn(info, ex);
+				loginfo.Warn(message);
 			}
 		}
 
-		public static void Fatal(string info, Exception ex = null)
+		public static void Warn(string message, Exception ex)
+		{
+			if (loginfo.IsWarnEnabled)
+			{
+				loginfo.Warn(message, ex);
+			}
+		}
+
+		public static void Fatal(string message)
 		{
 			if (loginfo.IsFatalEnabled)
 			{
-				loginfo.Fatal(info, ex);
+				loginfo.Fatal(message);
+			}
+		}
+
+		public static void Fatal(string message, Exception ex)
+		{
+			if (loginfo.IsFatalEnabled)
+			{
+				loginfo.Fatal(message, ex);
 			}
 		}
 	}

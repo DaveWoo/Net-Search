@@ -26,14 +26,14 @@ namespace Spider
 				//var text = iBoxDB.NDB.RunALL();
 
 				// Step 1:1 Get all basic url and site name
-				//GetAllSiteInfoFromChinaZ();
+				Site.GetAllSiteInfoFromChinaZ();
 				var SiteInfoList = manager.Select<SiteInfo>();
 				var processSiteInfoConfig = Site.GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_CHINAZINDEX);
 
 				// Step 1:2 Get links from basic url
 				//Site.GetBasicLinks();
 				var processLinkConfig = Site.GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABBASICLINKS);
-
+                var linkList = manager.Select<Link>();
 				// Step 2:
 				//SearchBy360();
 
@@ -41,7 +41,8 @@ namespace Spider
 				// GrabLinks();
 
 				// Step 3 : 2
-				// GrabLinksContent();
+				//Site.GrabLinksContent();
+                var pages = manager.Select<SitePage>();
 
 				// Step 4 : Add ad
 				Site.AddAd("abc.com",
@@ -50,9 +51,9 @@ namespace Spider
 					"广告",
 					"新闻;news");
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				throw;
+                Log.Error("Program", ex);
 			}
 		}
 

@@ -67,15 +67,14 @@
             width: 340px;
         }
 
-        #soSafe {     
+        #soSafe {
             border-top: 2px solid #aef0c6;
-            border-bottom: 2px solid #aef0c6;     
+            border-bottom: 2px solid #aef0c6;
             font-size: 13px;
             margin-bottom: 15px;
         }
 
-            #soSafe dt {    
-                  
+            #soSafe dt {
                 cursor: pointer;
                 height: 22px;
                 line-height: 22px;
@@ -96,9 +95,9 @@
                     padding-right: 14px;
                 }
 
-                #soSafe:hover {
-                    border-color: #cef0c6;
-                }
+            #soSafe:hover {
+                border-color: #cef0c6;
+            }
 
             /*#soSafe.open dt.hover {
                 border-color: #fff;
@@ -136,11 +135,6 @@
                     #soSafe dd p.txt {
                         margin-bottom: 8px;
                     }
-
-            .toask .ico-ask, .so-doc, .m-icp .icon-to, .result .res-list p.erro, #soSafe dt div {
-                background-image: url(https://p.ssl.qhimg.com/t019016be2616bba0f8.png);
-                background-repeat: no-repeat;
-            }
 
         .stext {
             font-size: 13px;
@@ -182,9 +176,50 @@
             .mingpian:hover {
                 color: #00bb3c;
             }
+
             .mingpian span {
-               font-size:12px;
+                font-size: 12px;
             }
+
+        .mingpian-tooltip {
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            width: 300px;
+            max-height: 200px;
+            display: none;
+            background: white;
+            position: absolute;
+            font-size: 12px;
+            font-family: 'Microsoft YaHei';
+        }
+
+        .mingpian-description {
+            margin-top: 3px;
+        }
+
+        .mingpian-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: aqua;
+        }
+
+        .mingpian-plan {
+            margin-top: 3px;
+            padding-top: 3px;
+            border-top: 1px solid #eee;
+        }
+
+        .mingpian-credit {
+            margin-top: 3px;
+        }
+
+        mingpian-plan {
+        }
+
+        mingpian-planed {
+        }
 
         .tip-v {
             background: url(src/v_16.png) no-repeat 0 0;
@@ -380,36 +415,36 @@
         };
     </script>
 
-      <script>
-          var objA = null, intrval = null;
-          var div_tip_ID = null;
-          function show(obj) {
-              if (!obj) {
-                  obj = objA;
-              }
-              else objA = obj;
+    <script>
+        var objA = null, intrval = null;
+        var div_tip_ID = null;
+        function show(obj) {
+            if (!obj) {
+                obj = objA;
+            }
+            else objA = obj;
 
-              if (intrval) {
-                  window.clearTimeout(intrval);
-                  intrval = null;
-              }
-              div_tip_ID = objA.id;
+            if (intrval) {
+                window.clearTimeout(intrval);
+                intrval = null;
+            }
+            div_tip_ID = objA.id;
 
-              var div_tip = document.getElementById(div_tip_ID);
-              div_tip.style.display = "block";
-              div_tip.style.left = (obj.offsetLeft + 20) + "px";
-              div_tip.style.top = (obj.offsetTop - div_tip.offsetHeight) + "px";
-          }
-          function hide() {
-              //现在这个demo提示框和超链接没重叠部分，所以延时50毫秒隐藏提示框,以解决移出超链接到移入提示框这个过程之间提示框隐藏掉。
-              //大部分时候可能是做成有重叠的，就不需要延时隐藏。
-              intrval = window.setTimeout(function () {
-                  document.getElementById(div_tip_ID).style.display = "none";
-              }, 50);
+            var div_tip = document.getElementById(div_tip_ID);
+            div_tip.style.display = "block";
+            div_tip.style.left = (obj.offsetLeft + 20) + "px";
+            div_tip.style.top = (obj.offsetTop - div_tip.offsetHeight) + "px";
+        }
+        function hide() {
+            //现在这个demo提示框和超链接没重叠部分，所以延时50毫秒隐藏提示框,以解决移出超链接到移入提示框这个过程之间提示框隐藏掉。
+            //大部分时候可能是做成有重叠的，就不需要延时隐藏。
+            intrval = window.setTimeout(function () {
+                document.getElementById(div_tip_ID).style.display = "none";
+            }, 50);
 
-          }
-  </script>
- 
+        }
+    </script>
+
 </head>
 <body onload="highlight()">
 
@@ -494,17 +529,32 @@
                 </h3>
                 <span class="stext"><%=content%> </span>
                 <br />
-                  <% if(p.Tag!=null)%>
-                    <% 
-                    {
-                    %>
-                    <div id="<%=p.Id%>" style='width:300px;height:200px;display:none;background:#aef0c6;position:absolute;' onmouseover="show()" onmouseout="this.style.display='none';">
-                        <div class=\"m-title\"><%=((SiteInfo)p.Tag).Name%></div><div class=\"m-1\"><%=((SiteInfo)p.Tag).Description %>></div><div  class=\"m-2\">网站信用:</div><div  class=\"m-3\"><%=((SiteInfo)p.Tag).IsGuard %>加入上网保障计划</div>  
+                <% if (p.Tag != null)%>
+                <% 
+                   {
+                %>
+                <div id="<%=p.Id%>" class="mingpian-tooltip" onmouseover="show()" onmouseout="this.style.display='none';">
+                    <div class="mingpian-title"><%=((SiteInfo)p.Tag).Name%></div>
+                    <div class="mingpian-description"><%=((SiteInfo)p.Tag).Description %></div>
+                    <div class="mingpian-credit">网站信用 :</div>
+
+                    <% if (((SiteInfo)p.Tag).IsGuard)%>
+                    <% { %>
+                    <div class="mingpian-planed">
+                        <i class="check circle icon"></i>已加入上网保障计划
                     </div>
-                    <% 
-                    }
-                    %>
-                <div class="res-linkinfo" >
+                    <%}%>
+                    <% else %>
+                    <% { %>
+                    <div class="mingpian-plan">
+                        <i class="remove circle icon"></i>未加入上网保障计划
+                    </div>
+                    <%}%>
+                </div>
+                <% 
+                   }
+                %>
+                <div class="res-linkinfo">
                     <cite><%=p.Url%> </cite>&nbsp;&nbsp;<%=p.Verified%>
                 </div>
                 <% 
@@ -524,8 +574,10 @@
                 <div id="so_feb">
                     <dl id="soSafe" class="open">
                         <dt class="" onclick='collapsed()'>
-                            <div id="collapse-button">收起</div>
-                            <span class="safe-guard-logo"></span><span>Net Search · 安全保障</span></dt>
+                            <div id="collapse-button">收起<i id="angle" class="angle down icon"></i></div>
+                            <span class="safe-guard-logo"></span>
+                           <%-- <i class="lock icon"></i>--%>
+                            <span>Net Search · 安全保障</span></dt>
                         <dd id="ad-home" style="display: none;">
                             <p class="txt">如您加入Net Search推广赔付计划，在Net Search推广网站中因遭遇欺诈、钓鱼、假冒网站并造成经济损失，在符合《Net Search推广赔付协议》的赔付条件时，可向Net Search申请赔付。<a href="#src=#" target="_blank" class="join">我要加入&gt;&gt;</a></p>
                             <p><strong>了解详情：</strong>        <a href="#src=#" target="_blank">网购先赔</a></p>
@@ -538,6 +590,7 @@
                         <li>
                             <h3><a href="" e_nolog="0" target="_blank" style="font-size: 15px" se_prerender_url="complete">想在Net Search推广您的产品服务吗？</a></h3>
                             <p class="res-linkinfo">
+                                <%--<i class="volume control phone icon"></i>--%>
                                 ☎ 4000-123-123<br>
                                 <cite>a.bcd.cn</cite>
                             </p>
@@ -547,13 +600,11 @@
                 <script>
                     function collapsed() {
 
-                        if (document.getElementById('collapse-button').textContent == '收起') {
-                            document.getElementById('collapse-button').textContent = '展开';
-                            document.getElementById('soSafe').className = '';
+                        if (document.getElementById('collapse-button').textContent.indexOf('收起') != -1) {
+                            document.getElementById('collapse-button').innerHTML = '展开' + "<i id=\"angle\" class=\"angle up icon\"></i>";
                         }
-                        else {
-                            document.getElementById('collapse-button').textContent = '收起'
-                            document.getElementById('soSafe').className = 'open';
+                        else if (document.getElementById('collapse-button').textContent.indexOf('展开') != -1) {
+                            document.getElementById('collapse-button').innerHTML = '收起' + "<i id=\"angle\" class=\"angle down icon\"></i>";
                         }
                         var showorhidden = document.getElementById("ad-home");
 
