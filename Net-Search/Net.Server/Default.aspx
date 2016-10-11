@@ -4,8 +4,9 @@
 
  <%
      List<String> discoveries = new List<String> ();
-     
-     using (var box = SDB.SearchBox.Cube()) {
+
+     using (var box = SDB.SitePageBox.Cube())
+     {
      	foreach (String skw in SearchResource.Engine.discover(box, 'a', 'z', 4,
 				                                       '\u2E80', '\u9fa5', 1)) {
 			discoveries.Add (skw);
