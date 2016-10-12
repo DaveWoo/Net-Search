@@ -7,6 +7,7 @@ using Net.Api;
 using Net.Models;
 using Net.Utils;
 using Net.Utils.Common;
+using Spider.ServiceReference;
 
 namespace Spider
 {
@@ -19,6 +20,21 @@ namespace Spider
 		{
 			try
 			{
+				ManagerClient client = new ManagerClient();
+				var sds = client.SelectAllSiteInfo();
+				var sds2 = client.SelectAllSitePage();
+
+				//SitePage sitePage = new SitePage();
+				//sitePage.Id = 1234567;
+				//sitePage.Title = "Hello";
+				//sitePage.Description = "Description";
+				//sitePage.Url = "http://www.ac.com";
+
+				//sitePage.Content = sitePage.Description;
+				//sitePage.CreatedTimeStamp = System.DateTime.Now;
+				//sitePage.ModifiedTimeStamp = System.DateTime.Now;
+				//var sds2 = client.CreateSitePage(sitePage);
+
 				//string sqlLikeSiteInfo = string.Format("from {0} Url ==?", Constants.TABLE_SITEINFO);
 				//var host = "www.baidu.com";
 				//var siteInfo = manager.Select<SiteInfo>(sqlLikeSiteInfo, host);
@@ -30,7 +46,7 @@ namespace Spider
 				//var text = iBoxDB.NDB.RunALL();
 
 				// Step 1:1 Get all basic url and site name
-				//Site.GetAllSiteInfoFromChinaZ();
+				Site.GetAllSiteInfoFromChinaZ();
 				var SiteInfoList = manager.Select<SiteInfo>();
 				var processSiteInfoConfig = Site.GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_CHINAZINDEX);
 

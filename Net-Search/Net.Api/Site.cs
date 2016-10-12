@@ -54,7 +54,7 @@ namespace Net.Api
         {
             if (string.IsNullOrWhiteSpace(tag))
                 throw new ArgumentNullException("tag");
-            AD adSitePage = new AD();
+            SiteAD adSitePage = new SiteAD();
             adSitePage.Id = SDB.ADBox.NewId();
             adSitePage.Title = title;
             adSitePage.Description = description;
@@ -65,7 +65,7 @@ namespace Net.Api
             adSitePage.CreatedTimeStamp = System.DateTime.Now;
             adSitePage.ModifiedTimeStamp = System.DateTime.Now;
             adSitePage.Tag = tag;
-            manager.Create<AD>(adSitePage);
+            manager.Create<SiteAD>(adSitePage);
             Log.Info("Add ad: " + adSitePage.Title);
         }
 

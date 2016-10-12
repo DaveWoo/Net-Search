@@ -2,11 +2,13 @@ using CsQuery;
 using iBoxDB.LocalServer;
 using System;
 using System.Text.RegularExpressions;
+using System.Runtime.Serialization;
 
 namespace Net.Models
 {
-    public class AD : SitePage
-    {
-        public string Tag { get; set; }
-    }
+	[DataContract]
+	public class SiteAD : SitePage
+	{
+		public string Tag { get; set; }
+	}
 }

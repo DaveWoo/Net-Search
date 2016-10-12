@@ -1,16 +1,21 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace Net.Models
 {
+	[DataContract]
 	public class Linked
 	{
+		[DataMember]
 		public String Url { get; set; }
+
+		[DataMember]
 		public DateTime CreatedTimeStamp { get; set; }
+
+		[DataMember]
 		public string IP { get; set; }
+
+		[DataMember]
 		public string Host
 		{
 			get
@@ -27,7 +32,6 @@ namespace Net.Models
 					{
 						return null;
 					}
-
 				}
 			}
 		}

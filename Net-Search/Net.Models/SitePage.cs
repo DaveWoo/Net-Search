@@ -1,198 +1,221 @@
+using System;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using CsQuery;
 using iBoxDB.LocalServer;
-using System;
-using System.Text.RegularExpressions;
 
 namespace Net.Models
 {
-    public class SitePage : IDInterface
-    {
-        public const int MAX_URL_LENGTH = 100;
-        public long Id { get; set; }
-        public String Url { get; set; }
-        public String Title { get; set; }
-        public String Description { get; set; }
-        public String VerifiedSiteName { get; set; }
-        public String Rank { get; set; }
-        public UString Content { get; set; }
-        public DateTime CreatedTimeStamp { get; set; }
-        public DateTime ModifiedTimeStamp { get; set; }
-        public bool Enabled { get; set; }
+	[DataContract]
+	public class SitePage : IDInterface
+	{
+		[DataMember]
+		public const int MAX_URL_LENGTH = 100;
 
-        public string Host
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(Url))
-                    return string.Empty;
-                else
-                {
-                    try
-                    {
-                        return new Uri(Url).Host;
-                    }
-                    catch (Exception ex)
-                    {
-                        return string.Empty;
-                    }
-                }
-            }
-        }
+		[DataMember]
+		public long Id { get; set; }
 
-        public object Tag { get; set; }
+		[DataMember]
+		public String Url { get; set; }
 
-        public string Verified
-        {
-            get
-            {
-                string content = string.Empty;
-                if (!string.IsNullOrWhiteSpace(VerifiedSiteName))
-                {
-                    content += string.Format("<a href='#' id=\"{0}\" onmouseover=\"show(this)\" onmouseout=\"hide()\"class=\"mingpian\" target=\"_blank\"><span class=\"tip-v\"  ></span><span>{1}</span></a>", Id, VerifiedSiteName);
-                }
-                return content;
-            }
-        }
+		[DataMember]
+		public String Title { get; set; }
 
-        [NotColumn]
-        public long RankUpId()
-        {
-            return Id | (1L << 60);
-        }
+		[DataMember]
+		public String Description { get; set; }
 
-        [NotColumn]
-        public static long RankDownId(long id)
-        {
-            return id & (~(1L << 60));
-        }
+		[DataMember]
+		public String VerifiedSiteName { get; set; }
 
-        [NotColumn]
-        public String RankUpDescription()
-        {
-            return Description + " " + Title;
-        }
+		[DataMember]
+		public String Rank { get; set; }
 
-        private static readonly Random cran = new Random();
+		[DataMember]
+		public String Content { get; set; }
 
-        [NotColumn]
-        public String GetRandomContent()
-        {
-            int len = Content.ToString().Length - 100;
-            if (len <= 20)
-            {
-                return Content.ToString();
-            }
-            int s = cran.Next(len);
-            if (s < 0)
-            {
-                s = 0;
-            }
-            if (s > len)
-            {
-                s = len;
-            }
+		[DataMember]
+		public DateTime CreatedTimeStamp { get; set; }
 
-            int count = Content.ToString().Length - s;
-            if (count > 200)
-            {
-                count = 200;
-            }
-            return Content.ToString().Substring(s, count);
-        }
+		[DataMember]
+		public DateTime ModifiedTimeStamp { get; set; }
 
-        [NotColumn]
-        public static SitePage Get(String url)
-        {
-            try
-            {
-                if (url == null || url.Length > MAX_URL_LENGTH || url.Length < 8)
-                {
-                    return null;
-                }
-                SitePage page = new SitePage();
-                page.Url = url;
+		[DataMember]
+		public bool Enabled { get; set; }
 
-                CQ doc = CQ.CreateFromUrl(url);
-                //Console.WriteLine(doc.Html());
-                doc["script"].Remove();
-                doc["Script"].Remove();
+		public string Host
+		{
+			get
+			{
+				if (string.IsNullOrWhiteSpace(Url))
+					return string.Empty;
+				else
+				{
+					try
+					{
+						return new Uri(Url).Host;
+					}
+					catch (Exception ex)
+					{
+						return string.Empty;
+					}
+				}
+			}
+		}
 
-                doc["style"].Remove();
-                doc["Style"].Remove();
+		public object Tag { get; set; }
 
-                doc["textarea"].Remove();
-                doc["Textarea"].Remove();
+		public string Verified
+		{
+			get
+			{
+				string content = string.Empty;
+				if (!string.IsNullOrWhiteSpace(VerifiedSiteName))
+				{
+					content += string.Format("<a href='#' id=\"{0}\" onmouseover=\"show(this)\" onmouseout=\"hide()\"class=\"mingpian\" target=\"_blank\"><span class=\"tip-v\"  ></span><span>{1}</span></a>", Id, VerifiedSiteName);
+				}
+				return content;
+			}
+		}
 
-                doc["noscript"].Remove();
-                doc["Noscript"].Remove();
+		[NotColumn]
+		public long RankUpId()
+		{
+			return Id | (1L << 60);
+		}
 
-                page.Title = doc["title"].Text();
-                if (page.Title == null)
-                {
-                    page.Title = doc["Title"].Text();
-                }
-                if (page.Title == null)
-                {
-                    page.Title = url;
-                }
-                page.Title = page.Title.Trim();
-                if (page.Title.Length < 2)
-                {
-                    page.Title = url;
-                }
-                if (page.Title.Length > 80)
-                {
-                    page.Title = page.Title.Substring(0, 80);
-                }
-                page.Title = page.Title.Replace("<", " ")
-                    .Replace(">", " ").Replace("$", " ");
-                doc["title"].Remove();
-                doc["Title"].Remove();
+		[NotColumn]
+		public static long RankDownId(long id)
+		{
+			return id & (~(1L << 60));
+		}
 
-                page.Description = doc["meta[name='description']"].Attr("content");
-                if (page.Description == null)
-                {
-                    page.Description = doc["meta[name='Description']"].Attr("content");
-                }
-                if (page.Description == null)
-                {
-                    page.Description = "";
-                }
-                if (page.Description.Length > 200)
-                {
-                    page.Description = page.Description.Substring(0, 200);
-                }
-                page.Description = page.Description.Replace("<", " ")
-                    .Replace(">", " ").Replace("$", " ");
+		[NotColumn]
+		public String RankUpDescription()
+		{
+			return Description + " " + Title;
+		}
 
-                String content = doc.Text().Replace("　", " ");
-                content = Regex.Replace(content, "\t|\r|\n|�|<|>", " ");
-                content = Regex.Replace(content, "\\$", " ");
-                content = Regex.Replace(content, "\\s+", " ");
-                content = content.Trim();
+		private static readonly Random cran = new Random();
 
-                if (content.Length < 50)
-                {
-                    return null;
-                }
-                if (content.Length > 5000)
-                {
-                    content = content.Substring(0, 5000);
-                }
+		[NotColumn]
+		public String GetRandomContent()
+		{
+			int len = Content.ToString().Length - 100;
+			if (len <= 20)
+			{
+				return Content.ToString();
+			}
+			int s = cran.Next(len);
+			if (s < 0)
+			{
+				s = 0;
+			}
+			if (s > len)
+			{
+				s = len;
+			}
 
-                page.Content = content + " " + page.Url;
-                page.CreatedTimeStamp = System.DateTime.Now;
-                page.ModifiedTimeStamp = System.DateTime.Now;
-                return page;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                return null;
-            }
-        }
+			int count = Content.ToString().Length - s;
+			if (count > 200)
+			{
+				count = 200;
+			}
+			return Content.ToString().Substring(s, count);
+		}
 
-        [NotColumn]
-        public KeyWord keyWord;
-    }
+		[NotColumn]
+		public static SitePage Get(String url)
+		{
+			try
+			{
+				if (url == null || url.Length > MAX_URL_LENGTH || url.Length < 8)
+				{
+					return null;
+				}
+				SitePage page = new SitePage();
+				page.Url = url;
+
+				CQ doc = CQ.CreateFromUrl(url);
+				//Console.WriteLine(doc.Html());
+				doc["script"].Remove();
+				doc["Script"].Remove();
+
+				doc["style"].Remove();
+				doc["Style"].Remove();
+
+				doc["textarea"].Remove();
+				doc["Textarea"].Remove();
+
+				doc["noscript"].Remove();
+				doc["Noscript"].Remove();
+
+				page.Title = doc["title"].Text();
+				if (page.Title == null)
+				{
+					page.Title = doc["Title"].Text();
+				}
+				if (page.Title == null)
+				{
+					page.Title = url;
+				}
+				page.Title = page.Title.Trim();
+				if (page.Title.Length < 2)
+				{
+					page.Title = url;
+				}
+				if (page.Title.Length > 80)
+				{
+					page.Title = page.Title.Substring(0, 80);
+				}
+				page.Title = page.Title.Replace("<", " ")
+					.Replace(">", " ").Replace("$", " ");
+				doc["title"].Remove();
+				doc["Title"].Remove();
+
+				page.Description = doc["meta[name='description']"].Attr("content");
+				if (page.Description == null)
+				{
+					page.Description = doc["meta[name='Description']"].Attr("content");
+				}
+				if (page.Description == null)
+				{
+					page.Description = "";
+				}
+				if (page.Description.Length > 200)
+				{
+					page.Description = page.Description.Substring(0, 200);
+				}
+				page.Description = page.Description.Replace("<", " ")
+					.Replace(">", " ").Replace("$", " ");
+
+				String content = doc.Text().Replace("　", " ");
+				content = Regex.Replace(content, "\t|\r|\n|�|<|>", " ");
+				content = Regex.Replace(content, "\\$", " ");
+				content = Regex.Replace(content, "\\s+", " ");
+				content = content.Trim();
+
+				if (content.Length < 50)
+				{
+					return null;
+				}
+				if (content.Length > 5000)
+				{
+					content = content.Substring(0, 5000);
+				}
+
+				page.Content = content + " " + page.Url;
+				page.CreatedTimeStamp = System.DateTime.Now;
+				page.ModifiedTimeStamp = System.DateTime.Now;
+				return page;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+				return null;
+			}
+		}
+
+		[NotColumn]
+		public KeyWord keyWord;
+	}
 }

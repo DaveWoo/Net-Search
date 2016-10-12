@@ -72,7 +72,7 @@ namespace Net.Server
 
 			#region Ad query
 			Log.Info("Calc ad query start");
-			var ads = SDB.ADBox.Select<AD>(string.Format(Constants.SQLLIKE, Constants.TABLE_AD));
+			var ads = SDB.ADBox.Select<SiteAD>(string.Format(Constants.SQLLIKE, Constants.TABLE_AD));
 			if (ads != null)
 			{
 				pagesAd = ads.Where(p => (p.Tag != null) && p.Tag.ToString().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Contains(name)).ToList<SitePage>();
