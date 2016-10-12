@@ -5,11 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace Net.Models
 {
-    public class Words
-    {
-        public string Name { get; set; }
-        public DateTime CreatedTimeStamp { get; set; }
-        public DateTime ModifiedTimeStamp { get; set; }
-        public string IP { get; set; }
-    }
+	public class Words
+	{
+		public string Name { get; set; }
+		public DateTime CreatedTimeStamp { get; set; }
+		public string IP { get; set; }
+	}
 }

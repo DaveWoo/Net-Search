@@ -9,12 +9,12 @@ namespace Net.Utils.Common
 	/// </summary>
 	public class Log
 	{
+		public static log4net.ILog Loginfo = null;
 		static Log()
 		{
 			SetConfig();
+			Loginfo = log4net.LogManager.GetLogger("loginfo");
 		}
-
-		public static readonly log4net.ILog loginfo = log4net.LogManager.GetLogger("loginfo");
 
 		public static void SetConfig()
 		{
@@ -27,67 +27,67 @@ namespace Net.Utils.Common
 			log4net.Config.DOMConfigurator.Configure(configFile);
 		}
 
-        public static void Info(string message)
+		public static void Info(string message)
 		{
-			if (loginfo.IsInfoEnabled)
+			if (Loginfo.IsInfoEnabled)
 			{
-                loginfo.Info(message);
+				Loginfo.Info(message);
 			}
 		}
 
-        public static void Info(string message, Exception ex)
+		public static void Info(string message, Exception ex)
 		{
-			if (loginfo.IsInfoEnabled)
+			if (Loginfo.IsInfoEnabled)
 			{
-                loginfo.Info(message, ex);
+				Loginfo.Info(message, ex);
 			}
 		}
 
-        public static void Error(string message)
+		public static void Error(string message)
 		{
-			if (loginfo.IsErrorEnabled)
+			if (Loginfo.IsErrorEnabled)
 			{
-                loginfo.Error(message);
+				Loginfo.Error(message);
 			}
 		}
 
 		public static void Error(string message, Exception ex)
 		{
-			if (loginfo.IsErrorEnabled)
+			if (Loginfo.IsErrorEnabled)
 			{
-				loginfo.Error(message, ex);
+				Loginfo.Error(message, ex);
 			}
 		}
 
 		public static void Warn(string message)
 		{
-			if (loginfo.IsWarnEnabled)
+			if (Loginfo.IsWarnEnabled)
 			{
-				loginfo.Warn(message);
+				Loginfo.Warn(message);
 			}
 		}
 
 		public static void Warn(string message, Exception ex)
 		{
-			if (loginfo.IsWarnEnabled)
+			if (Loginfo.IsWarnEnabled)
 			{
-				loginfo.Warn(message, ex);
+				Loginfo.Warn(message, ex);
 			}
 		}
 
 		public static void Fatal(string message)
 		{
-			if (loginfo.IsFatalEnabled)
+			if (Loginfo.IsFatalEnabled)
 			{
-				loginfo.Fatal(message);
+				Loginfo.Fatal(message);
 			}
 		}
 
 		public static void Fatal(string message, Exception ex)
 		{
-			if (loginfo.IsFatalEnabled)
+			if (Loginfo.IsFatalEnabled)
 			{
-				loginfo.Fatal(message, ex);
+				Loginfo.Fatal(message, ex);
 			}
 		}
 	}

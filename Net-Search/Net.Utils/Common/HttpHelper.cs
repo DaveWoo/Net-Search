@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Web;
+using Net.Utils.Common;
 
 namespace Net.Utils
 {
@@ -196,6 +197,22 @@ namespace Net.Utils
 			client.DownloadFile(url, localfile);
 		}
 
+		public static string GetIp()
+		{
+			try
+			{
+				if (System.Web.HttpContext.Current.Request.ServerVariables["HTTP_VIA"] != null)
+					return System.Web.HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"].Split(new char[] { ',' })[0];
+				else
+					return System.Web.HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+			}
+			catch (Exception ex)
+			{
+				Log.Error("GetIp", ex);
+			}
+			return "-1";
+		}
+
 		#region Member Fields
 
 		private CookieContainer _cc = new CookieContainer();
@@ -203,7 +220,7 @@ namespace Net.Utils
 
 		private int _delayTime;
 		private int _timeout = 120000; // The default is 120000 milliseconds (120 seconds).
-		private int _tryTimes = 3; // 默认重试3次
+		private int _tryTimes = 3; // retry 3 times
 		private string _lastUrl = string.Empty;
 		private string reqUserAgent = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; SLCC1; .NET CLR 2.0.50727; .NET CLR 3.0.04506; InfoPath.2)";
 

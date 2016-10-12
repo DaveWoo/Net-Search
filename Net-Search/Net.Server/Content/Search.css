@@ -37,22 +37,23 @@ body {
 }
 
 #body_right {
-    margin-left: 40px;
-    min-width: 360px;
-    max-width: 400px;
+    margin-left: 10px;
+    min-width: 200px;
+    max-width: 300px;
     border-left: 1px solid #eee;
     padding: 0 0 0 15px;
 }
 
 #right_show {
-    -width: 360px;
+    -width: 300px;
 }
 
 #so_feb {
-    width: 340px;
+    width: 300px;
 }
 
 #soSafe {
+    /*border: 2px solid #aef0c6;*/
     border-top: 2px solid #aef0c6;
     border-bottom: 2px solid #aef0c6;
     font-size: 13px;
@@ -60,6 +61,7 @@ body {
 }
 
     #soSafe dt {
+        border: red solid 0px;
         cursor: pointer;
         height: 22px;
         line-height: 22px;
@@ -80,6 +82,20 @@ body {
             padding-right: 14px;
         }
 
+    #soSafe dd a {
+        color: #46c878;
+        display: inline-block;
+        height: 20px;
+        line-height: 20px;
+        margin-right: 2px;
+        padding: 0;
+    }
+
+        #soSafe dd a:hover {
+            border-color: red;
+            text-decoration:underline;
+        }
+
     #soSafe:hover {
         border-color: #cef0c6;
     }
@@ -88,17 +104,14 @@ body {
                 border-color: #fff;
             }*/
 
-    #soSafe.open dt div {
-        background-position: -177px -387px;
-    }
 
     #soSafe.open dd {
         display: block;
     }
 
     #soSafe span.safe-guard-logo {
-        background: url(src/safe_16.png) no-repeat;
-        background-image: -webkit-image-set(url(src/safe_16.png) 1x,url(src/safe_32.png) 2x);
+        background: url(/src/safe_16.png) no-repeat;
+        background-image: -webkit-image-set(url(/src/safe_16.png) 1x,url(/src/safe_32.png) 2x);
         display: inline-block;
         height: 13px;
         margin-right: 3px;
@@ -108,7 +121,9 @@ body {
 
     #soSafe dd {
         display: none;
-        padding: 11px 0 12px;
+        padding: 5px 0 5px 0;
+        border: red solid 0;
+        margin-left: 0;
     }
 
         #soSafe dd p {
@@ -178,6 +193,9 @@ body {
     position: absolute;
     font-size: 12px;
     font-family: 'Microsoft YaHei';
+    border: 2px solid #eee;
+    /*border-bottom: 2px solid #aef0c6;*/
+   
 }
 
 .mingpian-description {
@@ -187,7 +205,8 @@ body {
 .mingpian-title {
     font-size: 16px;
     font-weight: bold;
-    color: aqua;
+    color: #46c878;
+    text-decoration:underline;    
 }
 
 .mingpian-plan {
@@ -207,8 +226,8 @@ mingpian-planed {
 }
 
 .tip-v {
-    background: url(src/v_16.png) no-repeat 0 0;
-    background-image: -webkit-image-set(url(src/v_16.png) 1x,url(src/v_32.png) 2x);
+    background: url(/src/v_16.png) no-repeat 0 0;
+    background-image: -webkit-image-set(url(/src/v_16.png) 1x,url(/src/v_32.png) 2x);
     display: inline-block;
     height: 12px;
     overflow: hidden;
@@ -267,11 +286,16 @@ mingpian-planed {
     text-align: center;
 }
 
-.spread li, .spread h3 {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.spread {
+    margin-left: -40px;
 }
+
+    .spread li, .spread h3 {
+        list-style: none;
+        padding: 0;
+        border: red solid 0;
+        text-indent: 0;
+    }
 
 #page {
     margin: 15px 0 0 -2px;
@@ -346,3 +370,5 @@ mingpian-planed {
             line-height: 24px;
             list-style: none;
         }
+
+#top{position:fixed;right:130px;bottom:100px;background:#eee;padding:5px;display:block; border:grey 1px solid}

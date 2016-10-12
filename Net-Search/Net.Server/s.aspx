@@ -8,15 +8,22 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta charset="utf-8">
-    <meta name="description" content="<%=name%>">
-    <title><%=name%>,</title>
+    <meta name="description" content="Net Search, <%=name%></">
+    <title><%=name%>,Net Search</title>
 
     <link rel="stylesheet" type="text/css" href="Content/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="Content/Search.css">
-    
+    <script type="text/javascript" src="js/toTop.js"></script>
 
     <script>
+        function onLoad()
+        {
+            toTop('top', false);
+            highlight();
+        }
+
         function highlight() {
+       
             var txt = document.title.substr(0, document.title.indexOf(','));
 
             var ts = document.getElementsByClassName("stext");
@@ -42,22 +49,6 @@
                 }
             }
         }
-        </script>
-
-    <script type="text/javascript">
-        window.onload = function () {
-            var nav = document.getElementById('nav');
-            var navFixed = document.getElementById('navFixed');
-            window.onscroll = function () {
-                var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-                document.title = "<%=name%>"
-                if (scrollTop > nav.offsetTop) {
-                    navFixed.style.display = 'block';
-                } else if (scrollTop < nav.offsetTop) {
-                    navFixed.style.display = 'none';
-                }
-            }
-        };
     </script>
 
     <script>
@@ -73,7 +64,7 @@
                 window.clearTimeout(intrval);
                 intrval = null;
             }
-            div_tip_ID = objA.id;
+            div_tip_ID = "tipID_" + objA.id;
 
             var div_tip = document.getElementById(div_tip_ID);
             div_tip.style.display = "block";
@@ -91,7 +82,7 @@
     </script>
 
 </head>
-<body onload="highlight()">
+<body onload="onLoad()">
 
     <div class="nav-wrapper-fixed" id="navFixed" style="display: none;">
         <%--   <div class="nav" id="nav">
@@ -124,7 +115,7 @@
             function formfocus() {
                 btnsearch.disabled = undefined;
             }
-           </script>
+        </script>
     </div>
 
     <%--result box after searched--%>
@@ -132,10 +123,10 @@
         <div class="flex-container">
             <%--left side start--%>
             <div id="body_left">
-                <% foreach (var p in pagesAll)
+                <% foreach (var p in pages)
                    {
                        String content = null;
-                       if (pagesAll.Count() == 1 || p.keyWord == null)
+                       if (pages.Count() == 1 || p.keyWord == null)
                        {
                            content = p.Description + "...";
                            if (p.Content != null)
@@ -168,9 +159,9 @@
                                content = content.Substring(0, 200) + "..";
                            }
                        }
-                        %>
+                %>
                 <h3 class="res-title">
-                    <a class="stext" target="_blank" href="<%=p.Url%>"><%= p.Title%></a>
+                    <a class="stext" target="_blank" href="link.aspx?url=<%=p.Url%>"><%= p.Title%></a>
                 </h3>
                 <span class="stext"><%=content%> </span>
                 <br />
@@ -178,7 +169,7 @@
                 <% 
                    {
                 %>
-                <div id="<%=p.Id%>_<%=p.Url%>" class="mingpian-tooltip" onmouseover="show()" onmouseout="this.style.display='none';">
+                <div id="tipID_<%=p.Id%>" class="mingpian-tooltip" onmouseover="show()" onmouseout="this.style.display='none';">
                     <div class="mingpian-title"><%=((SiteInfo)p.Tag).Name%></div>
                     <div class="mingpian-description"><%=((SiteInfo)p.Tag).Description %></div>
                     <div class="mingpian-credit">网站信用 :</div>
@@ -202,26 +193,21 @@
                 <div class="res-linkinfo">
                     <cite><%=p.Url%> </cite>&nbsp;&nbsp;<%=p.Verified%>
                 </div>
-                <% 
-                   }
-                %>
+                <% } %>
             </div>
             <%--left side end--%>
 
             <%--right side start--%>
             <div id="body_right">
-                <%-- <div class="ui segment">
-                    <h4><a href="http://www.iboxdb.com" target="_blank">iBoxDB</a></h4>
-                    Fast NoSQL Document Database
-               
-                </div>--%>
+                <% if (pages.Count > 0)%>
+                <% { %>
 
                 <div id="so_feb">
                     <dl id="soSafe" class="open">
                         <dt class="" onclick='collapsed()'>
                             <div id="collapse-button">收起<i id="angle" class="angle down icon"></i></div>
                             <span class="safe-guard-logo"></span>
-                           <%-- <i class="lock icon"></i>--%>
+                            <%-- <i class="lock icon"></i>--%>
                             <span>Net Search · 安全保障</span></dt>
                         <dd id="ad-home" style="display: none;">
                             <p class="txt">如您加入Net Search推广赔付计划，在Net Search推广网站中因遭遇欺诈、钓鱼、假冒网站并造成经济损失，在符合《Net Search推广赔付协议》的赔付条件时，可向Net Search申请赔付。<a href="#src=#" target="_blank" class="join">我要加入&gt;&gt;</a></p>
@@ -260,20 +246,22 @@
                     }
                 </script>
 
-                <%
-                    String tcontent = (DateTime.Now - begin).TotalSeconds + "s, "
-                            + "MEM:" + (System.GC.GetTotalMemory(false) / 1024 / 1024) + "MB ";
-                %>
-       
+                <% } %>
             </div>
             <%--right side end--%>
         </div>
+        <% if (pages.Count > 0)%>
+        <% { %>
         <div id="page">
             <span><%=pageIndexString%>  </span>
             <span class="nums" style="margin-left: 20px">找到相关结果约<%=searchResult %>个</span>
         </div>
+        <% } %>
     </div>
-
+    <div>
+        
+        <a href="javascript:;" id="top"><i class="teal arrow circle outline up icon" style="margin-left:20px"></i><br/>回到顶部</a>    
+    </div>
     <div id="s_footer">
         <a href="u" target="_blank">意见反馈</a> | <a href="" target="_blank">推广合作</a> | <span>Copyright © Net Search</span>
     </div>

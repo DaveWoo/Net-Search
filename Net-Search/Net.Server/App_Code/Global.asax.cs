@@ -1,10 +1,12 @@
-using System.Net;
-using CsQuery.Web;
 
 namespace Net.Server
 {
 	using System;
 	using Net.Api;
+	using Net.Utils.Common;
+	using System.Net;
+	using CsQuery.Web;
+	using System.Reflection;
 
 	public class Global : System.Web.HttpApplication
 	{
@@ -24,22 +26,9 @@ namespace Net.Server
 			ServicePointManager.ServerCertificateValidationCallback
 				+= (ssender, cert, chain, sslPolicyErrors) => true;
 			ServerConfig.Default.TimeoutSeconds = 20.0;
-			bool isVM = false;
 
-			String dir = Constants.SERVERDATA_NAME;
-			String path = Constants.SERVERDATA_PATH;
-			try
-			{
-				System.IO.Directory.CreateDirectory(path);
-			}
-			catch (UnauthorizedAccessException ex)
-			{
-				isVM = true;
-				path = this.Server.MapPath(dir);
-				System.IO.Directory.CreateDirectory(path);
-			}
-			//SDB.InitSearchDB (path, isVM);
-
+			Log.Loginfo = log4net.LogManager.GetLogger(Assembly.GetAssembly(typeof(Global)), "Net.Server");
+			
 			#endregion Search engine
 		}
 

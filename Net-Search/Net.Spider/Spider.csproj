@@ -73,8 +73,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Net.Server\log4net_config.xml">
-      <Link>log4net_config.xml</Link>
+    <Content Include="log4net_config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

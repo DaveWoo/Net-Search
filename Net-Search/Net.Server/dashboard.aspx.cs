@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Net.Api;
 using Net.Models;
@@ -12,6 +11,9 @@ namespace Net.Server
 		protected string processLinksCount;
 		protected string siteInfoCount;
 		protected string sitePageCount;
+		protected string wordsCount;
+		protected string linkedCount;
+
 		private static Manager manager = new Manager();
 
 		protected override void OnLoad(EventArgs e)
@@ -29,17 +31,14 @@ namespace Net.Server
 
 		protected void btnProcessLinks_Click(object sender, EventArgs e)
 		{
-
 		}
 
 		protected void btnSiteInfo_Click(object sender, EventArgs e)
 		{
-
 		}
 
 		protected void btnSitePage_Click(object sender, EventArgs e)
 		{
-
 		}
 
 		private void GenerateSummaryInfo()
@@ -50,6 +49,12 @@ namespace Net.Server
 			siteInfoCount = siteInfo.Count().ToString();
 			var sitePage = manager.Select<SitePage>();
 			sitePageCount = sitePage.Count().ToString();
+
+			var words = manager.Select<Words>();
+			wordsCount = words.Count().ToString();
+
+			var linked = manager.Select<Linked>();
+			linkedCount = linked.Count().ToString();
 		}
 	}
 }

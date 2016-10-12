@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" Inherits="Net.Server.Dashboard" EnableSessionState="false" Async="true" AsyncTimeout="30" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="dashboard.aspx.cs" Inherits="Net.Server.Dashboard" EnableSessionState="false" Async="true" AsyncTimeout="30" %>
 
 <%@ Import Namespace="Net.Server" %>
 <%@ Import Namespace="Net.Api" %>
@@ -88,7 +88,7 @@
             display: flex;
             -webkit-flex-flow: row wrap;
             border: red solid 0;
-            justify-content:space-between ;
+            justify-content: space-between;
         }
 
         .flex-item {
@@ -108,7 +108,7 @@
 
     <form id="form1" runat="server">
 
-        <div id="body_right" >
+        <div id="body_right">
 
             <%
                 String tcontent = (DateTime.Now - begin).TotalSeconds + "s, "
@@ -128,10 +128,20 @@
                     <%= siteInfoCount%>
                 <asp:Button ID="btnSiteInfo" runat="server" class="ui teal right button" Text="Button" OnClick="btnSiteInfo_Click" />
             </div>
-            <div class="ui segment" >
+            <div class="ui segment">
                 Collected pages: 
                     <%= sitePageCount%>
                 <asp:Button ID="btnSitePage" runat="server" class="ui teal right button" Text="Button" OnClick="btnSitePage_Click" />
+            </div>
+            <div class="ui segment">
+                Searched words: 
+                    <%= wordsCount%>
+                <asp:Button ID="Button1" runat="server" class="ui teal right button" Text="Button" />
+            </div>
+            <div class="ui segment">
+                Linked url: 
+                    <%= linkedCount%>
+                <asp:Button ID="Button2" runat="server" class="ui teal right button" Text="Button" />
             </div>
         </div>
 

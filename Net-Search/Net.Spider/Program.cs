@@ -19,6 +19,10 @@ namespace Spider
 		{
 			try
 			{
+				//string sqlLikeSiteInfo = string.Format("from {0} Url ==?", Constants.TABLE_SITEINFO);
+				//var host = "www.baidu.com";
+				//var siteInfo = manager.Select<SiteInfo>(sqlLikeSiteInfo, host);
+
 				Log.Info("Begin running...");
 				//Log.Warn("Warn running...");
 				//Log.Fatal("Fatal running...");
@@ -33,29 +37,54 @@ namespace Spider
 				// Step 1:2 Get links from basic url
 				//Site.GetBasicLinks();
 				var processLinkConfig = Site.GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABBASICLINKS);
-                var linkList = manager.Select<Link>();
+				var linkList = manager.Select<Link>();
 				// Step 2:
 				//SearchBy360();
 
 				// Step 3: 1
-                //Site.GrabLinks();
-                //var linkList = manager.Select<Link>();
+				//Site.GrabLinks();
+				//var linkList = manager.Select<Link>();
 
 				// Step 3 : 2
 				//Site.GrabLinksContent();
-                var pages = manager.Select<SitePage>();
+				var pages = manager.Select<SitePage>();
 
 				// Step 4 : Add ad
-				Site.AddAd("www.abcde.com",
-					"这是您的第一份免费广告",
-					"这是您的第一份免费广告,我们将竭诚为您服务",
-					"广告",
-					"新闻;news");
+				//Site.AddAd("www.abcdef.com",
+				//	"这是您的第一份免费广告",
+				//	"这是您的第一份免费广告,我们将竭诚为您服务",
+				//	"广告",
+				//	"新闻;news");
+
+				//SearchWords();
+
+				CountLinked();
+
 			}
 			catch (Exception ex)
 			{
-                Log.Error("Program", ex);
+				Log.Error("Program", ex);
 			}
+		}
+
+		private static void SearchWords()
+		{
+			Words word = new Words();
+			word.IP = "11,1,2,4";
+			word.Name = "name";
+			word.CreatedTimeStamp = System.DateTime.Now;
+			manager.Create<Words>(word);
+			var sds = manager.Select<Words>();
+		}
+
+		private static void CountLinked()
+		{
+			Linked linked = new Linked();
+			linked.IP = "11,1,2,4";
+			linked.Url = "http://baidu.com";
+			linked.CreatedTimeStamp = System.DateTime.Now;
+			manager.Create<Linked>(linked);
+			var sds = manager.Select<Linked>();
 		}
 
 		private static void Test1()
