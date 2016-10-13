@@ -1,10 +1,13 @@
 using System;
+using System.Runtime.Serialization;
 using iBoxDB.LocalServer;
 
 namespace Net.Models
 {
+	[DataContract]
 	public abstract class KeyWord
 	{
+		[DataMember]
 		public readonly static int MAX_WORD_LENGTH = 16;
 
 		public static void config(DatabaseConfig c)
@@ -17,6 +20,7 @@ namespace Net.Models
 		}
 
 		[NotColumn]
+		[DataMember]
 		public abstract object KWord
 		{
 			get;
@@ -24,9 +28,11 @@ namespace Net.Models
 		}
 
 		//Position
+		[DataMember]
 		public int P;
 
 		[NotColumn]
+		[DataMember]
 		public int Position
 		{
 			get { return P; }
@@ -34,9 +40,11 @@ namespace Net.Models
 		}
 
 		//Document ID
+		[DataMember]
 		public long I;
 
 		[NotColumn]
+		[DataMember]
 		public long ID
 		{
 			get { return I; }
@@ -44,6 +52,7 @@ namespace Net.Models
 		}
 
 		[NotColumn]
+		[DataMember]
 		public KeyWord previous;
 
 		public String ToFullString()

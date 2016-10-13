@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Net.Api;
 using Net.Models;
+using Net.Server.ServiceReference;
 using Net.Utils;
 using Net.Utils.Common;
 
@@ -18,7 +19,12 @@ namespace Net.Server
 		protected string processLinksCount;
 		protected string siteInfoCount;
 		protected string sitePageCount;
-		private static Manager manager = new Manager();
+		static ManagerClient client = null;
+
+		static Default()
+		{
+			client = new ManagerClient();
+		}
 
 		protected override void OnLoad(EventArgs e)
 		{
@@ -61,28 +67,27 @@ namespace Net.Server
 			Words word = new Words();
 			word.IP = HttpHelper.GetIp();
 			word.Name = name;
-			word.CreatedTimeStamp = System.DateTime.Now;
-			manager.Create<Words>(word);
+			word.CreatedTimeStamp = System.DateTime.Now;		
+
+			client.CreateSiteSearchWords(word);
 
 			#endregion Search words
 
 			#region Calc
 
-			List<SitePage> pageList = new List<SitePage>();
-
 			#region Ad query
-			Log.Info("Calc ad query start");
-			var ads = SDB.ADBox.Select<SiteAD>(string.Format(Constants.SQLLIKE, Constants.TABLE_AD));
-			if (ads != null)
-			{
-				pagesAd = ads.Where(p => (p.Tag != null) && p.Tag.ToString().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Contains(name)).ToList<SitePage>();
-			}
+			//Log.Info("Calc ad query start");
+			//var ads = SDB.ADBox.Select<SiteAD>(string.Format(Constants.SQLLIKE, Constants.TABLE_AD));
+			//if (ads != null)
+			//{
+			//	pagesAd = ads.Where(p => (p.Tag != null) && p.Tag.ToString().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Contains(name)).ToList<SitePage>();
+			//}
 
 			#endregion Ad query
 
 			#region body query
 			Log.Info("Calc body query start");
-			pageList = GetPages();
+			var pageList = client.GetPages(name);
 
 			var pagesNext = pageList.Skip((pageNumber - 1) * 10).Take(Constants.PAGECOUNT);
 			if (pagesNext == null || pagesNext.Count() == 0)
@@ -92,7 +97,7 @@ namespace Net.Server
 				p.Description = "";
 				p.Content = "Please contact administrator";
 				p.Url = "./";
-				pageList.Add(p);
+				pageList.ToList<SitePage>().Add(p);
 			}
 
 			#endregion body query
@@ -105,6 +110,7 @@ namespace Net.Server
 			Log.Info("Query factory start pagesAd");
 			if (pagesNext != null)
 			{
+				//todo
 				foreach (var page in pagesNext)
 				{
 					if (!string.IsNullOrWhiteSpace(page.Host))
@@ -114,7 +120,7 @@ namespace Net.Server
 						{
 							string sqlLikeSiteInfo = string.Format("from {0} Url ==?", Constants.TABLE_SITEINFO);
 							//var siteInfo = manager.Select<SiteInfo>().Where(p => p.Url.IndexOf(host) != -1).FirstOrDefault();
-							var siteInfo = manager.Select<SiteInfo>(sqlLikeSiteInfo, host);
+							var siteInfo = client.SelectSiteInfo(sqlLikeSiteInfo, host);
 							if (siteInfo != null && siteInfo.FirstOrDefault() != null)
 							{
 								page.Tag = siteInfo.FirstOrDefault();
@@ -135,37 +141,6 @@ namespace Net.Server
 			Log.Info("Exit search");
 
 			#endregion Pane index
-		}
-
-		private List<SitePage> GetPages()
-		{
-			List<SitePage> pageList = null;
-			using (var box = SDB.SitePageBox.Cube())
-			{
-				var results = SearchResource.Engine.SearchDistinct(box, name).OrderBy(p => p.Position);
-				if (results != null)
-				{
-					searchResult = results.Count().ToString();
-					//searchResult.TakeWhile()
-					foreach (KeyWord kw in results)
-					{
-						long id = kw.ID;
-						id = SitePage.RankDownId(id);
-						SitePage page = box[Constants.TABLE_SITEPAGE, id].Select<SitePage>();
-						//todo
-						if (page == null)
-							continue;
-						page.keyWord = kw;
-						pageList.Add(page);
-						if (pageList.Count >= Constants.PAGECOUNTLIMIT)
-						{
-							break;
-						}
-					}
-				}
-			}
-
-			return pageList;
 		}
 
 		private void GenerateNextPage(int pageNumber)

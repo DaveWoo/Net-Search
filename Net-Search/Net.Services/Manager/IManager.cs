@@ -16,5 +16,14 @@ namespace Net.Services
 
 		[OperationContract]
 		IEnumerable<SitePage> SelectAllSitePage();
+
+		[OperationContract]
+		List<SitePage> GetPages(string name);
+
+		[OperationContract]
+		IEnumerable<SiteInfo> SelectSiteInfo(string sqlLike, object args);
+		
+		[OperationContract]
+		bool CreateSiteSearchWords(Words value);
 	}
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using iBoxDB.LocalServer;
 using Net.Models;
+using System.Linq;
 
 namespace Net.Services
 {
@@ -217,5 +218,35 @@ namespace Net.Services
 		}
 
 		#endregion Delete
+
+		public List<SitePage> GetPages(string name)
+		{
+			List<SitePage> pageList = new List<SitePage>();
+			using (var box = SDB.SitePageBox.Cube())
+			{
+				var results = SearchResource.Engine.SearchDistinct(box, name).OrderBy(p => p.Position);
+				if (results != null)
+				{
+					foreach (KeyWord kw in results)
+					{
+						long id = kw.ID;
+						id = SitePage.RankDownId(id);
+						SitePage page = box[Constants.TABLE_SITEPAGE, id].Select<SitePage>();
+						//todo
+						if (page == null)
+							continue;
+						page.keyWord = kw;
+						pageList.Add(page);
+						if (pageList.Count >= Constants.PAGECOUNTLIMIT)
+						{
+							break;
+						}
+					}
+				}
+			}
+
+			return pageList;
+		}
+
 	}
 }

@@ -216,6 +216,7 @@ namespace Net.Models
 		}
 
 		[NotColumn]
+		//[DataMember]
 		public KeyWord keyWord;
 	}
 }
