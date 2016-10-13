@@ -63,6 +63,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Net.Models.SiteInfo.datasource" />
     <None Include="Properties\DataSources\Net.Models.SitePage.datasource" />
