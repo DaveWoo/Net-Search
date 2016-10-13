@@ -82,30 +82,7 @@ namespace Net.Server
 
 			#region body query
 			Log.Info("Calc body query start");
-			using (var box = SDB.SitePageBox.Cube())
-			{
-				var results = SearchResource.Engine.SearchDistinct(box, name).OrderBy(p => p.Position);
-				if (results != null)
-				{
-					searchResult = results.Count().ToString();
-					//searchResult.TakeWhile()
-					foreach (KeyWord kw in results)
-					{
-						long id = kw.ID;
-						id = SitePage.RankDownId(id);
-						SitePage page = box[Constants.TABLE_SITEPAGE, id].Select<SitePage>();
-						//todo
-						if (page == null)
-							continue;
-						page.keyWord = kw;
-						pageList.Add(page);
-						if (pageList.Count >= Constants.PAGECOUNTLIMIT)
-						{
-							break;
-						}
-					}
-				}
-			}
+			pageList = GetPages();
 
 			var pagesNext = pageList.Skip((pageNumber - 1) * 10).Take(Constants.PAGECOUNT);
 			if (pagesNext == null || pagesNext.Count() == 0)
@@ -158,6 +135,37 @@ namespace Net.Server
 			Log.Info("Exit search");
 
 			#endregion Pane index
+		}
+
+		private List<SitePage> GetPages()
+		{
+			List<SitePage> pageList = null;
+			using (var box = SDB.SitePageBox.Cube())
+			{
+				var results = SearchResource.Engine.SearchDistinct(box, name).OrderBy(p => p.Position);
+				if (results != null)
+				{
+					searchResult = results.Count().ToString();
+					//searchResult.TakeWhile()
+					foreach (KeyWord kw in results)
+					{
+						long id = kw.ID;
+						id = SitePage.RankDownId(id);
+						SitePage page = box[Constants.TABLE_SITEPAGE, id].Select<SitePage>();
+						//todo
+						if (page == null)
+							continue;
+						page.keyWord = kw;
+						pageList.Add(page);
+						if (pageList.Count >= Constants.PAGECOUNTLIMIT)
+						{
+							break;
+						}
+					}
+				}
+			}
+
+			return pageList;
 		}
 
 		private void GenerateNextPage(int pageNumber)
