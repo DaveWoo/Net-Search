@@ -124,46 +124,12 @@
             <%--left side start--%>
             <div id="body_left">
                 <% foreach (var p in pages)
-                   {
-                       String content = null;
-                       if (pages.Count() == 1 || p.keyWord == null)
-                       {
-                           content = p.Description + "...";
-                           if (p.Content != null)
-                           {
-                               content += p.Content.ToString();
-                           }
-                       }
-                       else if (p.Id != p.keyWord.ID)
-                       {
-                           content = p.Description;
-                           if (content.Length < 20)
-                           {
-                               content += p.GetRandomContent();
-                           }
-                       }
-                       else
-                       {
-                           var c1 = p.Content != null ? p.Content.ToString() : p.Description;
-                           content = SearchResource.Engine.getDesc(c1, p.keyWord, 80);
-                           if (content.Length < 100)
-                           {
-                               content += p.GetRandomContent();
-                           }
-                           if (content.Length < 100)
-                           {
-                               content += p.Description;
-                           }
-                           if (content.Length > 200)
-                           {
-                               content = content.Substring(0, 200) + "..";
-                           }
-                       }
+                   {               
                 %>
                 <h3 class="res-title">
                     <a class="stext" target="_blank" href="link.aspx?url=<%=p.Url%>"><%= p.Title%></a>
                 </h3>
-                <span class="stext"><%=content%> </span>
+                <span class="stext"><%=p.Content%> </span>
                 <br />
                 <% if (p.Tag != null)%>
                 <% 

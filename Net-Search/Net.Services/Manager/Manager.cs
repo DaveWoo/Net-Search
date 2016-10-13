@@ -231,12 +231,51 @@ namespace Net.Services
 					{
 						long id = kw.ID;
 						id = SitePage.RankDownId(id);
-						SitePage page = box[Constants.TABLE_SITEPAGE, id].Select<SitePage>();
+						SitePage p = box[Constants.TABLE_SITEPAGE, id].Select<SitePage>();
 						//todo
-						if (page == null)
+						if (p == null)
 							continue;
-						page.keyWord = kw;
-						pageList.Add(page);
+						p.keyWord = kw;
+						#region Clac page body contents
+
+						string content = string.Empty;
+						if (p.keyWord == null)
+						{
+							content = p.Description + "...";
+							if (p.Content != null)
+							{
+								content += p.Content.ToString();
+							}
+						}
+						else if (p.Id != p.keyWord.ID)
+						{
+							content = p.Description;
+							if (content.Length < 20)
+							{
+								content += p.GetRandomContent();
+							}
+						}
+						else
+						{
+							var c1 = p.Content != null ? p.Content.ToString() : p.Description;
+							content = SearchResource.Engine.getDesc(c1, p.keyWord, 80);
+							if (content.Length < 100)
+							{
+								content += p.GetRandomContent();
+							}
+							if (content.Length < 100)
+							{
+								content += p.Description;
+							}
+							if (content.Length > 200)
+							{
+								content = content.Substring(0, 200) + "..";
+							}
+						}
+						p.Content = content;
+						#endregion
+
+						pageList.Add(p);
 						if (pageList.Count >= Constants.PAGECOUNTLIMIT)
 						{
 							break;

@@ -83,6 +83,7 @@
     </Content>
     <Content Include="Properties\DataSources\Net.Models.SiteInfo.datasource" />
     <Content Include="Properties\DataSources\Net.Models.SitePage.datasource" />
+    <None Include="Properties\PublishProfiles\NetServer.pubxml" />
     <None Include="Service References\ServiceReference\api3.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -128,7 +129,9 @@
     <Content Include="Src\safe_32.png" />
     <Content Include="Src\v_16.png" />
     <Content Include="Src\v_32.png" />
-    <Content Include="web.config" />
+    <Content Include="web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Default.aspx" />
     <Content Include="App_Code\Global.asax.cs" />
     <Content Include="s.aspx" />
