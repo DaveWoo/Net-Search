@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.Services", "Net.Service
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.Services.UnitTest", "Net.Services.UnitTest\Net.Services.UnitTest.csproj", "{DA9787EA-F31E-456A-B578-65AFB95FA25A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.WindowsService", "Net.WindowsService\Net.WindowsService.csproj", "{EC74A46B-1C08-494B-96E2-4073786C42D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{DA9787EA-F31E-456A-B578-65AFB95FA25A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA9787EA-F31E-456A-B578-65AFB95FA25A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA9787EA-F31E-456A-B578-65AFB95FA25A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC74A46B-1C08-494B-96E2-4073786C42D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC74A46B-1C08-494B-96E2-4073786C42D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC74A46B-1C08-494B-96E2-4073786C42D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC74A46B-1C08-494B-96E2-4073786C42D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

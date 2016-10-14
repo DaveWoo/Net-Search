@@ -7,7 +7,7 @@ namespace Net.Api
 		public const string TABLE_SITEPAGE = "SitePage";
 		public const string TABLE_SITEINFO = "SiteInfo";
 		public const string TABLE_LINK = "Link";
-		public const string TABLE_AD = "AD";
+		public const string TABLE_AD = "SiteAD";
 		public const string TABLE_WORDS = "Words";
 		public const string TABLE_LINKED = "Linked";
 
@@ -22,6 +22,10 @@ namespace Net.Api
 		public const string PROCESSLINKCONFIG_NAME_GRABBASICLINKS = "GrabBasicLinks";
 
 		public const string SERVERDATA_NAME = "/NetServerData/";
+
+		public const string SERVICE_NAME = "NetServer";
+		public const string SERVICE_DESCRIPTION = "This service host search engine";
+
 
 		public const string SQLLIKE = "from {0}";
 		public const string LINKPATTERN = @"(href)[ ]*=[ ]*[""']*(http)?[^""'#>]+[""']*";

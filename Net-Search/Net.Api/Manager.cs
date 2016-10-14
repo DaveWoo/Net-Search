@@ -3,7 +3,7 @@ using Net.Models;
 
 namespace Net.Api
 {
-	public class Manager
+	public partial class Manager
 	{
 		public bool Create<T>(params T[] values) where T : class
 		{

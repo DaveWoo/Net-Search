@@ -67,6 +67,16 @@
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Net.Models.SiteInfo.datasource" />
     <None Include="Properties\DataSources\Net.Models.SitePage.datasource" />
+    <None Include="Service References\ServiceReference\api.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceReference\api1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceReference\api2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceReference\Manager.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Net.Api\Net.Api.csproj">
@@ -86,23 +96,13 @@
     <Content Include="log4net_config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Service References\ServiceReference\api1.disco" />
-    <None Include="Service References\ServiceReference\api3.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceReference\api31.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceReference\api32.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceReference\Manager1.wsdl" />
     <None Include="Service References\ServiceReference\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Service References\ServiceReference\configuration.svcinfo" />
     <None Include="Service References\ServiceReference\configuration91.svcinfo" />
+    <None Include="Service References\ServiceReference\api.disco" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

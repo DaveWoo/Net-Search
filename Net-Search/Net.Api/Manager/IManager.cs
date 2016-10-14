@@ -3,7 +3,7 @@ using System.ServiceModel;
 using iBoxDB.LocalServer;
 using Net.Models;
 
-namespace Net.Services
+namespace Net.Api
 {
 	[ServiceContract]
 	internal interface IManager
@@ -22,7 +22,7 @@ namespace Net.Services
 
 		[OperationContract]
 		IEnumerable<SiteInfo> SelectSiteInfo(string sqlLike, object args);
-		
+
 		[OperationContract]
 		bool CreateSiteSearchWords(Words value);
 	}

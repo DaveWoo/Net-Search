@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using iBoxDB.LocalServer;
 using Net.Models;
 using System.Linq;
+using Net.Api;
 
-namespace Net.Services
+namespace Net.Api
 {
-	public class Manager : IManager
+	public partial class Manager : IManager
 	{
 		#region Fields
 
