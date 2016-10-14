@@ -1,1 +1,1 @@
-sc start WCFWindowsServiceSample
+sc start NetServer

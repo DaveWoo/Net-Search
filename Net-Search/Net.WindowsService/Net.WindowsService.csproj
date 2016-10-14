@@ -57,6 +57,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ServiceStart.bat" />
+    <None Include="ServiceDelete.bat" />
     <None Include="ServiceStop.bat" />
     <None Include="UninstallService.bat" />
     <Content Include="InstallService.bat">

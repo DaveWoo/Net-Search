@@ -1,0 +1,1 @@
+cmd sc delete NetServer

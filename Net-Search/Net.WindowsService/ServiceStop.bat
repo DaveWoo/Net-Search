@@ -1,1 +1,1 @@
-cmd sc stop WCFWindowsServiceSample
+cmd sc stop NetServer
