@@ -83,8 +83,16 @@
     </Content>
     <Content Include="Properties\DataSources\Net.Models.SiteInfo.datasource" />
     <Content Include="Properties\DataSources\Net.Models.SitePage.datasource" />
+    <Content Include="Properties\DataSources\Net.Models.Link.datasource" />
+    <Content Include="Properties\DataSources\Net.Models.Linked.datasource" />
+    <Content Include="Properties\DataSources\Net.Models.NetServerConfig.datasource" />
+    <Content Include="Properties\DataSources\Net.Models.SiteAD.datasource" />
+    <Content Include="Properties\DataSources\Net.Models.Words.datasource" />
     <None Include="Properties\PublishProfiles\NetServer.pubxml" />
     <None Include="Service References\ServiceReference\api.disco" />
+    <None Include="Service References\ServiceReference\api3.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\ServiceReference\configuration91.svcinfo" />
     <None Include="Service References\ServiceReference\configuration.svcinfo" />
     <None Include="Service References\ServiceReference\Reference.svcmap">

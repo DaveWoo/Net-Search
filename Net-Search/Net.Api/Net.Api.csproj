@@ -54,7 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Manager.cs" />
-    <Compile Include="Constant.cs" />
     <Compile Include="Manager\IManager.cs" />
     <Compile Include="Manager\Manager.cs" />
     <Compile Include="SDB.cs" />

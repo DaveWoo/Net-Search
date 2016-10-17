@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace Net.Api
+namespace Net.Utils
 {
 	public class Constants
 	{

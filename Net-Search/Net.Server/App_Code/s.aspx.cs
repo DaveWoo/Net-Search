@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Net.Api;
 using Net.Models;
 using Net.Server.ServiceReference;
 using Net.Utils;
@@ -32,6 +31,7 @@ namespace Net.Server
 			base.OnLoad(e);
 
 			#region Handle parameter
+
 			Log.Info("Handle parameter start");
 
 			name = Request["q"];
@@ -62,12 +62,13 @@ namespace Net.Server
 			#endregion Handle parameter
 
 			#region Search words
+
 			Log.Info("Search words start");
 
 			Words word = new Words();
 			word.IP = HttpHelper.GetIp();
 			word.Name = name;
-			word.CreatedTimeStamp = System.DateTime.Now;		
+			word.CreatedTimeStamp = System.DateTime.Now;
 
 			client.CreateSiteSearchWords(word);
 
@@ -76,16 +77,19 @@ namespace Net.Server
 			#region Calc
 
 			#region Ad query
+
 			//Log.Info("Calc ad query start");
-			//var ads = SDB.ADBox.Select<SiteAD>(string.Format(Constants.SQLLIKE, Constants.TABLE_AD));
-			//if (ads != null)
-			//{
-			//	pagesAd = ads.Where(p => (p.Tag != null) && p.Tag.ToString().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Contains(name)).ToList<SitePage>();
-			//}
+			//todo
+			var ads = client.SelectAllSiteAD();
+			if (ads != null)
+			{
+				pagesAd = ads.Where(p => (p.Tag != null) && p.Tag.ToString().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Contains(name)).ToList<SitePage>();
+			}
 
 			#endregion Ad query
 
 			#region body query
+
 			Log.Info("Calc body query start");
 			var pageList = client.GetPages(name);
 
@@ -135,6 +139,7 @@ namespace Net.Server
 			#endregion Calc
 
 			#region Pane index
+
 			Log.Info("Page index start");
 
 			GenerateNextPage(pageNumber);

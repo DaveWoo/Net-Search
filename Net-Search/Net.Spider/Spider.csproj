@@ -65,8 +65,13 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Net.Models.Link.datasource" />
+    <None Include="Properties\DataSources\Net.Models.Linked.datasource" />
+    <None Include="Properties\DataSources\Net.Models.NetServerConfig.datasource" />
+    <None Include="Properties\DataSources\Net.Models.SiteAD.datasource" />
     <None Include="Properties\DataSources\Net.Models.SiteInfo.datasource" />
     <None Include="Properties\DataSources\Net.Models.SitePage.datasource" />
+    <None Include="Properties\DataSources\Net.Models.Words.datasource" />
     <None Include="Service References\ServiceReference\api.xsd">
       <SubType>Designer</SubType>
     </None>

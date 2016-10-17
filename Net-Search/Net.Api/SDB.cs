@@ -1,7 +1,8 @@
+using System;
 using iBoxDB.LocalServer;
 using Net.Models;
+using Net.Utils;
 using Net.Utils.Common;
-using System;
 
 namespace Net.Api
 {
@@ -50,6 +51,7 @@ namespace Net.Api
 				Log.Error("InitSitePageBox", ex);
 			}
 		}
+
 		//siteInfoBox
 		private static void InitSiteInfoBox()
 		{
@@ -175,6 +177,7 @@ namespace Net.Api
 		{
 			return InitServer(dbID, Constants.SERVERDATA_FULLPATH, false);
 		}
+
 		private static DB InitServer(long dbID, string path, bool isVM)
 		{
 			CreateServerPath(path);
