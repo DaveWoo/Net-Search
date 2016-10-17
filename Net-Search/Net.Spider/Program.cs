@@ -22,7 +22,7 @@ namespace Spider
 			{
 				ManagerClient client = new ManagerClient();
 				//var sds = client.SelectAllSiteInfo();
-				//var sds2 = client.SelectAllSitePage();
+				var sds2 = client.SelectAllSitePage();
 				var pageList = client.GetPages("新闻");
 				//SitePage sitePage = new SitePage();
 				//sitePage.Id = 1234567;

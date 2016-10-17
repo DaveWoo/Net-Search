@@ -84,23 +84,13 @@
     <Content Include="Properties\DataSources\Net.Models.SiteInfo.datasource" />
     <Content Include="Properties\DataSources\Net.Models.SitePage.datasource" />
     <None Include="Properties\PublishProfiles\NetServer.pubxml" />
-    <None Include="Service References\ServiceReference\api3.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceReference\api31.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceReference\api32.xsd">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="Service References\ServiceReference\api.disco" />
     <None Include="Service References\ServiceReference\configuration91.svcinfo" />
     <None Include="Service References\ServiceReference\configuration.svcinfo" />
-    <None Include="Service References\ServiceReference\Manager1.wsdl" />
     <None Include="Service References\ServiceReference\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Service References\ServiceReference\api1.disco" />
     <Content Include="test\float_test.htm" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -135,6 +125,16 @@
     <Content Include="Default.aspx" />
     <Content Include="App_Code\Global.asax.cs" />
     <Content Include="s.aspx" />
+    <None Include="Service References\ServiceReference\api.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceReference\api1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceReference\api2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceReference\Manager.wsdl" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

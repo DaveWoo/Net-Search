@@ -173,7 +173,7 @@ namespace Net.Api
 
 		private static DB InitServer(long dbID)
 		{
-			return InitServer(dbID, Constants.SERVERDATA_PATH, false);
+			return InitServer(dbID, Constants.SERVERDATA_FULLPATH, false);
 		}
 		private static DB InitServer(long dbID, string path, bool isVM)
 		{

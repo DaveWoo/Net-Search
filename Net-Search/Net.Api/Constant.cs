@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace Net.Api
 {
@@ -21,7 +22,9 @@ namespace Net.Api
 		public const string PROCESSLINKCONFIG_NAME_CHINAZINDEX = "ChinaZIndex";
 		public const string PROCESSLINKCONFIG_NAME_GRABBASICLINKS = "GrabBasicLinks";
 
-		public const string SERVERDATA_NAME = "/NetServerData/";
+		public const string SERVERDATA_NAME = "NetServerData";
+		public const string SERVERDATA_PATH = @"D:\IIS\NetServer";
+
 
 		public const string SERVICE_NAME = "NetServer";
 		public const string SERVICE_DESCRIPTION = "This service host search engine";
@@ -39,6 +42,6 @@ namespace Net.Api
 		public const int URLLENGTH = 200;
 
 
-		public static string SERVERDATA_PATH = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal) + Constants.SERVERDATA_NAME;
+		public static string SERVERDATA_FULLPATH = Path.Combine(SERVERDATA_PATH, SERVERDATA_NAME);
 	}
 }

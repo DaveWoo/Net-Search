@@ -58,10 +58,6 @@
       <Project>{b8ed198d-b0da-4055-8cdd-441df17728e6}</Project>
       <Name>Net.Models</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Net.Services\Net.Services.csproj">
-      <Project>{637fadf9-0043-47fe-aeb1-cfd93e3d1e61}</Project>
-      <Name>Net.Services</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
