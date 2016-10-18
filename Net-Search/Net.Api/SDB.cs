@@ -6,7 +6,7 @@ using Net.Utils.Common;
 
 namespace Net.Api
 {
-	public class SDB
+	internal class SDB
 	{
 		private static object lockObject = new object();
 

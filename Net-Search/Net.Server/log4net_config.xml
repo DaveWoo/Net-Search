@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <log4net>
-    
+
     <appender name="ColoredConsoleAppender" type="log4net.Appender.ColoredConsoleAppender">
         <mapping>
             <level value="INFO" />
@@ -32,7 +32,7 @@
             <conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
         </layout>
     </appender>
-    
+
     <appender name="EventLogAppender" type="log4net.Appender.EventLogAppender">
         <filter type="log4net.Filter.LevelRangeFilter">
             <levelMin value="ERROR" />
@@ -124,7 +124,7 @@
 
     <root>
         <level value="ALL" />
-     
+
         <appender-ref ref="EventLogAppender" />
         <appender-ref ref="ColoredConsoleAppender" />
         <appender-ref ref="AllLogFileAppender" />

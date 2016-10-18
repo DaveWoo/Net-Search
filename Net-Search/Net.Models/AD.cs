@@ -9,6 +9,7 @@ namespace Net.Models
 	[DataContract]
 	public class SiteAD : SitePage
 	{
-		public string Tag { get; set; }
+		[DataMember]
+		public new string Tag { get; set; }
 	}
 }

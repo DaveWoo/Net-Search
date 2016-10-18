@@ -5,7 +5,7 @@ namespace Net.Api
 {
 	public partial class Manager
 	{
-		public bool Create<T>(params T[] values) where T : class
+		public bool Insert<T>(params T[] values) where T : class
 		{
 			if (typeof(T).Name == Constants.TABLE_SITEPAGE)
 			{
@@ -137,35 +137,35 @@ namespace Net.Api
 			return false;
 		}
 
-		public bool Delete<T>(params T[] values) where T : class, new()
+		public bool Delete<T>(params string[] values) where T : class, new()
 		{
 			if (typeof(T).Name == Constants.TABLE_SITEPAGE)
 			{
-				return SDB.SiteInfoBox.Delete(Constants.TABLE_SITEPAGE, (T[])values);
+				return SDB.SiteInfoBox.Delete(Constants.TABLE_SITEPAGE, values);
 			}
 			else if (typeof(T).Name == Constants.TABLE_SITEINFO)
 			{
-				return SDB.SiteInfoBox.Delete(Constants.TABLE_SITEINFO, (T[])values);
+				return SDB.SiteInfoBox.Delete(Constants.TABLE_SITEINFO, values);
 			}
 			else if (typeof(T).Name == Constants.TABLE_NETSERVERCONFIG)
 			{
-				return SDB.NetServerConfigBox.Delete(Constants.TABLE_NETSERVERCONFIG, (T[])values);
+				return SDB.NetServerConfigBox.Delete(Constants.TABLE_NETSERVERCONFIG, values);
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINK)
 			{
-				return SDB.LinkBox.Delete(Constants.TABLE_LINK, (T[])values);
+				return SDB.LinkBox.Delete(Constants.TABLE_LINK, values);
 			}
 			else if (typeof(T).Name == Constants.TABLE_AD)
 			{
-				return SDB.ADBox.Delete(Constants.TABLE_LINK, (T[])values);
+				return SDB.ADBox.Delete(Constants.TABLE_LINK, values);
 			}
 			else if (typeof(T).Name == Constants.TABLE_WORDS)
 			{
-				return SDB.WordsBox.Delete(Constants.TABLE_WORDS, (T[])values);
+				return SDB.WordsBox.Delete(Constants.TABLE_WORDS, values);
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINKED)
 			{
-				return SDB.LinkedBox.Delete(Constants.TABLE_LINKED, (T[])values);
+				return SDB.LinkedBox.Delete(Constants.TABLE_LINKED, values);
 			}
 			return false;
 		}

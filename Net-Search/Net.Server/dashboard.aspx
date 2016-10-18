@@ -102,7 +102,6 @@
             text-align: center;*/
         }
     </style>
-
 </head>
 <body>
 
@@ -115,31 +114,31 @@
                         + "MEM:" + (System.GC.GetTotalMemory(false) / 1024 / 1024) + "MB ";
             %>
             <div class="ui segment ">
-                Time: 
+                Time:
                     <%= tcontent%>
             </div>
             <div class="ui segment ">
-                Collected links: 
+                Collected links:
                     <%= processLinksCount%>
                 <asp:Button ID="btnProcessLinks" runat="server" class="ui teal right button" Text="Button" OnClick="btnProcessLinks_Click" />
             </div>
             <div class="ui segment">
-                Verified site: 
+                Verified site:
                     <%= siteInfoCount%>
                 <asp:Button ID="btnSiteInfo" runat="server" class="ui teal right button" Text="Button" OnClick="btnSiteInfo_Click" />
             </div>
             <div class="ui segment">
-                Collected pages: 
+                Collected pages:
                     <%= sitePageCount%>
                 <asp:Button ID="btnSitePage" runat="server" class="ui teal right button" Text="Button" OnClick="btnSitePage_Click" />
             </div>
             <div class="ui segment">
-                Searched words: 
+                Searched words:
                     <%= wordsCount%>
                 <asp:Button ID="Button1" runat="server" class="ui teal right button" Text="Button" />
             </div>
             <div class="ui segment">
-                Linked url: 
+                Linked url:
                     <%= linkedCount%>
                 <asp:Button ID="Button2" runat="server" class="ui teal right button" Text="Button" />
             </div>

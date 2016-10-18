@@ -78,7 +78,6 @@
 
         }
     </script>
-
 </head>
 <body onload="onLoad()">
 
@@ -126,7 +125,7 @@
             <%--left side start--%>
             <div id="body_left">
                 <% foreach (var p in pages)
-                   {               
+                   {
                 %>
                 <h3 class="res-title">
                     <a class="stext" target="_blank" href="link.aspx?url=<%=p.Url%>"><%= p.Title%></a>
@@ -134,7 +133,7 @@
                 <span class="stext"><%=p.Content%> </span>
                 <br />
                 <% if (p.Tag != null)%>
-                <% 
+                <%
                    {
                 %>
                 <div id="tipID_<%=p.Id%>" class="mingpian-tooltip" onmouseover="show()" onmouseout="this.style.display='none';">
@@ -155,7 +154,7 @@
                     </div>
                     <%}%>
                 </div>
-                <% 
+                <%
                    }
                 %>
                 <div class="res-linkinfo">
@@ -187,7 +186,7 @@
                 <div id="right_show" class="spread">
                     <ul id="rightbox" class="result">
                         <li>
-                            <h3><a href="#"target="_blank" style="font-size: 15px" >想在Net Search推广您的产品服务吗？</a></h3>
+                            <h3><a href="#" target="_blank" style="font-size: 15px">想在Net Search推广您的产品服务吗？</a></h3>
                             <p class="res-linkinfo">
                                 <%--<i class="volume control phone icon"></i>--%>
                                 ☎ 4000-123-123<br>

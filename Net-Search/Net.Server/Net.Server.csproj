@@ -89,6 +89,12 @@
     <Content Include="Properties\DataSources\Net.Models.SiteAD.datasource" />
     <Content Include="Properties\DataSources\Net.Models.Words.datasource" />
     <None Include="Properties\PublishProfiles\NetServer.pubxml" />
+    <Content Include="Scripts\bootstrap.min.js.map">
+      <DependentUpon>bootstrap.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery-1.10.2.min.js.map">
+      <DependentUpon>jquery-1.10.2.min.js</DependentUpon>
+    </Content>
     <None Include="Service References\ServiceReference\api.disco" />
     <None Include="Service References\ServiceReference\api3.xsd">
       <SubType>Designer</SubType>

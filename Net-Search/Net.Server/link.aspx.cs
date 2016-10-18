@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using Net.Api;
 using Net.Models;
+using Net.Server.ServiceReference;
 using Net.Utils;
 using Net.Utils.Common;
 
@@ -19,9 +15,10 @@ namespace Net.Server
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			#region Handle parameter
+
 			try
 			{
-
+				var client = new ManagerClient();
 
 				url = Request["url"];
 				if (string.IsNullOrWhiteSpace(url))
@@ -38,7 +35,7 @@ namespace Net.Server
 				linked.Url = url;
 				linked.CreatedTimeStamp = System.DateTime.Now;
 
-				manager.Create<Linked>(linked);
+				var isSuccessed = client.CreateSiteClickedLink(linked);
 
 				Response.Write(string.Format("<script language='javascript'>window.location='{0}'</script>", url));
 			}
@@ -46,7 +43,8 @@ namespace Net.Server
 			{
 				Log.Error("link.Page_Load", ex);
 			}
-			#endregion
+
+			#endregion Handle parameter
 		}
 	}
 }

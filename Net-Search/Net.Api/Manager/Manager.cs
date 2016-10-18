@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using iBoxDB.LocalServer;
 using Net.Models;
 using Net.Utils;
 using Net.Utils.Common;
@@ -20,14 +19,6 @@ namespace Net.Api
 
 		#region Fields
 
-		private DB.AutoBox sitePageBox = SDB.SitePageBox;
-		private DB.AutoBox siteInfoBox = SDB.SiteInfoBox;
-		private DB.AutoBox linkBox = SDB.LinkBox;
-		private DB.AutoBox adBox = SDB.ADBox;
-		private DB.AutoBox netServerConfigBox = SDB.NetServerConfigBox;
-		private DB.AutoBox wordsBox = SDB.WordsBox;
-		private DB.AutoBox linkedBox = SDB.LinkedBox;
-
 		private static HttpHelper httpHelper = new HttpHelper();
 		private static int currentGrabedSiteCount = 0;
 		private static object objectLock = new object();
@@ -41,37 +32,54 @@ namespace Net.Api
 
 		public bool CreateSitePage(SitePage value)
 		{
-			return sitePageBox.Insert<SitePage>(Constants.TABLE_SITEPAGE, value);
+			return Insert<SitePage>(value);
 		}
 
 		public bool CreateSiteInfo(SiteInfo value)
 		{
-			return siteInfoBox.Insert<SiteInfo>(Constants.TABLE_SITEINFO, value);
+			return Insert<SiteInfo>(value);
 		}
 
 		public bool CreateSiteServerConfig(NetServerConfig value)
 		{
-			return adBox.Insert<NetServerConfig>(Constants.TABLE_NETSERVERCONFIG, value);
+			return Insert<NetServerConfig>(value);
 		}
 
 		public bool CreateSiteLink(Link value)
 		{
-			return linkBox.Insert<Link>(Constants.TABLE_LINK, value);
+			return Insert<Link>(value);
 		}
 
 		public bool CreateSiteAD(SiteAD value)
 		{
-			return adBox.Insert<SiteAD>(Constants.TABLE_AD, value);
+			return Insert<SiteAD>(value);
+		}
+
+		public bool AddSiteAD(string url, string title, string content, string company, string tag)
+		{
+			if (string.IsNullOrWhiteSpace(tag))
+				throw new ArgumentNullException("tag");
+			SiteAD adSitePage = new SiteAD();
+			adSitePage.Id = SDB.ADBox.NewId();
+			adSitePage.Title = title;
+			adSitePage.Content = content;
+			adSitePage.Url = url;
+			adSitePage.VerifiedSiteName = company;
+			adSitePage.CreatedTimeStamp = System.DateTime.Now;
+			adSitePage.ModifiedTimeStamp = System.DateTime.Now;
+			adSitePage.Tag = tag;
+
+			return Insert<SiteAD>(adSitePage);
 		}
 
 		public bool CreateSiteSearchWords(Words value)
 		{
-			return wordsBox.Insert<Words>(Constants.TABLE_WORDS, value);
+			return Insert<Words>(value);
 		}
 
 		public bool CreateSiteClickedLink(Linked value)
 		{
-			return linkedBox.Insert<Linked>(Constants.TABLE_LINKED, value);
+			return Insert<Linked>(value);
 		}
 
 		#endregion Create
@@ -80,37 +88,52 @@ namespace Net.Api
 
 		public bool UpdateSitePage(SitePage value)
 		{
-			return sitePageBox.Update<SitePage>(Constants.TABLE_SITEPAGE, value);
+			return Update<SitePage>(value);
 		}
 
 		public bool UpdateSiteInfo(SiteInfo value)
 		{
-			return siteInfoBox.Update<SiteInfo>(Constants.TABLE_SITEINFO, value);
+			return Update<SiteInfo>(value);
 		}
 
 		public bool UpdateSiteSeverConfig(NetServerConfig value)
 		{
-			return adBox.Update<NetServerConfig>(Constants.TABLE_NETSERVERCONFIG, value);
+			return Update<NetServerConfig>(value);
 		}
 
 		public bool UpdateSiteLink(Link value)
 		{
-			return linkBox.Update<Link>(Constants.TABLE_LINK, value);
+			return Update<Link>(value);
 		}
 
 		public bool UpdateSiteAD(SiteAD value)
 		{
-			return adBox.Update<SiteAD>(Constants.TABLE_AD, value);
+			return Update<SiteAD>(value);
+		}
+
+		public bool UpdateSiteAD(string url, string title, string content, string company, string tag)
+		{
+			if (string.IsNullOrWhiteSpace(tag))
+				throw new ArgumentNullException("tag");
+			SiteAD adSitePage = new SiteAD();
+			adSitePage.Id = SDB.ADBox.NewId();
+			adSitePage.Title = title;
+			adSitePage.Content = content;
+			adSitePage.Url = url;
+			adSitePage.VerifiedSiteName = company;
+			adSitePage.ModifiedTimeStamp = System.DateTime.Now;
+			adSitePage.Tag = tag;
+			return Update<SiteAD>(adSitePage);
 		}
 
 		public bool UpdateSiteWords(Words value)
 		{
-			return wordsBox.Update<Words>(Constants.TABLE_WORDS, value);
+			return Update<Words>(value);
 		}
 
 		public bool UpdateSiteLinked(Linked value)
 		{
-			return linkedBox.Update<Linked>(Constants.TABLE_LINKED, value);
+			return Update<Linked>(value);
 		}
 
 		#endregion Update
@@ -121,38 +144,38 @@ namespace Net.Api
 
 		public IEnumerable<SitePage> SelectAllSitePage()
 		{
-			var result = sitePageBox.Select<SitePage>(string.Format(Constants.SQLLIKE, Constants.TABLE_SITEPAGE));
+			var result = Select<SitePage>();
 			return result;
 		}
 
 		public IEnumerable<SiteInfo> SelectAllSiteInfo()
 		{
-			return siteInfoBox.Select<SiteInfo>(string.Format(Constants.SQLLIKE, Constants.TABLE_SITEINFO));
+			return Select<SiteInfo>();
 		}
 
 		public IEnumerable<NetServerConfig> SelectAllSiteServerConfig()
 		{
-			return adBox.Select<NetServerConfig>(string.Format(Constants.SQLLIKE, Constants.TABLE_NETSERVERCONFIG));
+			return Select<NetServerConfig>();
 		}
 
 		public IEnumerable<Link> SelectAllLink()
 		{
-			return linkBox.Select<Link>(string.Format(Constants.SQLLIKE, Constants.TABLE_LINK));
+			return Select<Link>();
 		}
 
 		public IEnumerable<SiteAD> SelectAllSiteAD()
 		{
-			return adBox.Select<SiteAD>(string.Format(Constants.SQLLIKE, Constants.TABLE_AD));
+			return Select<SiteAD>();
 		}
 
 		public IEnumerable<Words> SelectAllWords()
 		{
-			return wordsBox.Select<Words>(string.Format(Constants.SQLLIKE, Constants.TABLE_WORDS));
+			return Select<Words>();
 		}
 
 		public IEnumerable<Linked> SelectAllLinked()
 		{
-			return linkedBox.Select<Linked>(string.Format(Constants.SQLLIKE, Constants.TABLE_LINKED));
+			return Select<Linked>();
 		}
 
 		#endregion Select All
@@ -161,37 +184,37 @@ namespace Net.Api
 
 		public IEnumerable<SitePage> SelectSitePage(string sqlLike, object args)
 		{
-			return sitePageBox.Select<SitePage>(sqlLike, args);
+			return Select<SitePage>(sqlLike, args);
 		}
 
 		public IEnumerable<SiteInfo> SelectSiteInfo(string sqlLike, object args)
 		{
-			return siteInfoBox.Select<SiteInfo>(sqlLike, args);
+			return Select<SiteInfo>(sqlLike, args);
 		}
 
 		public IEnumerable<NetServerConfig> SelectSiteServerConfig(string sqlLike, object args)
 		{
-			return adBox.Select<NetServerConfig>(sqlLike, args);
+			return Select<NetServerConfig>(sqlLike, args);
 		}
 
 		public IEnumerable<Link> SelectSiteLink(string sqlLike, object args)
 		{
-			return linkBox.Select<Link>(sqlLike, args);
+			return Select<Link>(sqlLike, args);
 		}
 
 		public IEnumerable<SiteAD> SelectSiteAD(string sqlLike, object args)
 		{
-			return adBox.Select<SiteAD>(sqlLike, args);
+			return Select<SiteAD>(sqlLike, args);
 		}
 
 		public IEnumerable<Words> SelectSiteWords(string sqlLike, object args)
 		{
-			return wordsBox.Select<Words>(sqlLike, args);
+			return Select<Words>(sqlLike, args);
 		}
 
 		public IEnumerable<Linked> SelectSiteLinked(string sqlLike, object args)
 		{
-			return linkedBox.Select<Linked>(sqlLike, args);
+			return Select<Linked>(sqlLike, args);
 		}
 
 		#endregion Select sql like
@@ -200,39 +223,39 @@ namespace Net.Api
 
 		#region Delete
 
-		public bool DeleteSitePage(SitePage value)
+		public bool DeleteSitePage(string url)
 		{
-			return siteInfoBox.Delete(Constants.TABLE_SITEPAGE, value);
+			return Delete<SitePage>(url);
 		}
 
-		public bool DeleteSiteInfo(SiteInfo value)
+		public bool DeleteSiteInfo(string url)
 		{
-			return siteInfoBox.Delete(Constants.TABLE_SITEINFO, value);
+			return Delete<SiteInfo>(url);
 		}
 
-		public bool DeleteSiteServerConfig(NetServerConfig value)
+		public bool DeleteSiteServerConfig(string name)
 		{
-			return adBox.Delete(Constants.TABLE_NETSERVERCONFIG, value);
+			return Delete<NetServerConfig>(name);
 		}
 
-		public bool Delete(Link value)
+		public bool DeleteLink(string url)
 		{
-			return linkBox.Delete(Constants.TABLE_LINK, value);
+			return Delete<Link>(url);
 		}
 
-		public bool DeleteSiteAD(SiteAD value)
+		public bool DeleteSiteAD(string url)
 		{
-			return adBox.Delete(Constants.TABLE_AD, value);
+			return Delete<SiteAD>(url);
 		}
 
-		public bool DeleteSiteWords(Words value)
+		public bool DeleteSiteWords(string url)
 		{
-			return wordsBox.Delete(Constants.TABLE_WORDS, value);
+			return Delete<Words>(url);
 		}
 
-		public bool DeleteSiteLinked(Linked value)
+		public bool DeleteSiteLinked(string url)
 		{
-			return linkedBox.Delete(Constants.TABLE_LINKED, value);
+			return Delete<Linked>(url);
 		}
 
 		#endregion Delete
@@ -240,7 +263,7 @@ namespace Net.Api
 		public List<SitePage> GetPages(string searchValue)
 		{
 			List<SitePage> pageList = new List<SitePage>();
-			using (var box = sitePageBox.Cube())
+			using (var box = SDB.SitePageBox.Cube())
 			{
 				var results = SearchResource.Engine.SearchDistinct(box, searchValue).OrderBy(p => p.Position);
 				if (results != null)
@@ -309,7 +332,7 @@ namespace Net.Api
 
 		public int GetRelatedResutsCount(string searchValue)
 		{
-			using (var box = sitePageBox.Cube())
+			using (var box = SDB.SitePageBox.Cube())
 			{
 				var results = SearchResource.Engine.SearchDistinct(box, searchValue);
 				if (results != null)
@@ -352,25 +375,6 @@ namespace Net.Api
 					Log.Info("Grab basic link end: " + i);
 				}
 			}
-		}
-
-		public void AddAd(string url, string title, string description, string company, string tag)
-		{
-			if (string.IsNullOrWhiteSpace(tag))
-				throw new ArgumentNullException("tag");
-			SiteAD adSitePage = new SiteAD();
-			adSitePage.Id = SDB.ADBox.NewId();
-			adSitePage.Title = title;
-			adSitePage.Description = description;
-
-			adSitePage.Url = url;
-
-			adSitePage.VerifiedSiteName = company;
-			adSitePage.CreatedTimeStamp = System.DateTime.Now;
-			adSitePage.ModifiedTimeStamp = System.DateTime.Now;
-			adSitePage.Tag = tag;
-			Create<SiteAD>(adSitePage);
-			Log.Info("Add ad: " + adSitePage.Title);
 		}
 
 		public void GrabLinks()
@@ -523,7 +527,7 @@ namespace Net.Api
 						info.Score = ContentHelper.GetMidInteger(item, "<span>得分:", "</span>");
 						info.CreatedTimeStamp = System.DateTime.Now;
 						info.UpdatedTimeStamp = System.DateTime.Now;
-						bool isSucceed = Create<SiteInfo>(info);
+						bool isSucceed = Insert<SiteInfo>(info);
 						lock (objectLock)
 						{
 							Log.Info("Grabbing site Index: " + currentGrabedSiteCount++ + "Name: " + info.Name);
@@ -602,7 +606,7 @@ namespace Net.Api
 
 			foreach (var item in sitePageList)
 			{
-				item.Id = sitePageBox.NewId();
+				item.Id = SDB.SitePageBox.NewId();
 
 				SearchResource.InsertSitePage(item, true);
 				Log.Info("Processing... " + item.VerifiedSiteName);
@@ -637,7 +641,7 @@ namespace Net.Api
 
 								if (isExist == null || isExist.Count() == 0)
 								{
-									var isSuccessed = Create<Link>(link);
+									var isSuccessed = Insert<Link>(link);
 									var Links = Select<Link>();
 									lock (objectLockBasicLink)
 									{
@@ -681,7 +685,7 @@ namespace Net.Api
 				processLinkConfig.Name = name;
 				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
 				//manager.Insert(Constants.TABLE_NETSERVERCONFIG, processLinkConfig);
-				Create<NetServerConfig>(processLinkConfig);
+				Insert<NetServerConfig>(processLinkConfig);
 			}
 			return processLinkConfig;
 		}
@@ -689,7 +693,7 @@ namespace Net.Api
 		public List<String> GetDiscover()
 		{
 			List<String> discoveries = new List<String>();
-			using (var box = sitePageBox.Cube())
+			using (var box = SDB.SitePageBox.Cube())
 			{
 				foreach (String skw in SearchResource.Engine.discover(box, 'a', 'z', 4,
 															   '\u2E80', '\u9fa5', 1))

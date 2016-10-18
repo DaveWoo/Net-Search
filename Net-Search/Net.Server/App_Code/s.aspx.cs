@@ -155,10 +155,11 @@ namespace Net.Server
 
 		private void GenerateNextPage(int pageNumber)
 		{
-			string index = "<a href=\"\\s.aspx?q={0}&pn={1}\">{2}</a>";
+			Log.Info("FilePath:" + Request.FilePath);
+			string index = "<a href=\"" + Request.FilePath + "?q={0}&pn={1}\">{2}</a>";
 			string indexCurrent = "<strong>{0}</strong>";
-			string nextIndexStr = "<a id=\"snext\" href=\"\\s.aspx?q={0}&pn={1}\">Next</a>";
-			string preIndexStr = "<a id=\"spre\" href=\"\\s.aspx?q={0}&pn={1}\">Previous</a>";
+			string nextIndexStr = "<a id=\"snext\" href=\"" + Request.FilePath + "?q={0}&pn={1}\">Next</a>";
+			string preIndexStr = "<a id=\"spre\" href=\"" + Request.FilePath + "?q={0}&pn={1}\">Previous</a>";
 			bool isAddPreindex = false;
 			int pageIndexCount = pageNumber < Constants.PAGEINDEXS ? Constants.PAGEINDEXS : pageNumber;
 			int indexStart = pageNumber < Constants.PAGEINDEXS ? 1 : pageNumber - Constants.PAGEINDEXS + 1;
