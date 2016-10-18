@@ -16,14 +16,13 @@
     <script type="text/javascript" src="js/toTop.js"></script>
 
     <script>
-        function onLoad()
-        {
+        function onLoad() {
             toTop('top', false);
             highlight();
         }
 
         function highlight() {
-       
+
             var txt = document.title.substr(0, document.title.indexOf(','));
 
             var ts = document.getElementsByClassName("stext");
@@ -68,8 +67,8 @@
 
             var div_tip = document.getElementById(div_tip_ID);
             div_tip.style.display = "block";
-            div_tip.style.left = (obj.offsetLeft + 20) + "px";
-            div_tip.style.top = (obj.offsetTop - div_tip.offsetHeight) + "px";
+            div_tip.style.left = (obj.offsetLeft + 40) + "px";
+            div_tip.style.top = (obj.offsetTop - div_tip.offsetHeight + 160) + "px";
         }
         function hide() {
             //现在这个demo提示框和超链接没重叠部分，所以延时50毫秒隐藏提示框,以解决移出超链接到移入提示框这个过程之间提示框隐藏掉。
@@ -225,8 +224,10 @@
         <% } %>
     </div>
     <div>
-        
-        <a href="javascript:;" id="top"><i class="teal arrow circle outline up icon" style="margin-left:20px"></i><br/>回到顶部</a>    
+
+        <a href="javascript:;" id="top"><i class="teal arrow circle outline up icon" style="margin-left: 20px"></i>
+            <br />
+            回到顶部</a>
     </div>
     <div id="s_footer">
         <a href="u" target="_blank">意见反馈</a> | <a href="" target="_blank">推广合作</a> | <span>Copyright © Net Search</span>

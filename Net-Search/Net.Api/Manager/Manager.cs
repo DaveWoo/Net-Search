@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using iBoxDB.LocalServer;
@@ -12,6 +13,11 @@ namespace Net.Api
 {
 	public partial class Manager : IManager
 	{
+		static Manager()
+		{
+			Log.Loginfo = log4net.LogManager.GetLogger(Assembly.GetAssembly(typeof(Manager)), "Net.Api");
+		}
+
 		#region Fields
 
 		private DB.AutoBox sitePageBox = SDB.SitePageBox;

@@ -178,9 +178,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App_Code\s.aspx.cs">
+    <Content Include="App_Code\s.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
-    </None>
+    </Content>
     <Content Include="Content\themes\basic\assets\fonts\icons.eot" />
     <Content Include="Content\themes\basic\assets\fonts\icons.ttf" />
     <Content Include="Content\themes\basic\assets\fonts\icons.woff" />

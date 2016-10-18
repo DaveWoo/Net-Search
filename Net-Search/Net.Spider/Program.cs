@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 //using Net.Api;
 using Net.Models;
@@ -20,6 +22,9 @@ namespace Spider
 		{
 			try
 			{
+				Log.Loginfo = log4net.LogManager.GetLogger(Assembly.GetAssembly(typeof(Program)), "Spider.Program");
+
+				Run();
 				//var pageList = client.GetPages("新闻");
 				//SitePage sitePage = new SitePage();
 				//sitePage.Id = 1234567;
@@ -63,22 +68,57 @@ namespace Spider
 				//var pages = client.SelectAllSitePage();
 
 				// Step 4 : Add ad
-				client.AddAd("www.abcdef.com",
-					"这是您的第一份免费广告",
-					"这是您的第一份免费广告,我们将竭诚为您服务",
-					"广告",
-					"新闻;news");
+				//client.AddAd("www.abcdef.com",
+				//	"这是您的第一份免费广告",
+				//	"这是您的第一份免费广告,我们将竭诚为您服务",
+				//	"广告",
+				//	"新闻;news");
 
-				var sdf = client.SelectAllSiteAD();
-				SearchWords();
+				//var sdf = client.SelectAllSiteAD();
+				//SearchWords();
 
-				CountLinked();
+				//CountLinked();
 
 			}
 			catch (Exception ex)
 			{
 				Log.Error("Program", ex);
 			}
+		}
+
+		private static void Run()
+		{
+			Task taskGetBasicSiteInfo = Task.Run(() =>
+			{
+				Log.Info("GetAllSiteInfoFromChinaZ start");
+				client.GetAllSiteInfoFromChinaZ();
+				Log.Info("GetAllSiteInfoFromChinaZ end");
+			});
+
+			Task taskGetBasicLinks = Task.Run(() =>
+			{
+				Log.Info("GetBasicLinks start");
+				client.GetBasicLinks();
+				Log.Info("GetBasicLinks end");
+			});
+
+			Task taskGrabLinks = Task.Run(() =>
+			{
+				Log.Info("GrabLinks start");
+				client.GrabLinks();
+				Log.Info("GrabLinks end");
+			});
+
+			Task taskGrabLinksContent = Task.Run(() =>
+			{
+				Log.Info("GrabLinksContent start");
+				client.GrabLinksContent();
+				Log.Info("GrabLinksContent end");
+			});
+			taskGetBasicSiteInfo.Wait();
+			taskGetBasicLinks.Wait();
+			taskGrabLinks.Wait();
+			taskGrabLinksContent.Wait();
 		}
 
 		private static void SearchWords()

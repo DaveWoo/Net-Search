@@ -110,8 +110,8 @@ body {
     }
 
     #soSafe span.safe-guard-logo {
-        background: url(/src/safe_16.png) no-repeat;
-        background-image: -webkit-image-set(url(/src/safe_16.png) 1x,url(/src/safe_32.png) 2x);
+        background: url(../src/safe_16.png) no-repeat;
+        background-image: -webkit-image-set(url(../src/safe_16.png) 1x,url(../src/safe_32.png) 2x);
         display: inline-block;
         height: 13px;
         margin-right: 3px;
@@ -226,8 +226,8 @@ mingpian-planed {
 }
 
 .tip-v {
-    background: url(/src/v_16.png) no-repeat 0 0;
-    background-image: -webkit-image-set(url(/src/v_16.png) 1x,url(/src/v_32.png) 2x);
+    background: url(../Src/v_16.png) no-repeat 0 0;
+    background-image: -webkit-image-set(url(../src/v_16.png) 1x,url(../src/v_32.png) 2x);
     display: inline-block;
     height: 12px;
     overflow: hidden;
