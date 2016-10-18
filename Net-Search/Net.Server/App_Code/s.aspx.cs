@@ -11,7 +11,7 @@ namespace Net.Server
 	public partial class Default : System.Web.UI.Page
 	{
 		protected string name = "Net Search";
-		protected string searchResult;
+		protected string relatedSearchCount;
 		protected List<SitePage> pages = new List<SitePage>();
 		List<SitePage> pagesAd = null;
 		protected string pageIndexString;
@@ -78,7 +78,7 @@ namespace Net.Server
 
 			#region Ad query
 
-			//Log.Info("Calc ad query start");
+			Log.Info("Calc ad query start");
 			//todo
 			var ads = client.SelectAllSiteAD();
 			if (ads != null)
@@ -92,9 +92,14 @@ namespace Net.Server
 
 			Log.Info("Calc body query start");
 			var pageList = client.GetPages(name);
+			var relatedSearchResultCount = client.GetRelatedResutsCount(name);
+			if (relatedSearchResultCount != -1)
+			{
+				relatedSearchCount = relatedSearchResultCount.ToString("n2");
+			}
 
-			var pagesNext = pageList.Skip((pageNumber - 1) * 10).Take(Constants.PAGECOUNT);
-			if (pagesNext == null || pagesNext.Count() == 0)
+			var currentPages = pageList.Skip((pageNumber - 1) * 10).Take(Constants.PAGECOUNT);
+			if (currentPages == null || currentPages.Count() == 0)
 			{
 				SitePage p = new SitePage();
 				p.Title = "NotFound";
@@ -112,10 +117,10 @@ namespace Net.Server
 				pages.AddRange(pagesAd);
 			}
 			Log.Info("Query factory start pagesAd");
-			if (pagesNext != null)
+			if (currentPages != null)
 			{
 				//todo
-				foreach (var page in pagesNext)
+				foreach (var page in currentPages)
 				{
 					if (!string.IsNullOrWhiteSpace(page.Host))
 					{
@@ -133,7 +138,7 @@ namespace Net.Server
 						}
 					}
 				}
-				pages.AddRange(pagesNext);
+				pages.AddRange(currentPages);
 			}
 
 			#endregion Calc

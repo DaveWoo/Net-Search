@@ -71,8 +71,7 @@
             div_tip.style.top = (obj.offsetTop - div_tip.offsetHeight + 160) + "px";
         }
         function hide() {
-            //现在这个demo提示框和超链接没重叠部分，所以延时50毫秒隐藏提示框,以解决移出超链接到移入提示框这个过程之间提示框隐藏掉。
-            //大部分时候可能是做成有重叠的，就不需要延时隐藏。
+
             intrval = window.setTimeout(function () {
                 document.getElementById(div_tip_ID).style.display = "none";
             }, 50);
@@ -97,13 +96,17 @@
     </div>
     <%--search box--%>
 
-    <div id="s_head" class="column">
+    <div id="s_head">
         <form class="ui large form" action="s.aspx" onsubmit="formsubmit()">
             <div class="ui label input" id="float_banner">
-                <div class="ui action input" style="width: 580px">
+                <div class="ui action input" style="width: 780px">
                     <a href="./"><i class="teal feed icon" style="font-size: 42px"></i></a>
                     <input name="q" value="<%=name%>" required onfocus="formfocus()" />
                     <input id="btnsearch" type="submit" class="ui teal right button" value="Search" />
+                    <% if (!string.IsNullOrWhiteSpace(relatedSearchCount))%>
+                    <% { %>
+                    <span class="nums" style="">找到相关结果约<%=relatedSearchCount %>个</span>
+                    <% } %>
                 </div>
             </div>
         </form>
@@ -184,7 +187,7 @@
                 <div id="right_show" class="spread">
                     <ul id="rightbox" class="result">
                         <li>
-                            <h3><a href="" e_nolog="0" target="_blank" style="font-size: 15px" se_prerender_url="complete">想在Net Search推广您的产品服务吗？</a></h3>
+                            <h3><a href="#"target="_blank" style="font-size: 15px" >想在Net Search推广您的产品服务吗？</a></h3>
                             <p class="res-linkinfo">
                                 <%--<i class="volume control phone icon"></i>--%>
                                 ☎ 4000-123-123<br>
@@ -219,7 +222,6 @@
         <% { %>
         <div id="page">
             <span><%=pageIndexString%>  </span>
-            <span class="nums" style="margin-left: 20px">找到相关结果约<%=searchResult %>个</span>
         </div>
         <% } %>
     </div>

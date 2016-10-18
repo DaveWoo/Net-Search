@@ -237,12 +237,12 @@ namespace Net.Api
 
 		#endregion Delete
 
-		public List<SitePage> GetPages(string name)
+		public List<SitePage> GetPages(string searchValue)
 		{
 			List<SitePage> pageList = new List<SitePage>();
-			using (var box = SDB.SitePageBox.Cube())
+			using (var box = sitePageBox.Cube())
 			{
-				var results = SearchResource.Engine.SearchDistinct(box, name).OrderBy(p => p.Position);
+				var results = SearchResource.Engine.SearchDistinct(box, searchValue).OrderBy(p => p.Position);
 				if (results != null)
 				{
 					foreach (KeyWord kw in results)
@@ -305,6 +305,20 @@ namespace Net.Api
 			}
 
 			return pageList;
+		}
+
+		public int GetRelatedResutsCount(string searchValue)
+		{
+			using (var box = sitePageBox.Cube())
+			{
+				var results = SearchResource.Engine.SearchDistinct(box, searchValue);
+				if (results != null)
+				{
+					return results.Count();
+				}
+			}
+
+			return -1;
 		}
 
 		#region Site manager
@@ -588,7 +602,7 @@ namespace Net.Api
 
 			foreach (var item in sitePageList)
 			{
-				item.Id = SDB.SitePageBox.NewId();
+				item.Id = sitePageBox.NewId();
 
 				SearchResource.InsertSitePage(item, true);
 				Log.Info("Processing... " + item.VerifiedSiteName);

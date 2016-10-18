@@ -45,7 +45,7 @@ namespace Net.Api
 		bool CreateSiteSearchWords(Words value);
 
 		[OperationContract]
-		List<SitePage> GetPages(string name);
+		List<SitePage> GetPages(string searchValue);
 
 		[OperationContract]
 		void GetAllSiteInfoFromChinaZ();
@@ -70,6 +70,9 @@ namespace Net.Api
 
 		[OperationContract]
 		List<String> GetDiscover();
+
+		[OperationContract]
+		int GetRelatedResutsCount(string searchValue);
 
 		#endregion Site operation
 	}

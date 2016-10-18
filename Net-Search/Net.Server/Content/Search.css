@@ -8,7 +8,7 @@ body {
 
 #s_head {
     min-width: 1000px;
-    border: red solid 0;
+    border: red solid 0px;
     height: 60px;
     position: relative;
     margin-left: -10px;
@@ -326,6 +326,18 @@ mingpian-planed {
     #page .nums {
         color: #999;
         font-size: 12px;
+    }
+
+    .nums {
+        color: #999;
+        font-size: 12px;
+      
+        min-width:150px;
+        border: red solid 0;
+        max-height:20px;
+        margin:0 auto 0 auto;
+        margin-top:14px;
+        margin-left: 20px;
     }
 
 .nav-wrapper-fixed {
