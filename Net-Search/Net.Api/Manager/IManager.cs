@@ -6,7 +6,7 @@ using Net.Models;
 namespace Net.Api
 {
 	[ServiceContract]
-	internal interface IManager
+	public interface IManager
 	{
 		#region Select all
 
@@ -66,7 +66,7 @@ namespace Net.Api
 		bool UpdateSiteAD(string url, string title, string content, string company, string tag);
 
 		[OperationContract]
-		bool CreateSitePage(SitePage value);
+		bool CreateSitePage(SitePage value, bool isDeleteCurrentThenAddNew);
 
 		[OperationContract]
 		bool CreateSiteLink(Link value);

@@ -1,4 +1,5 @@
 using iBoxDB.LocalServer;
+using Net.Models;
 using Net.Utils;
 
 namespace Net.Api
@@ -141,7 +142,7 @@ namespace Net.Api
 		{
 			if (typeof(T).Name == Constants.TABLE_SITEPAGE)
 			{
-				return SDB.SiteInfoBox.Delete(Constants.TABLE_SITEPAGE, values);
+				return SDB.SitePageBox.Delete(Constants.TABLE_SITEPAGE, values);
 			}
 			else if (typeof(T).Name == Constants.TABLE_SITEINFO)
 			{

@@ -31,6 +31,9 @@ namespace Net.Utils
 
 
 		public const string SQLLIKE = "from {0}";
+		public const string SQLLIKEURL = "from {0} where Url==?";
+		public const string SQLLIKEID = "from {0} where Id==?";
+
 		public const string LINKPATTERN = @"(href)[ ]*=[ ]*[""']*(http)?[^""'#>]+[""']*";
 
 		public const int PAGECOUNT = 10;
@@ -40,7 +43,7 @@ namespace Net.Utils
 		public const int TAKECOUNTCHINAZ = 20;
 		public const int TAKECOUNTBASICLINKS = 5;
 		public const int URLLENGTH = 200;
-
+		public const int COMMITCOUNT = 100;
 
 		public static string SERVERDATA_FULLPATH = Path.Combine(SERVERDATA_PATH, SERVERDATA_NAME);
 	}

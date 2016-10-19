@@ -10,8 +10,8 @@ namespace Net.Api
 	{
 		public static ConcurrentQueue<String> searchList = new ConcurrentQueue<String>();
 		public static ConcurrentQueue<String> urlList = new ConcurrentQueue<String>();
-		public readonly static Engine Engine = new Engine();
 		private static int commitCount = 100;
+		public readonly static Engine Engine = new Engine();
 
 		public static String IndexText(String name, bool isDelete)
 		{
@@ -19,35 +19,22 @@ namespace Net.Api
 			{
 				String url = getUrl(name);
 
-				//foreach (SitePage p in SDB.SitePageBox.Select<SitePage>("from SitePage where url==?", url))
-				//{
-				//    Engine.indexTextNoTran(SDB.SitePageBox, commitCount, p.Id, p.Content.ToString(), true);
-				//    Engine.indexTextNoTran(SDB.SitePageBox, commitCount, p.RankUpId(), p.RankUpDescription(), true);
-				//    SDB.SitePageBox.Delete(Constants.TABLE_SITEPAGE, p.Id);
-				//}
-
-				if (isDelete)
+				SitePage p = SitePage.Get(url);
+				if (p == null)
 				{
-					return "deleted";
+					return "temporarily unreachable";
 				}
+				else
 				{
-					SitePage p = SitePage.Get(url);
-					if (p == null)
+					p.Id = SDB.SitePageBox.NewId();
+					InsertSitePage(p, isDelete);
+					urlList.Enqueue(p.Url);
+					while (urlList.Count > 3)
 					{
-						return "temporarily unreachable";
+						String t;
+						urlList.TryDequeue(out t);
 					}
-					else
-					{
-						p.Id = SDB.SitePageBox.NewId();
-						InsertSitePage(p, isDelete);
-						urlList.Enqueue(p.Url);
-						while (urlList.Count > 3)
-						{
-							String t;
-							urlList.TryDequeue(out t);
-						}
-						return p.Url;
-					}
+					return p.Url;
 				}
 			}
 			catch (Exception ex)
@@ -65,7 +52,7 @@ namespace Net.Api
 			}
 			if (isDeleteCurrentThenAddNew)
 			{
-				foreach (SitePage sitePage in SDB.SitePageBox.Select<SitePage>("from SitePage where Url==?", p.Url))
+				foreach (SitePage sitePage in SDB.SitePageBox.Select<SitePage>(string.Format(Constants.SQLLIKEURL, Constants.TABLE_SITEPAGE), p.Url))
 				{
 					Engine.indexTextNoTran(SDB.SitePageBox, commitCount, sitePage.Id, sitePage.Content.ToString(), true);
 					Engine.indexTextNoTran(SDB.SitePageBox, commitCount, sitePage.RankUpId(), sitePage.RankUpDescription(), true);

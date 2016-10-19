@@ -7,7 +7,7 @@ using iBoxDB.LocalServer;
 namespace Net.Models
 {
 	[DataContract]
-	public class SitePage : IDInterface
+	public class SitePage : IID, IUrl
 	{
 		[DataMember]
 		public const int MAX_URL_LENGTH = 100;

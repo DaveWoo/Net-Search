@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Net.Models
 {
 	[DataContract]
-	public class SiteInfo
+	public class SiteInfo : IID, IUrl
 	{
 		[DataMember]
 		public long Id { get; set; }

@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Net.Models
 {
 	[DataContract]
-	public class Link
+	public class Link : IID, IUrl
 	{
 		[DataMember]
 		public long Id { get; set; }
@@ -21,7 +21,6 @@ namespace Net.Models
 		[DataMember]
 		public DateTime ModifiedTimeStamp { get; set; }
 
-		[DataMember]
 		public string Host
 		{
 			get

@@ -30,9 +30,36 @@ namespace Net.Api
 
 		#region Create
 
-		public bool CreateSitePage(SitePage value)
+		public bool CreateSitePage(SitePage value, bool isDeleteCurrentThenAddNew)
 		{
-			return Insert<SitePage>(value);
+			var isSucceed = false;
+			if (value == null || value.Content == null || string.IsNullOrWhiteSpace(value.Url) || string.IsNullOrWhiteSpace(value.Title))
+			{
+				throw new ArgumentNullException("value is invalid");
+			}
+
+			if (isDeleteCurrentThenAddNew)
+			{
+				foreach (SitePage sitePage in SDB.SitePageBox.Select<SitePage>(string.Format(Constants.SQLLIKEURL, Constants.TABLE_SITEPAGE), value.Url))
+				{
+					SearchResource.Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, sitePage.Id, sitePage.Content.ToString(), true);
+					SearchResource.Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, sitePage.RankUpId(), sitePage.RankUpDescription(), true);
+					SDB.SitePageBox.Delete(Constants.TABLE_SITEPAGE, sitePage.Id);
+				}
+			}
+
+			var isExist = Select<SitePage>(string.Format(Constants.SQLLIKEURL, Constants.TABLE_SITEPAGE), value.Url);
+
+			if (isExist == null || isExist.Count() == 0)
+			{
+				isSucceed = Insert<SitePage>(value);
+				if (isSucceed)
+				{
+					SearchResource.Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, value.Id, value.Content.ToString(), false);
+					SearchResource.Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, value.RankUpId(), value.RankUpDescription(), false);
+				}
+			}
+			return isSucceed;
 		}
 
 		public bool CreateSiteInfo(SiteInfo value)
@@ -47,7 +74,13 @@ namespace Net.Api
 
 		public bool CreateSiteLink(Link value)
 		{
-			return Insert<Link>(value);
+			var isExist = Select<Link>(string.Format(Constants.SQLLIKEURL, Constants.TABLE_LINK), value.Url);
+
+			if (isExist == null || isExist.Count() == 0)
+			{
+				return Insert<Link>(value);
+			}
+			return false;
 		}
 
 		public bool CreateSiteAD(SiteAD value)
@@ -225,7 +258,15 @@ namespace Net.Api
 
 		public bool DeleteSitePage(string url)
 		{
-			return Delete<SitePage>(url);
+			foreach (SitePage p in SDB.SitePageBox.Select<SitePage>(string.Format(Constants.SQLLIKEURL, Constants.TABLE_SITEPAGE), url))
+			{
+				SearchResource.Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, p.Id, p.Content.ToString(), true);
+				SearchResource.Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, p.RankUpId(), p.RankUpDescription(), true);
+				return Delete<SitePage>(url);
+				//SDB.SitePageBox.Delete(Constants.TABLE_SITEPAGE, p.Id);
+			}
+
+			return false;
 		}
 
 		public bool DeleteSiteInfo(string url)
@@ -350,7 +391,6 @@ namespace Net.Api
 		{
 			NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABBASICLINKS);
 			var SiteInfoList = Select<SiteInfo>();
-			List<string> sitePageList = new List<string>();
 			var toBeProcessedLinks = SiteInfoList.OrderBy(p => p.Id).Where(p => p.Id > processLinkConfig.ProcessedLinkAnchorId);
 
 			for (int i = 0; i < toBeProcessedLinks.Count(); i = i + Constants.TAKECOUNTBASICLINKS)
@@ -363,7 +403,7 @@ namespace Net.Api
 					Parallel.ForEach(prepareProcessLinks,
 					(e) =>
 					{
-						GrabLinksToDB(sitePageList, e.Url);
+						GrabLinksToDB(e.Url);
 						lock (objectLockGrabContents)
 						{
 							Log.Info(currentGrabedSiteCount++ + "Grabbed basic link name: " + e.Name);
@@ -380,7 +420,6 @@ namespace Net.Api
 		public void GrabLinks()
 		{
 			var configList = Select<NetServerConfig>();
-			List<string> sitePageList = new List<string>();
 
 			NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABLINKS);
 
@@ -402,7 +441,7 @@ namespace Net.Api
 						(e) =>
 						{
 							Log.Info(processLinkConfig.ProcessedLinkAnchorId + " link processing: " + e.Url);
-							GrabLinksToDB(sitePageList, e.Url);
+							GrabLinksToDB(e.Url);
 							Log.Info(processLinkConfig.ProcessedLinkAnchorId + " link processed: " + e.Url);
 						});
 					}
@@ -613,53 +652,89 @@ namespace Net.Api
 			}
 		}
 
-		private void GrabLinksToDB(List<string> sitePageList, string url)
+		public void GrabLinksToDB(string url)
 		{
 			try
 			{
 				var contents = httpHelper.Get(url);
-				Link link = null;
-				List<Link> linkList = new List<Link>();
-				Regex reg = new Regex(Constants.LINKPATTERN, RegexOptions.IgnoreCase);
-				MatchCollection matchList = reg.Matches(contents);
-				if (matchList != null)
-				{
-					foreach (Capture item in matchList)
-					{
-						try
-						{
-							var insideUrl = item.Value.Replace('\'', '"');
-							var pos = insideUrl.IndexOf("\"");
-							link = new Link();
-							link.Id = SDB.LinkBox.NewId();
-							link.Url = item.Value.Substring(pos + 1, item.Length - pos - 2);
-							link.CreatedTimeStamp = System.DateTime.Now;
-							link.ModifiedTimeStamp = System.DateTime.Now;
-							if (link.Url.Length < Constants.URLLENGTH)
-							{
-								var isExist = Select<Link>().Where(p => p.Url == link.Url);
-
-								if (isExist == null || isExist.Count() == 0)
-								{
-									var isSuccessed = Insert<Link>(link);
-									var Links = Select<Link>();
-									lock (objectLockBasicLink)
-									{
-										Log.Info(string.Format("Index:{2}   Host:{0}	Url:{1}", link.Host, link.Url, currentGrabedBaiscLinksCount++));
-									}
-								}
-							}
-						}
-						catch (Exception ex)
-						{
-							Log.Error("GrabLinksToDB: " + url, ex);
-						}
-					}
-				}
+				AnalyzeContentsLink(url, contents);
 			}
 			catch (Exception ex)
 			{
 				Log.Error("Error: " + ex.Message, ex);
+			}
+		}
+
+		public void AnalyzeContentsLink(string url, string contents)
+		{
+			Link link = null;
+			List<Link> linkList = new List<Link>();
+			Regex reg = new Regex(Constants.LINKPATTERN, RegexOptions.IgnoreCase);
+			MatchCollection matchList = reg.Matches(contents);
+			var value = string.Empty;
+
+			if (matchList != null)
+			{
+				foreach (Capture item in matchList)
+				{
+					try
+					{
+						value = item.Value;
+						var insideUrl = item.Value.Replace('\'', '"');
+						var pos = insideUrl.IndexOf("\"");
+						var contenetUrl = item.Value.Substring(pos + 1, item.Length - pos - 2);
+
+						#region Handle non-valid url
+
+						if (contenetUrl.EndsWith(".css")
+							|| contenetUrl.EndsWith(".js")
+							|| contenetUrl.EndsWith(".jpg")
+							|| contenetUrl.EndsWith(".png")
+							|| contenetUrl.EndsWith(".jpeg")
+							|| contenetUrl.EndsWith(".gif")
+							|| contenetUrl.EndsWith(".mp3")
+							|| contenetUrl.EndsWith(".mp4")
+							|| contenetUrl.EndsWith(".avi")
+							|| contenetUrl.EndsWith(".rm")
+							|| contenetUrl.EndsWith(".rmvb")
+							|| contenetUrl.EndsWith(".mpg")
+							|| contenetUrl.EndsWith(".mpeg"))
+						{
+							continue;
+						}
+
+						if (contenetUrl.StartsWith("javascript"))
+						{
+							continue;
+						}
+						else if (contenetUrl.StartsWith("/"))
+						{
+							Uri uri = new Uri(url);
+							contenetUrl = uri.Host + contenetUrl;
+						}
+
+						#endregion Handle non-valid url
+
+						link = new Link();
+						link.Id = SDB.LinkBox.NewId();
+						link.Url = contenetUrl;
+						link.CreatedTimeStamp = System.DateTime.Now;
+						link.ModifiedTimeStamp = System.DateTime.Now;
+						if (link.Url.Length < Constants.URLLENGTH && link.Url.Length > 10)
+						{
+							var isSuccessed = CreateSiteLink(link);
+							lock (objectLockBasicLink)
+							{
+								if (isSuccessed)
+									Log.Info(string.Format("Index:{2}   Host:{0}	Url:{1}", link.Host, link.Url, currentGrabedBaiscLinksCount++));
+							}
+						}
+					}
+					catch (Exception ex)
+					{
+						Log.Error(string.Format("GrabLinksToDB: {0}	value: {1}", url, value), ex);
+					}
+				}
 			}
 		}
 

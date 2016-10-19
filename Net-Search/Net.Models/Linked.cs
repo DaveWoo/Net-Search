@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Net.Models
 {
 	[DataContract]
-	public class Linked
+	public class Linked : IUrl
 	{
 		[DataMember]
 		public String Url { get; set; }
@@ -15,7 +15,6 @@ namespace Net.Models
 		[DataMember]
 		public string IP { get; set; }
 
-		[DataMember]
 		public string Host
 		{
 			get
