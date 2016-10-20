@@ -190,7 +190,7 @@ namespace Net.Api
 			}
 			server.GetConfig().DBConfig.SwapFileBuffer = (int)server.GetConfig().DBConfig.MB(4);
 			server.GetConfig().DBConfig.FileIncSize = (int)server.GetConfig().DBConfig.MB(16);
-			SearchResource.Engine.Config(server.GetConfig().DBConfig);
+			Manager.Engine.Config(server.GetConfig().DBConfig);
 			return server;
 		}
 

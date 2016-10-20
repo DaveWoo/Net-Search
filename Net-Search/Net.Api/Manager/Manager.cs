@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,8 +13,13 @@ namespace Net.Api
 {
 	public partial class Manager : IManager
 	{
+		public static ConcurrentQueue<String> searchList = new ConcurrentQueue<String>();
+		public static ConcurrentQueue<String> urlList = new ConcurrentQueue<String>();
+		public readonly static Engine Engine;
+
 		static Manager()
 		{
+			Engine = new Engine();
 			Log.Loginfo = log4net.LogManager.GetLogger(Assembly.GetAssembly(typeof(Manager)), "Net.Api");
 		}
 
@@ -32,6 +38,7 @@ namespace Net.Api
 
 		public bool CreateSitePage(SitePage value, bool isDeleteCurrentThenAddNew)
 		{
+			Log.Info("CreateSitePage start");
 			var isSucceed = false;
 			if (value == null || value.Content == null || string.IsNullOrWhiteSpace(value.Url) || string.IsNullOrWhiteSpace(value.Title))
 			{
@@ -42,21 +49,24 @@ namespace Net.Api
 			{
 				foreach (SitePage sitePage in SDB.SitePageBox.Select<SitePage>(string.Format(Constants.SQLLIKEURL, Constants.TABLE_SITEPAGE), value.Url))
 				{
-					SearchResource.Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, sitePage.Id, sitePage.Content.ToString(), true);
-					SearchResource.Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, sitePage.RankUpId(), sitePage.RankUpDescription(), true);
+					Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, sitePage.Id, sitePage.Content.ToString(), true);
+					Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, sitePage.RankUpId(), sitePage.RankUpDescription(), true);
 					SDB.SitePageBox.Delete(Constants.TABLE_SITEPAGE, sitePage.Id);
 				}
 			}
-
 			var isExist = Select<SitePage>(string.Format(Constants.SQLLIKEURL, Constants.TABLE_SITEPAGE), value.Url);
 
 			if (isExist == null || isExist.Count() == 0)
 			{
+				value.Id = SDB.SitePageBox.NewId();
 				isSucceed = Insert<SitePage>(value);
 				if (isSucceed)
 				{
-					SearchResource.Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, value.Id, value.Content.ToString(), false);
-					SearchResource.Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, value.RankUpId(), value.RankUpDescription(), false);
+					Log.Info("index start");
+					Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, value.Id, value.Content.ToString(), false);
+					Log.Info("index start 1");
+					Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, value.RankUpId(), value.RankUpDescription(), false);
+					Log.Info("index end");
 				}
 			}
 			return isSucceed;
@@ -260,8 +270,8 @@ namespace Net.Api
 		{
 			foreach (SitePage p in SDB.SitePageBox.Select<SitePage>(string.Format(Constants.SQLLIKEURL, Constants.TABLE_SITEPAGE), url))
 			{
-				SearchResource.Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, p.Id, p.Content.ToString(), true);
-				SearchResource.Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, p.RankUpId(), p.RankUpDescription(), true);
+				Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, p.Id, p.Content.ToString(), true);
+				Engine.indexTextNoTran(SDB.SitePageBox, Constants.COMMITCOUNT, p.RankUpId(), p.RankUpDescription(), true);
 				return Delete<SitePage>(url);
 				//SDB.SitePageBox.Delete(Constants.TABLE_SITEPAGE, p.Id);
 			}
@@ -306,7 +316,7 @@ namespace Net.Api
 			List<SitePage> pageList = new List<SitePage>();
 			using (var box = SDB.SitePageBox.Cube())
 			{
-				var results = SearchResource.Engine.SearchDistinct(box, searchValue).OrderBy(p => p.Position);
+				var results = Engine.SearchDistinct(box, searchValue).OrderBy(p => p.Position);
 				if (results != null)
 				{
 					foreach (KeyWord kw in results)
@@ -341,7 +351,7 @@ namespace Net.Api
 						else
 						{
 							var c1 = p.Content != null ? p.Content.ToString() : p.Description;
-							content = SearchResource.Engine.getDesc(c1, p.keyWord, 80);
+							content = Engine.getDesc(c1, p.keyWord, 80);
 							if (content.Length < 100)
 							{
 								content += p.GetRandomContent();
@@ -375,7 +385,7 @@ namespace Net.Api
 		{
 			using (var box = SDB.SitePageBox.Cube())
 			{
-				var results = SearchResource.Engine.SearchDistinct(box, searchValue);
+				var results = Engine.SearchDistinct(box, searchValue);
 				if (results != null)
 				{
 					return results.Count();
@@ -456,7 +466,7 @@ namespace Net.Api
 				processLinkConfig.ProcessedLinkAnchorId += 1;
 				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
 				Update<NetServerConfig>(processLinkConfig);
-				Log.Error("Error: " + ex.Message);
+				Log.Error(ex.Message, ex);
 			}
 		}
 
@@ -476,7 +486,7 @@ namespace Net.Api
 						Parallel.ForEach<Link>(prepareProcessLinks,
 						(e) =>
 						{
-							string contents = SearchResource.IndexText(e.Url, false);
+							string contents = AddPageByUrl(e.Url, false);
 							if (contents == "temporarily unreachable")
 							{
 								Log.Warn(contents + "Url: " + e.Url);
@@ -645,9 +655,7 @@ namespace Net.Api
 
 			foreach (var item in sitePageList)
 			{
-				item.Id = SDB.SitePageBox.NewId();
-
-				SearchResource.InsertSitePage(item, true);
+				CreateSitePage(item, true);
 				Log.Info("Processing... " + item.VerifiedSiteName);
 			}
 		}
@@ -661,7 +669,7 @@ namespace Net.Api
 			}
 			catch (Exception ex)
 			{
-				Log.Error("Error: " + ex.Message, ex);
+				Log.Error(ex.Message, ex);
 			}
 		}
 
@@ -770,7 +778,7 @@ namespace Net.Api
 			List<String> discoveries = new List<String>();
 			using (var box = SDB.SitePageBox.Cube())
 			{
-				foreach (String skw in SearchResource.Engine.discover(box, 'a', 'z', 4,
+				foreach (String skw in Engine.discover(box, 'a', 'z', 4,
 															   '\u2E80', '\u9fa5', 1))
 				{
 					discoveries.Add(skw);
@@ -778,6 +786,59 @@ namespace Net.Api
 			}
 
 			return discoveries;
+		}
+
+		public String AddPageByUrl(String name, bool isDelete)
+		{
+			try
+			{
+				Log.Info("AddPageByUrl");
+				String url = getUrl(name);
+				SitePage p = SitePage.Get(url);
+				Log.Info("generated model SitePage");
+
+				if (p == null)
+				{
+					return "temporarily unreachable";
+				}
+				else
+				{
+					CreateSitePage(p, isDelete);
+					Log.Info("stored model to db");
+					urlList.Enqueue(p.Url);
+					while (urlList.Count > 3)
+					{
+						String t;
+						urlList.TryDequeue(out t);
+					}
+					return p.Url;
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error("IndexText", ex);
+			}
+			return string.Empty;
+		}
+
+		private String getUrl(String name)
+		{
+			int p = name.IndexOf("http://");
+			if (p < 0)
+			{
+				p = name.IndexOf("https://");
+			}
+			if (p >= 0)
+			{
+				name = name.Substring(p).Trim();
+				var t = name.IndexOf("#");
+				if (t > 0)
+				{
+					name = name.Substring(0, t);
+				}
+				return name;
+			}
+			return "";
 		}
 
 		#endregion Site manager

@@ -70,6 +70,12 @@
   <ItemGroup>
     <Content Include="favicon.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Net.Utils\Net.Utils.csproj">
+      <Project>{a10fd44e-d6bd-4db7-ba77-771982e85c28}</Project>
+      <Name>Net.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

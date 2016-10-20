@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using CsQuery;
 using iBoxDB.LocalServer;
+using Net.Utils.Common;
 
 namespace Net.Models
 {
@@ -42,6 +43,7 @@ namespace Net.Models
 		[DataMember]
 		public bool Enabled { get; set; }
 
+		[NotColumn]
 		public string Host
 		{
 			get
@@ -56,14 +58,17 @@ namespace Net.Models
 					}
 					catch (Exception ex)
 					{
+						Log.Error(ex.Message, ex);
 						return string.Empty;
 					}
 				}
 			}
 		}
 
+		[NotColumn]
 		public object Tag { get; set; }
 
+		[NotColumn]
 		public string Verified
 		{
 			get
@@ -210,7 +215,7 @@ namespace Net.Models
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
+				Log.Error(ex.Message, ex);
 				return null;
 			}
 		}

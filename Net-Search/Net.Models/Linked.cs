@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using Net.Utils.Common;
 
 namespace Net.Models
 {
@@ -29,6 +30,7 @@ namespace Net.Models
 					}
 					catch (Exception ex)
 					{
+						Log.Error(ex.Message, ex);
 						return null;
 					}
 				}
