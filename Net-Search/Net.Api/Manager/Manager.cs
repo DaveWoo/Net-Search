@@ -513,7 +513,7 @@ namespace Net.Api
 			}
 		}
 
-		public void GrabLinksContentAsync()
+		public void GrabLinksContent_()
 		{
 			NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS);
 			try

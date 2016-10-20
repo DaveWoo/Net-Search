@@ -60,6 +60,9 @@ namespace Net.Api
 		void GrabLinksContent();
 
 		[OperationContract]
+		void GrabLinksContent_();
+
+		[OperationContract]
 		bool AddSiteAD(string url, string title, string content, string company, string tag);
 
 		[OperationContract]

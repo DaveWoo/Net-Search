@@ -24,6 +24,13 @@ namespace Spider
 			{
 				Log.Loginfo = log4net.LogManager.GetLogger(Assembly.GetAssembly(typeof(Program)), "Spider.Program");
 
+				Task taskGrabLinksContent = Task.Run(() =>
+				{
+					Log.Info("GrabLinksContent start");
+					client.GrabLinksContent_();
+					Log.Info("GrabLinksContent end");
+				});
+				taskGrabLinksContent.Wait();
 				//Run();
 				//var pageList = client.GetPages("新闻");
 				//SitePage sitePage = new SitePage();
@@ -68,7 +75,7 @@ namespace Spider
 				//var pages = client.SelectAllSitePage();
 
 				// Step 4 : Add ad
-				client.AddAd("www.abcdef.com",
+				client.AddSiteAD("www.abcdef.com",
 					"这是您的第一份免费广告",
 					"这是您的第一份免费广告,我们将竭诚为您服务",
 					"广告",
