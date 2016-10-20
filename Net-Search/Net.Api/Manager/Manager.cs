@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using CsQuery;
+using CsQuery.Web;
 using Net.Models;
 using Net.Utils;
 using Net.Utils.Common;
@@ -511,6 +513,39 @@ namespace Net.Api
 			}
 		}
 
+		public void GrabLinksContentAsync()
+		{
+			NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_GRABCONTENTS);
+			try
+			{
+				string likeSqlProcessLink = string.Format("from {0} Id >? order by Id", Constants.TABLE_LINK);
+				var processLinks = Select<Link>(likeSqlProcessLink, processLinkConfig.ProcessedLinkAnchorId);
+				for (int i = 0; i < processLinks.Count(); i = i + Constants.TAKECOUNT)
+				{
+					var prepareProcessLinks = processLinks.Where(p => p.Id > processLinkConfig.ProcessedLinkAnchorId).Take(Constants.TAKECOUNT);
+
+					if (prepareProcessLinks != null && prepareProcessLinks.LastOrDefault() != null)
+					{
+						Parallel.ForEach<Link>(prepareProcessLinks,
+						(e) =>
+						{
+							var contents = AddPageByUrlAsync(e.Url);
+						});
+						processLinkConfig.ProcessedLinkAnchorId = prepareProcessLinks.LastOrDefault().Id;
+						processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+						Update<NetServerConfig>(processLinkConfig);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				processLinkConfig.ProcessedLinkAnchorId += 1;
+				processLinkConfig.ModifiedTimeStamp = System.DateTime.Now;
+				Update<NetServerConfig>(processLinkConfig);
+				Log.Error(ex.Message, ex);
+			}
+		}
+
 		public void GetAllSiteInfoFromChinaZ()
 		{
 			NetServerConfig processLinkConfig = GetCurrentProcessLinkAnchorID(Constants.PROCESSLINKCONFIG_NAME_CHINAZINDEX);
@@ -793,7 +828,7 @@ namespace Net.Api
 			try
 			{
 				Log.Info("AddPageByUrl");
-				String url = getUrl(name);
+				String url = GetUrl(name);
 				SitePage p = SitePage.Get(url);
 				Log.Info("generated model SitePage");
 
@@ -821,7 +856,29 @@ namespace Net.Api
 			return string.Empty;
 		}
 
-		private String getUrl(String name)
+		public int AddPageByUrlAsync(String url)
+		{
+			try
+			{
+				if (url == null || url.Length > Constants.MAX_URL_LENGTH || url.Length < Constants.Min_URL_LENGTH)
+				{
+					return -1;
+				}
+
+				Log.Info("CreateFromUrl start");
+				var doc = CQ.CreateFromUrlAsync(url, SuccessResponse);
+				Log.Info("CreateFromUrl end:" + doc);
+				return doc;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex.Message, ex);
+				return -1;
+			}
+		}
+
+
+		private String GetUrl(String name)
 		{
 			int p = name.IndexOf("http://");
 			if (p < 0)
@@ -840,6 +897,118 @@ namespace Net.Api
 			}
 			return "";
 		}
+
+		private void SuccessResponse(ICsqWebResponse response)
+		{
+			try
+			{
+				var sitePage = GenerateSitePageModel(response);
+
+				if (sitePage != null)
+				{
+					CreateSitePage(sitePage, false);
+					Log.Info("stored model to db");
+					urlList.Enqueue(sitePage.Url);
+					while (urlList.Count > 3)
+					{
+						String t;
+						urlList.TryDequeue(out t);
+					}
+				}
+				return;
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex.Message, ex);
+			}
+
+		}
+
+		private static SitePage GenerateSitePageModel(ICsqWebResponse response)
+		{
+			SitePage page = new SitePage();
+			page.Url = response.Url;
+			CQ doc = response.Dom;
+
+			//Console.WriteLine(doc.Html());
+			doc["script"].Remove();
+			doc["Script"].Remove();
+
+			doc["style"].Remove();
+			doc["Style"].Remove();
+
+			doc["textarea"].Remove();
+			doc["Textarea"].Remove();
+
+			doc["noscript"].Remove();
+			doc["Noscript"].Remove();
+			Log.Info("Remove");
+
+			page.Title = doc["title"].Text();
+			if (page.Title == null)
+			{
+				page.Title = doc["Title"].Text();
+			}
+			if (page.Title == null)
+			{
+				page.Title = response.Url;
+			}
+			page.Title = page.Title.Trim();
+			if (page.Title.Length < 2)
+			{
+				page.Title = response.Url;
+			}
+			if (page.Title.Length > Constants.TITLE_LENGTH)
+			{
+				page.Title = page.Title.Substring(0, Constants.TITLE_LENGTH);
+			}
+			page.Title = page.Title.Replace("<", " ")
+				.Replace(">", " ").Replace("$", " ");
+			doc["title"].Remove();
+			doc["Title"].Remove();
+
+			page.Description = doc["meta[name='description']"].Attr("content");
+			if (page.Description == null)
+			{
+				page.Description = doc["meta[name='Description']"].Attr("content");
+			}
+			if (page.Description == null)
+			{
+				page.Description = "";
+			}
+			if (page.Description.Length > Constants.DESCRIPTION_LENGTH)
+			{
+				page.Description = page.Description.Substring(0, Constants.DESCRIPTION_LENGTH);
+			}
+			page.Description = page.Description.Replace("<", " ")
+				.Replace(">", " ").Replace("$", " ");
+
+			String content = doc.Text().Replace("　", " ");
+			content = Regex.Replace(content, "\t|\r|\n|�|<|>", " ");
+			content = Regex.Replace(content, "\\$", " ");
+			content = Regex.Replace(content, "\\s+", " ");
+			content = content.Trim();
+
+			if (content.Length < 50)
+			{
+				return null;
+			}
+			if (content.Length > 5000)
+			{
+				content = content.Substring(0, 5000);
+			}
+
+			page.Content = content + " " + page.Url;
+			page.CreatedTimeStamp = System.DateTime.Now;
+			page.ModifiedTimeStamp = System.DateTime.Now;
+			return page;
+		}
+
+		private static void FailResponse(ICsqWebResponse response)
+		{
+
+		}
+
 
 		#endregion Site manager
 	}

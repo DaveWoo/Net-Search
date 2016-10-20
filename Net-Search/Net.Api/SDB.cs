@@ -41,7 +41,7 @@ namespace Net.Api
 			{
 				DB server = InitServer(1);
 				server.GetConfig().EnsureTable<SitePage>(Constants.TABLE_SITEPAGE, Constants.TABLE_FIELD_ID);
-				server.GetConfig().EnsureIndex<SitePage>(Constants.TABLE_SITEPAGE, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
+				server.GetConfig().EnsureIndex<SitePage>(Constants.TABLE_SITEPAGE, true, "Url(" + Constants.MAX_URL_LENGTH + ")");
 
 				if (SitePageBox == null)
 					SitePageBox = server.Open();
@@ -61,7 +61,7 @@ namespace Net.Api
 
 				server.GetConfig().EnsureTable<SiteInfo>(Constants.TABLE_SITEINFO, Constants.TABLE_FIELD_ID);
 				//server.GetConfig().EnsureUpdateIncrementIndex<SiteInfo>(Constants.TABLE_SITEINFO, Constants.TABLE_FIELD_ID);
-				server.GetConfig().EnsureIndex<SiteInfo>(Constants.TABLE_SITEINFO, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
+				server.GetConfig().EnsureIndex<SiteInfo>(Constants.TABLE_SITEINFO, true, "Url(" + Constants.MAX_URL_LENGTH + ")");
 				if (SiteInfoBox == null)
 					SiteInfoBox = server.Open();
 			}
@@ -81,7 +81,7 @@ namespace Net.Api
 			{
 				DB server = InitServer(3);
 				server.GetConfig().EnsureTable<Link>(Constants.TABLE_LINK, Constants.TABLE_FIELD_ID);
-				server.GetConfig().EnsureIndex<Link>(Constants.TABLE_LINK, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
+				server.GetConfig().EnsureIndex<Link>(Constants.TABLE_LINK, true, "Url(" + Constants.MAX_URL_LENGTH + ")");
 				if (LinkBox == null)
 					LinkBox = server.Open();
 			}
@@ -99,7 +99,7 @@ namespace Net.Api
 				DB server = InitServer(4);
 
 				server.GetConfig().EnsureTable<SitePage>(Constants.TABLE_AD, Constants.TABLE_FIELD_ID);
-				server.GetConfig().EnsureIndex<SitePage>(Constants.TABLE_AD, true, "Url(" + SitePage.MAX_URL_LENGTH + ")");
+				server.GetConfig().EnsureIndex<SitePage>(Constants.TABLE_AD, true, "Url(" + Constants.MAX_URL_LENGTH + ")");
 				if (ADBox == null)
 					ADBox = server.Open();
 			}

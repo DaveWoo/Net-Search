@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using Net.Utils.Common;
 using Net.Utils;
+using System.Linq;
 
 namespace Net.Api.UnitTest
 {
@@ -61,10 +62,12 @@ namespace Net.Api.UnitTest
 			try
 			{
 				Log.Info("Begin running TestGrabLinksToDB...");
-				var url = "http://sports.163.com/nba/";
-				string contents = manager.AddPageByUrl(url, false);
+				var url = "http://tech.163.com/";
+				var contents = manager.AddPageByUrlAsync(url);
 				var all = manager.SelectAllSitePage();
 				var single = manager.SelectSitePage(string.Format(Constants.SQLLIKEURL, Constants.TABLE_SITEPAGE), url);
+
+				Assert.AreEqual(single.FirstOrDefault().Url, url);
 				Log.Info("End running TestGrabLinksToDB...");
 			}
 			catch (Exception)

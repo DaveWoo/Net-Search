@@ -44,7 +44,10 @@ namespace Net.Utils
 		public const int TAKECOUNTBASICLINKS = 5;
 		public const int URLLENGTH = 200;
 		public const int COMMITCOUNT = 100;
-
+		public const int DESCRIPTION_LENGTH = 200;
+		public const int TITLE_LENGTH = 80;
+		public const int MAX_URL_LENGTH = 100;
+		public const int Min_URL_LENGTH = 8;
 		public static string SERVERDATA_FULLPATH = Path.Combine(SERVERDATA_PATH, SERVERDATA_NAME);
 	}
 }

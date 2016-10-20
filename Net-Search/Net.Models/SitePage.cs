@@ -2,7 +2,9 @@ using System;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using CsQuery;
+using CsQuery.Web;
 using iBoxDB.LocalServer;
+using Net.Utils;
 using Net.Utils.Common;
 
 namespace Net.Models
@@ -10,9 +12,6 @@ namespace Net.Models
 	[DataContract]
 	public class SitePage : IID, IUrl
 	{
-		[DataMember]
-		public const int MAX_URL_LENGTH = 100;
-
 		[DataMember]
 		public long Id { get; set; }
 
@@ -133,14 +132,16 @@ namespace Net.Models
 		{
 			try
 			{
-				if (url == null || url.Length > MAX_URL_LENGTH || url.Length < 8)
+				if (url == null || url.Length > Constants.MAX_URL_LENGTH || url.Length < Constants.Min_URL_LENGTH)
 				{
 					return null;
 				}
 				SitePage page = new SitePage();
 				page.Url = url;
-
+				Log.Info("CreateFromUrl start");
 				CQ doc = CQ.CreateFromUrl(url);
+				Log.Info("CreateFromUrl end");
+
 				//Console.WriteLine(doc.Html());
 				doc["script"].Remove();
 				doc["Script"].Remove();
@@ -153,6 +154,7 @@ namespace Net.Models
 
 				doc["noscript"].Remove();
 				doc["Noscript"].Remove();
+				Log.Info("Remove");
 
 				page.Title = doc["title"].Text();
 				if (page.Title == null)
@@ -168,9 +170,9 @@ namespace Net.Models
 				{
 					page.Title = url;
 				}
-				if (page.Title.Length > 80)
+				if (page.Title.Length > Constants.TITLE_LENGTH)
 				{
-					page.Title = page.Title.Substring(0, 80);
+					page.Title = page.Title.Substring(0, Constants.TITLE_LENGTH);
 				}
 				page.Title = page.Title.Replace("<", " ")
 					.Replace(">", " ").Replace("$", " ");
@@ -186,9 +188,9 @@ namespace Net.Models
 				{
 					page.Description = "";
 				}
-				if (page.Description.Length > 200)
+				if (page.Description.Length > Constants.DESCRIPTION_LENGTH)
 				{
-					page.Description = page.Description.Substring(0, 200);
+					page.Description = page.Description.Substring(0, Constants.DESCRIPTION_LENGTH);
 				}
 				page.Description = page.Description.Replace("<", " ")
 					.Replace(">", " ").Replace("$", " ");
