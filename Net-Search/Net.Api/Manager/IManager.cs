@@ -11,33 +11,52 @@ namespace Net.Api
 		#region Select all
 
 		[OperationContract]
-		IEnumerable<SiteInfo> SelectAllSiteInfo();
+		IEnumerable<SiteInfo> SelectSiteInfoByDefault();
 
 		[OperationContract]
-		IEnumerable<SitePage> SelectAllSitePage();
+		IEnumerable<SitePage> SelectSitePageByDefault();
 
 		[OperationContract]
-		IEnumerable<NetServerConfig> SelectAllSiteServerConfig();
+		IEnumerable<NetServerConfig> SelectSiteServerConfigByDefault();
 
 		[OperationContract]
-		IEnumerable<Link> SelectAllLink();
+		IEnumerable<Link> SelectSiteLinkByDefault();
 
 		[OperationContract]
-		IEnumerable<SiteAD> SelectAllSiteAD();
+		IEnumerable<SiteAD> SelectSiteADByDefault();
 
 		[OperationContract]
-		IEnumerable<Words> SelectAllWords();
+		IEnumerable<Words> SelectWordsByDefault();
 
 		[OperationContract]
-		IEnumerable<Linked> SelectAllLinked();
+		IEnumerable<Linked> SelectLinkedByDefault();
 
 		#endregion Select all
+
+		#region Select sql like
+
+		[OperationContract]
+		IEnumerable<SitePage> SelectSitePage(string sqlLike, object args);
 
 		[OperationContract]
 		IEnumerable<SiteInfo> SelectSiteInfo(string sqlLike, object args);
 
 		[OperationContract]
+		IEnumerable<NetServerConfig> SelectSiteServerConfig(string sqlLike, object args);
+
+		[OperationContract]
+		IEnumerable<Link> SelectSiteLink(string sqlLike, object args);
+
+		[OperationContract]
 		IEnumerable<SiteAD> SelectSiteAD(string sqlLike, object args);
+
+		[OperationContract]
+		IEnumerable<Words> SelectSiteWords(string sqlLike, object args);
+
+		[OperationContract]
+		IEnumerable<Linked> SelectSiteLinked(string sqlLike, object args);
+
+		#endregion
 
 		#region Site operation
 
@@ -48,19 +67,13 @@ namespace Net.Api
 		List<SitePage> GetPages(string searchValue);
 
 		[OperationContract]
-		void GetAllSiteInfoFromChinaZ();
+		void CreateSiteInfoFromUrl(string url);
 
 		[OperationContract]
-		void GetBasicLinks();
+		int CreateSitePageFromUrl(string url);
 
 		[OperationContract]
-		void GrabLinks();
-
-		[OperationContract]
-		void GrabLinksContent();
-
-		[OperationContract]
-		void GrabLinksContent_();
+		void CreateSiteLinkFromUrl(string url);
 
 		[OperationContract]
 		bool AddSiteAD(string url, string title, string content, string company, string tag);
@@ -85,6 +98,9 @@ namespace Net.Api
 
 		[OperationContract]
 		int GetRelatedResutsCount(string searchValue);
+
+		[OperationContract]
+		bool UpdateSiteSeverConfig(NetServerConfig value);
 
 		#endregion Site operation
 	}

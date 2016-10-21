@@ -61,7 +61,7 @@
                 <type value="Net.Utils.Logging.CallContextPatternConverter" />
             </converter>
             <!--Some columns are have %%  others have %: http://stackoverflow.com/a/2638769/782185-->
-            <conversionPattern type="log4net.Util.PatternString" value="Level=&#34;%%level&#34;, Date=&#34;%%date{ISO8601}&#34;, AppDomain=&#34;%%appdomain&#34;, ProcessId=&#34;%processid&#34;, ThreadId=&#34;%%thread&#34;, Method=&#34;%%property{CallerMemberName}&#34;, Type=&#34;%%logger&#34;, Line= &#34;%%property{CallerLineNumber}&#34;, File=&#34;%%property{CallerFilePath}&#34; Message=%%message, Exception=&#34;%%exception&#34;%%context%newline" />
+            <conversionPattern type="log4net.Util.PatternString" value="Level=&#34;%%level&#34;, Date=&#34;%%date{ISO8601}&#34;, Message=%%message, Exception=&#34;%%exception&#34;%%context%newline" />
         </layout>
         <appendToFile value="true" />
         <rollingStyle value="Composite" />

@@ -80,7 +80,7 @@ namespace Net.Server
 
 			Log.Info("Calc ad query start");
 			//todo
-			var ads = client.SelectAllSiteAD();
+			var ads = client.SelectSiteADByDefault();
 			if (ads != null)
 			{
 				pagesAd = ads.Where(p => (p.Tag != null) && p.Tag.ToString().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Contains(name)).ToList<SitePage>();
