@@ -1,7 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="dashboard.aspx.cs" Inherits="Net.Server.Dashboard" EnableSessionState="false" Async="true" AsyncTimeout="30" %>
 
 <%@ Import Namespace="Net.Server" %>
-<%@ Import Namespace="Net.Api" %>
 <!DOCTYPE html>
 
 <html>

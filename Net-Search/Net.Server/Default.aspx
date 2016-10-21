@@ -1,6 +1,4 @@
 ﻿<%@ Page Language="C#" EnableSessionState="false" Async="true" AsyncTimeout="30" %>
-
-<%@ Import Namespace="Net.Api" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 
 <%

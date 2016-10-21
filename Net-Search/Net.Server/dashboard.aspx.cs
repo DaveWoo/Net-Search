@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using Net.Api;
 using Net.Models;
+using Net.Server.ServiceReference;
 
 namespace Net.Server
 {
@@ -13,13 +13,12 @@ namespace Net.Server
 		protected string sitePageCount;
 		protected string wordsCount;
 		protected string linkedCount;
-
-		private static Manager manager = new Manager();
+		ManagerClient client;
 
 		protected override void OnLoad(EventArgs e)
 		{
 			begin = DateTime.Now;
-
+			client = new ManagerClient();
 			base.OnLoad(e);
 
 			#region Summary
@@ -43,17 +42,17 @@ namespace Net.Server
 
 		private void GenerateSummaryInfo()
 		{
-			var processLinks = manager.Select<Link>();
+			var processLinks = client.SelectSiteLinkByDefault();
 			processLinksCount = processLinks.Count().ToString();
-			var siteInfo = manager.Select<SiteInfo>();
+			var siteInfo = client.SelectSiteInfoByDefault();
 			siteInfoCount = siteInfo.Count().ToString();
-			var sitePage = manager.Select<SitePage>();
+			var sitePage = client.SelectSitePageByDefault();
 			sitePageCount = sitePage.Count().ToString();
 
-			var words = manager.Select<Words>();
+			var words = client.SelectWordsByDefault();
 			wordsCount = words.Count().ToString();
 
-			var linked = manager.Select<Linked>();
+			var linked = client.SelectLinkedByDefault();
 			linkedCount = linked.Count().ToString();
 		}
 	}

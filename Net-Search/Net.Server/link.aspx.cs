@@ -1,5 +1,4 @@
 using System;
-using Net.Api;
 using Net.Models;
 using Net.Server.ServiceReference;
 using Net.Utils;
@@ -9,7 +8,6 @@ namespace Net.Server
 {
 	public partial class link : System.Web.UI.Page
 	{
-		private static Manager manager = new Manager();
 		protected string url { get; set; }
 
 		protected void Page_Load(object sender, EventArgs e)

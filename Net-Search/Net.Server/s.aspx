@@ -1,7 +1,6 @@
 ﻿<%@ Page Language="C#" Inherits="Net.Server.Default" EnableSessionState="false" Async="true" AsyncTimeout="30" %>
 
 <%@ Import Namespace="Net.Server" %>
-<%@ Import Namespace="Net.Api" %>
 <%@ Import Namespace="Net.Models" %>
 <!DOCTYPE html>
 <html>
