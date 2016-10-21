@@ -67,7 +67,7 @@
 
                 <br />
                 Recent Searches:<br />
-                <%
+      <%--          <%
                     foreach (String str in SearchResource.searchList)
                     {
 
@@ -75,11 +75,11 @@
 
                 <%
                         }
-                    %>
+                    %>--%>
 
                 <br>
                 Recent Records:<br>
-                <%
+         <%--       <%
                     foreach (String str in SearchResource.urlList)
                     {
                     %>
@@ -87,7 +87,7 @@
                 <br>
                 <%
                         }
-                    %>
+                    %>--%>
 
                 <br />
                 <a href="./">Refresh Discoveries</a>:&nbsp;

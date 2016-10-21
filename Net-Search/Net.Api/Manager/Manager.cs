@@ -515,7 +515,7 @@ namespace Net.Api
 			return discoveries;
 		}
 
-		public string CreateSitePageFromUrl(string name, bool isDelete)
+		public string CreateSitePageByName(string name, bool isDelete)
 		{
 			try
 			{
@@ -543,7 +543,7 @@ namespace Net.Api
 			}
 			catch (Exception ex)
 			{
-				Log.Error("IndexText", ex);
+				Log.Error("IndexText: " + name, ex);
 			}
 			return string.Empty;
 		}
@@ -557,49 +557,56 @@ namespace Net.Api
 					return -1;
 				}
 
-				var result = CQ.CreateFromUrlAsync(url, SuccessResponseSitePageFromUrl);
+				var result = CQ.CreateFromUrlAsync(url, SuccessResponseSitePageFromUrl, FailResponseSitePageFromUrl);
 				return result;
 			}
 			catch (Exception ex)
 			{
-				Log.Error(ex.Message, ex);
+				Log.Error("CreateSitePageFromUrl: " + url, ex);
 				return -1;
 			}
 		}
 
 		public void CreateSiteInfoFromUrl(string url)
 		{
-			string alexa = "http://alexa.chinaz.com/?domain=";
-			string linkedR = "http://outlink.chinaz.com/?h=";
-
-			var contents = httpHelper.Get(url);
-			var body = ContentHelper.GetMidString(contents, "<ul class=\"listCentent\">", "</ul>");
-			if (body != null)
+			try
 			{
-				var bodyItemList = body.Split(new string[] { "</li>" }, StringSplitOptions.None);
+				string alexa = "http://alexa.chinaz.com/?domain=";
+				string linkedR = "http://outlink.chinaz.com/?h=";
 
-				foreach (var item in bodyItemList)
+				var contents = httpHelper.Get(url);
+				var body = ContentHelper.GetMidString(contents, "<ul class=\"listCentent\">", "</ul>");
+				if (body != null)
 				{
-					if (!string.IsNullOrWhiteSpace(item))
+					var bodyItemList = body.Split(new string[] { "</li>" }, StringSplitOptions.None);
+
+					foreach (var item in bodyItemList)
 					{
-						var info = new SiteInfo();
-						//site name
-						info.Id = SDB.SiteInfoBox.NewId();
-						info.Name = ContentHelper.GetMidString(item, "class=\"pr10 fz14\">", "</a>");
-						info.Url = ContentHelper.GetMidString(item, "class=\"col-gray\">", "</span>");
-						info.Alexa = ContentHelper.GetMidInteger(item, alexa + info.Url + "\">", "</a>");
-						info.LinkedReversed = ContentHelper.GetMidInteger(item, linkedR + info.Url + "\">", "</a>");
-						info.Description = ContentHelper.GetMidString(item, "<p class=\"RtCInfo\">", "</p>");
-						info.Score = ContentHelper.GetMidInteger(item, "<span>得分:", "</span>");
-						info.CreatedTimeStamp = System.DateTime.Now;
-						info.UpdatedTimeStamp = System.DateTime.Now;
-						bool isSucceed = Insert<SiteInfo>(info);
-						lock (objectLock)
+						if (!string.IsNullOrWhiteSpace(item))
 						{
-							Log.Info("Grabbing site Index: " + currentGrabedSiteCount++ + "Name: " + info.Name);
+							var info = new SiteInfo();
+							//site name
+							info.Id = SDB.SiteInfoBox.NewId();
+							info.Name = ContentHelper.GetMidString(item, "class=\"pr10 fz14\">", "</a>");
+							info.Url = ContentHelper.GetMidString(item, "class=\"col-gray\">", "</span>");
+							info.Alexa = ContentHelper.GetMidInteger(item, alexa + info.Url + "\">", "</a>");
+							info.LinkedReversed = ContentHelper.GetMidInteger(item, linkedR + info.Url + "\">", "</a>");
+							info.Description = ContentHelper.GetMidString(item, "<p class=\"RtCInfo\">", "</p>");
+							info.Score = ContentHelper.GetMidInteger(item, "<span>得分:", "</span>");
+							info.CreatedTimeStamp = System.DateTime.Now;
+							info.UpdatedTimeStamp = System.DateTime.Now;
+							bool isSucceed = Insert<SiteInfo>(info);
+							lock (objectLock)
+							{
+								Log.Info("Grabbing site Index: " + currentGrabedSiteCount++ + "Name: " + info.Name);
+							}
 						}
 					}
 				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error("CreateSitePageFromUrl: " + url, ex);
 			}
 		}
 
@@ -612,7 +619,7 @@ namespace Net.Api
 			}
 			catch (Exception ex)
 			{
-				Log.Error(ex.Message, ex);
+				Log.Error("CreateSiteInfoFromUrl: " + url, ex);
 			}
 		}
 
@@ -700,7 +707,7 @@ namespace Net.Api
 					}
 					catch (Exception ex)
 					{
-						Log.Error(string.Format("GrabLinksToDB: {0}	value: {1}", url, value), ex);
+						Log.Error(string.Format("GrabLinksToDB: url: {0}		value: {1}", url, value), ex);
 					}
 				}
 			}
@@ -749,97 +756,104 @@ namespace Net.Api
 			}
 			catch (Exception ex)
 			{
-				Log.Error(ex.Message, ex);
+				Log.Error("SuccessResponseSitePageFromUrl: ", ex);
 			}
-
 		}
 
 		private SitePage GenerateSitePageModel(ICsqWebResponse response)
 		{
-			SitePage page = new SitePage();
-			page.Url = response.Url;
-			CQ doc = response.Dom;
-
-			//Console.WriteLine(doc.Html());
-			doc["script"].Remove();
-			doc["Script"].Remove();
-
-			doc["style"].Remove();
-			doc["Style"].Remove();
-
-			doc["textarea"].Remove();
-			doc["Textarea"].Remove();
-
-			doc["noscript"].Remove();
-			doc["Noscript"].Remove();
-			Log.Info("Remove");
-
-			page.Title = doc["title"].Text();
-			if (page.Title == null)
+			SitePage page = null;
+			try
 			{
-				page.Title = doc["Title"].Text();
-			}
-			if (page.Title == null)
-			{
-				page.Title = response.Url;
-			}
-			page.Title = page.Title.Trim();
-			if (page.Title.Length < 2)
-			{
-				page.Title = response.Url;
-			}
-			if (page.Title.Length > Constants.TITLE_LENGTH)
-			{
-				page.Title = page.Title.Substring(0, Constants.TITLE_LENGTH);
-			}
-			page.Title = page.Title.Replace("<", " ")
-				.Replace(">", " ").Replace("$", " ");
-			doc["title"].Remove();
-			doc["Title"].Remove();
+				page = new SitePage();
+				page.Url = response.Url;
+				CQ doc = response.Dom;
 
-			page.Description = doc["meta[name='description']"].Attr("content");
-			if (page.Description == null)
-			{
-				page.Description = doc["meta[name='Description']"].Attr("content");
-			}
-			if (page.Description == null)
-			{
-				page.Description = "";
-			}
-			if (page.Description.Length > Constants.DESCRIPTION_LENGTH)
-			{
-				page.Description = page.Description.Substring(0, Constants.DESCRIPTION_LENGTH);
-			}
-			page.Description = page.Description.Replace("<", " ")
-				.Replace(">", " ").Replace("$", " ");
+				//Console.WriteLine(doc.Html());
+				doc["script"].Remove();
+				doc["Script"].Remove();
 
-			string content = doc.Text().Replace("　", " ");
-			content = Regex.Replace(content, "\t|\r|\n|�|<|>", " ");
-			content = Regex.Replace(content, "\\$", " ");
-			content = Regex.Replace(content, "\\s+", " ");
-			content = content.Trim();
+				doc["style"].Remove();
+				doc["Style"].Remove();
 
-			if (content.Length < 50)
-			{
-				return null;
-			}
-			if (content.Length > 5000)
-			{
-				content = content.Substring(0, 5000);
-			}
+				doc["textarea"].Remove();
+				doc["Textarea"].Remove();
 
-			page.Content = content + " " + page.Url;
-			page.CreatedTimeStamp = System.DateTime.Now;
-			page.ModifiedTimeStamp = System.DateTime.Now;
+				doc["noscript"].Remove();
+				doc["Noscript"].Remove();
+				Log.Info("Remove");
+
+				page.Title = doc["title"].Text();
+				if (page.Title == null)
+				{
+					page.Title = doc["Title"].Text();
+				}
+				if (page.Title == null)
+				{
+					page.Title = response.Url;
+				}
+				page.Title = page.Title.Trim();
+				if (page.Title.Length < 2)
+				{
+					page.Title = response.Url;
+				}
+				if (page.Title.Length > Constants.TITLE_LENGTH)
+				{
+					page.Title = page.Title.Substring(0, Constants.TITLE_LENGTH);
+				}
+				page.Title = page.Title.Replace("<", " ")
+					.Replace(">", " ").Replace("$", " ");
+				doc["title"].Remove();
+				doc["Title"].Remove();
+
+				page.Description = doc["meta[name='description']"].Attr("content");
+				if (page.Description == null)
+				{
+					page.Description = doc["meta[name='Description']"].Attr("content");
+				}
+				if (page.Description == null)
+				{
+					page.Description = "";
+				}
+				if (page.Description.Length > Constants.DESCRIPTION_LENGTH)
+				{
+					page.Description = page.Description.Substring(0, Constants.DESCRIPTION_LENGTH);
+				}
+				page.Description = page.Description.Replace("<", " ")
+					.Replace(">", " ").Replace("$", " ");
+
+				string content = doc.Text().Replace("　", " ");
+				content = Regex.Replace(content, "\t|\r|\n|�|<|>", " ");
+				content = Regex.Replace(content, "\\$", " ");
+				content = Regex.Replace(content, "\\s+", " ");
+				content = content.Trim();
+
+				if (content.Length < 50)
+				{
+					return null;
+				}
+				if (content.Length > 5000)
+				{
+					content = content.Substring(0, 5000);
+				}
+
+				page.Content = content + " " + page.Url;
+				page.CreatedTimeStamp = System.DateTime.Now;
+				page.ModifiedTimeStamp = System.DateTime.Now;
+			}
+			catch (Exception ex)
+			{
+				Log.Error("GenerateSitePageModel: ", ex);
+				page = null;
+			}
 			return page;
 		}
 
-		private void FailResponse(ICsqWebResponse response)
+		private void FailResponseSitePageFromUrl(ICsqWebResponse response)
 		{
-
+			Log.Error(string.Format("url:{0},	status:{1} ", response.Url, response.HttpStatus));
 		}
 		#endregion
-
 
 		#endregion Site manager
 	}
