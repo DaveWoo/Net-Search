@@ -45,10 +45,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="iBoxDB, Version=2.9.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\iBoxDB.2.9.1\lib\net45\iBoxDB.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -211,7 +207,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="test\iBoxDB291.cs" />
     <Compile Include="link.aspx.cs">
       <DependentUpon>link.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -219,7 +214,6 @@
     <Compile Include="dashboard.aspx.designer.cs">
       <DependentUpon>dashboard.aspx</DependentUpon>
     </Compile>
-    <Compile Include="test\WSDatabaseConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Net.Models\Net.Models.csproj">
