@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.Server", "Net.Server\Ne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.Api.UnitTest", "Net.Api.UnitTest\Net.Api.UnitTest.csproj", "{E1B4A79C-D56B-4BC9-A9E4-8FC77DDF9292}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.HostServer", "Net.HostServer\Net.HostServer.csproj", "{08947B85-175C-4CAD-A99F-27E9F94F6B80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.HostServer.Tests", "Net.HostServer.Tests\Net.HostServer.Tests.csproj", "{9B7F6650-AC53-41AD-A2CC-1627DD486F2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,14 @@ Global
 		{E1B4A79C-D56B-4BC9-A9E4-8FC77DDF9292}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1B4A79C-D56B-4BC9-A9E4-8FC77DDF9292}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1B4A79C-D56B-4BC9-A9E4-8FC77DDF9292}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08947B85-175C-4CAD-A99F-27E9F94F6B80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08947B85-175C-4CAD-A99F-27E9F94F6B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08947B85-175C-4CAD-A99F-27E9F94F6B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08947B85-175C-4CAD-A99F-27E9F94F6B80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B7F6650-AC53-41AD-A2CC-1627DD486F2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B7F6650-AC53-41AD-A2CC-1627DD486F2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B7F6650-AC53-41AD-A2CC-1627DD486F2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B7F6650-AC53-41AD-A2CC-1627DD486F2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -64,6 +64,7 @@ namespace Net.Models
 			}
 		}
 
+		[DataMember]
 		[NotColumn]
 		public object Tag { get; set; }
 
