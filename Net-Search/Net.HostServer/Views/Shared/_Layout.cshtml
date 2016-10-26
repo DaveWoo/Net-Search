@@ -3,23 +3,23 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.SearchName,@ViewBag.SiteName</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
+    @Scripts.Render("~/bundles/netserver")
 </head>
-<body>
+<body onload="onLoad()">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 @using (Html.BeginForm())
                 {
                     <p style="margin-top:12px;width:600px">
-                       <span style="color:aqua">Net Search </span> @Html.TextBox("q") <input type="submit" value="Search" />
+                        <span style="color:aqua">Net Search </span> @Html.TextBox("q") <input type="submit" value="Search" />
                     </p>
                 }
 
-            </div> 
+            </div>
             <div class="navbar-collapse collapse">
                 @Html.Partial("_LoginPartial")
             </div>
@@ -28,9 +28,18 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
+        @*<hr />*@
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <div>
+                <a href="javascript:;" id="top">
+                    <i class="teal arrow circle outline up icon" style="margin-left: 20px"></i>
+                    <br />
+                    回到顶部
+                </a>
+            </div>
+            <div id="s_footer">
+                <a href="u" target="_blank">意见反馈</a> | <a href="" target="_blank">推广合作</a> | <span>Copyright ©@DateTime.Now.Year @ViewBag.SiteName</span>
+            </div>
         </footer>
     </div>
 

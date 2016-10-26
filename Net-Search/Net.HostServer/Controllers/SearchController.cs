@@ -38,7 +38,7 @@ namespace Net.HostServer.Controllers
 			List<SitePage> pages = GetPages();
 			ViewBag.Pages = pages;
 			ViewBag.PageCount = pages.Count();
-
+			ViewBag.SiteName = "Net Search";
 			return View(pages);
 		}
 
@@ -82,7 +82,7 @@ namespace Net.HostServer.Controllers
 			#region Search words
 
 			Log.Info("Search words start");
-			ViewBag.Name = name;
+			ViewBag.SearchName = name;
 			Words word = new Words();
 			word.IP = HttpHelper.GetIp();
 			word.Name = name;

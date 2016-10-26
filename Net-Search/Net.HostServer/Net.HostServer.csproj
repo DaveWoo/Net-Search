@@ -188,6 +188,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Search.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -212,6 +213,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\searchhome.js" />
     <Content Include="Scripts\_references.js" />
     <None Include="Service References\ServiceReference\api.disco" />
     <None Include="Service References\ServiceReference\configuration91.svcinfo" />
@@ -220,6 +222,10 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="Src\safe_16.png" />
+    <Content Include="Src\safe_32.png" />
+    <Content Include="Src\v_16.png" />
+    <Content Include="Src\v_32.png" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
