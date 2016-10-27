@@ -9,14 +9,20 @@
     @Scripts.Render("~/bundles/netserver")
 </head>
 <body onload="onLoad()">
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse-banner navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 @using (Html.BeginForm())
                 {
                     <p style="margin-top:12px;width:600px">
-                        <span style="color:aqua">Net Search </span> @Html.TextBox("q") <input type="submit" value="Search" />
+                        <span style="color:#000000">Net Search </span> @Html.TextBox("q") <input type="submit" value="Search" />
+                        @if (!string.IsNullOrWhiteSpace(ViewBag.RelatedSearchCount))
+                        {
+                            <span class="nums" style="">找到相关结果约 @ViewBag.RelatedSearchCount 个</span>
+                        }
+                        <span class="glyphicon glyphicon-arrow-up"></span>
                     </p>
+
                 }
 
             </div>
@@ -29,19 +35,19 @@
     <div class="container body-content">
         @RenderBody()
         @*<hr />*@
-        <footer>
-            <div>
-                <a href="javascript:;" id="top">
-                    <i class="teal arrow circle outline up icon" style="margin-left: 20px"></i>
-                    <br />
-                    回到顶部
-                </a>
-            </div>
-            <div id="s_footer">
-                <a href="u" target="_blank">意见反馈</a> | <a href="" target="_blank">推广合作</a> | <span>Copyright ©@DateTime.Now.Year @ViewBag.SiteName</span>
-            </div>
-        </footer>
     </div>
+    <footer>
+        <div>
+            <a href="javascript:;" id="top">
+                <i class="teal arrow circle outline up icon" style="margin-left: 20px"></i>
+                <br />
+                回到顶部
+            </a>
+        </div>
+        <div id="s_footer">
+            <a href="u" target="_blank">意见反馈</a> | <a href="" target="_blank">推广合作</a> | <span>Copyright ©@DateTime.Now.Year @ViewBag.SiteName</span>
+        </div>
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

@@ -23,13 +23,6 @@ body {
     border: red solid 0px;
 }
 
-#float_banner {
-    top: 0;
-    padding-left: 40px;
-    border: red solid 0px;
-    position: fixed;
-    z-index: 3000;
-}
 
 #body_left {
     max-width: 600px;
@@ -386,4 +379,8 @@ mingpian-planed {
     padding: 5px;
     display: block;
     border: grey 1px solid;
+}
+.navbar-inverse-banner {
+    background-color: #e8e8e8;
+    border-color: #e8e8e8;
 }

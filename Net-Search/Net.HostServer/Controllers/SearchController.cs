@@ -113,7 +113,7 @@ namespace Net.HostServer.Controllers
 			var relatedSearchResultCount = client.GetRelatedResutsCount(name);
 			if (relatedSearchResultCount != -1)
 			{
-				relatedSearchCount = relatedSearchResultCount.ToString("n2");
+				ViewBag.RelatedSearchCount = relatedSearchResultCount.ToString("N0");
 			}
 
 			var currentPages = pageList.Skip((pageNumber - 1) * 10).Take(Constants.PAGECOUNT);

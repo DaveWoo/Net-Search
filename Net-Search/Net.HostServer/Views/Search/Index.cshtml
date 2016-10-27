@@ -50,7 +50,7 @@
                 <div id="so_feb">
                     <dl id="soSafe" class="open">
                         <dt class="" onclick='collapsed()'>
-                            <div id="collapse-button">收起<i id="angle" class="angle down icon"></i></div>
+                            <div id="collapse-button">收起<span id="angle" class="glyphicon glyphicon-menu-down"></span></div>
                             <span class="safe-guard-logo"></span>
                             @* <i class="lock icon"></i>*@
                             <span>@ViewBag.SiteName· 安全保障</span>
@@ -78,10 +78,10 @@
                     function collapsed() {
 
                         if (document.getElementById('collapse-button').textContent.indexOf('收起') != -1) {
-                            document.getElementById('collapse-button').innerHTML = '展开' + "<i id=\"angle\" class=\"angle up icon\"></i>";
+                            document.getElementById('collapse-button').innerHTML = '展开' + "<i id=\"angle\" class=\"glyphicon glyphicon-menu-up\"></i>";
                         }
                         else if (document.getElementById('collapse-button').textContent.indexOf('展开') != -1) {
-                            document.getElementById('collapse-button').innerHTML = '收起' + "<i id=\"angle\" class=\"angle down icon\"></i>";
+                            document.getElementById('collapse-button').innerHTML = '收起' + "<i id=\"angle\" class=\"glyphicon glyphicon-menu-down\"></i>";
                         }
                         var showorhidden = document.getElementById("ad-home");
 
