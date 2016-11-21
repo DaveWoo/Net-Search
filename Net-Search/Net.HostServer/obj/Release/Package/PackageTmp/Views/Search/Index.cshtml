@@ -1,12 +1,12 @@
 ﻿@*@{
-    ViewBag.Title = "Home Page";
-}*@
+        ViewBag.Title = "Home Page";
+    }*@
 @using Net.Models;
 
 <div id="s_body">
     <div class="flex-container">
         @*left side start->*@
-        <div id="body_left">
+        <div id="body-left">
             @foreach (var p in ViewBag.Pages)
             {
                 <h3 class="res-title">
@@ -44,44 +44,45 @@
         @*left side end*@
 
         @*right side start*@
-        <div id="body_right">
+        <div id="body-right">
             @if (ViewBag.PageCount > 0)
             {
-                <div id="so_feb">
-                    <dl id="soSafe" class="open">
-                        <dt class="" onclick='collapsed()'>
-                            <div id="collapse-button">收起<span id="angle" class="glyphicon glyphicon-menu-down"></span></div>
-                            <span class="safe-guard-logo"></span>
-                            @* <i class="lock icon"></i>*@
-                            <span>@ViewBag.SiteName· 安全保障</span>
-                        </dt>
-                        <dd id="ad-home" style="display: none;">
-                            <p class="txt">如您加入 @ViewBag.SiteName 推广赔付计划，在 @ViewBag.SiteName 推广网站中因遭遇欺诈、钓鱼、假冒网站并造成经济损失，在符合《@ViewBag.SiteName 推广赔付协议》的赔付条件时，可向 @ViewBag.SiteName 申请赔付。<a href="#src=#" target="_blank" class="join">我要加入&gt;&gt;</a></p>
-                            <p><strong>了解详情：</strong>        <a href="#src=#" target="_blank">网购先赔</a></p>
-                            <p><strong>举报入口：</strong> <a href="https://110.xxx.cn" target="_blank">猎网平台&gt;&gt;</a></p>
-                        </dd>
-                    </dl>
-                </div>
-                <div id="right_show" class="spread">
-                    <ul id="rightbox" class="result">
-                        <li>
-                            <h3><a href="#" target="_blank" style="font-size: 15px">想在 @ViewBag.SiteName 推广您的产品服务吗？</a></h3>
-                            <p class="res-linkinfo">
-                                @*<i class="volume control phone icon"></i>*@
-                                ☎ 4000-123-123<br>
-                                <cite>a.bcd.cn</cite>
-                            </p>
-                        </li>
-                    </ul>
-                </div>
-                <script>
+                <div id="body-right-container">
+                    <div id="so-feb">
+                        <dl id="soSafe" class="open">
+                            <dt class="" onclick='collapsed()'>
+                                <div id="collapse-button">收起  <i id="angle" class="glyphicon glyphicon-menu-down"></i></div>
+                                <span class="safe-guard-logo"></span>
+                                @* <i class="lock icon"></i>*@
+                                <span>@ViewBag.SiteName· 安全保障</span>
+                            </dt>
+                            <dd id="ad-home" style="display: none;">
+                                <p class="txt">如您加入 @ViewBag.SiteName 推广赔付计划，在 @ViewBag.SiteName 推广网站中因遭遇欺诈、钓鱼、假冒网站并造成经济损失，在符合《@ViewBag.SiteName 推广赔付协议》的赔付条件时，可向 @ViewBag.SiteName 申请赔付。<a href="#src=#" target="_blank" class="join">我要加入&gt;&gt;</a></p>
+                                <p><strong>了解详情：</strong>        <a href="#src=#" target="_blank">网购先赔</a></p>
+                                <p><strong>举报入口：</strong> <a href="https://110.xxx.cn" target="_blank">猎网平台&gt;&gt;</a></p>
+                            </dd>
+                        </dl>
+                    </div>
+                    <div id="right-show" class="spread">
+                        <ul id="rightbox" class="result">
+                            <li>
+                                <h3><a href="#" target="_blank" style="font-size: 15px">想在 @ViewBag.SiteName 推广您的产品服务吗？</a></h3>
+                                <p class="res-linkinfo">
+                                    @*<i class="volume control phone icon"></i>*@
+                                    ☎ 4000-123-123<br>
+                                    <cite>a.bcd.cn</cite>
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                    <script>
                     function collapsed() {
 
                         if (document.getElementById('collapse-button').textContent.indexOf('收起') != -1) {
-                            document.getElementById('collapse-button').innerHTML = '展开' + "<i id=\"angle\" class=\"glyphicon glyphicon-menu-up\"></i>";
+                            document.getElementById('collapse-button').innerHTML = '展开' + "  <i id=\"angle\" class=\"glyphicon glyphicon-menu-up\"></i>";
                         }
                         else if (document.getElementById('collapse-button').textContent.indexOf('展开') != -1) {
-                            document.getElementById('collapse-button').innerHTML = '收起' + "<i id=\"angle\" class=\"glyphicon glyphicon-menu-down\"></i>";
+                            document.getElementById('collapse-button').innerHTML = '收起' + "  <i id=\"angle\" class=\"glyphicon glyphicon-menu-down\"></i>";
                         }
                         var showorhidden = document.getElementById("ad-home");
 
@@ -90,7 +91,8 @@
                         }
                         else { showorhidden.style.display = 'none' }
                     }
-                </script>
+                    </script>
+                </div>
             }
         </div>
         @*right side end*@
@@ -98,7 +100,7 @@
     @if (ViewBag.PageCount > 0)
     {
         <div id="page">
-            <span> 
+            <span>
                 @Html.Raw(ViewBag.PageIndexString)
             </span>
 

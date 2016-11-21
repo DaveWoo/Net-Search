@@ -10,7 +10,7 @@ using Net.Utils.Common;
 
 namespace Net.HostServer.Controllers
 {
-	public class SearchController : Controller
+	public class SController : Controller
 	{
 		protected string relatedSearchCount;
 		List<SitePage> pagesAd = null;
@@ -20,12 +20,12 @@ namespace Net.HostServer.Controllers
 		protected string sitePageCount;
 		static ManagerClient client = null;
 
-		static SearchController()
+		static SController()
 		{
 			client = new ManagerClient();
 		}
 
-		public ActionResult Index(string q)
+		public ActionResult Index(string q,string pn)
 		{
 			string searchString = q;
 			//var pages = from m in client.GetPages(searchString)

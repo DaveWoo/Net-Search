@@ -16,38 +16,45 @@ body {
 }
 
 #s_body {
-    overflow: auto;
-    padding-left: 30px;
+    padding-top: 50px;
+    padding-bottom: 20px;
+    padding-left: 0;
     margin-left: 0;
     min-width: 1000px;
     border: red solid 0px;
 }
 
 
-#body_left {
-    max-width: 600px;
+#body-left {
+    margin-left:70px;
+    max-width: 550px;
 }
 
-#body_right {
+#body-right {
     margin-left: 10px;
     min-width: 200px;
-    max-width: 300px;
-    border-left: 1px solid #eee;
-    padding: 0 0 0 15px;
+    width: 400px;
+    padding: 0 0 0 75px;
 }
 
-#right_show {
-    -width: 300px;
+#body-right-container {
+    padding: 0 0 0 15px;
+    border-left: 1px solid #eee;
+    max-width: 400px;
+}
+
+#right-show {
+    -width: 400px;
 }
 
 #so_feb {
-    width: 300px;
+      width: 400px;
 }
 
 #soSafe {
     /*border: 2px solid #aef0c6;*/
-    border-top: 2px solid #aef0c6;
-    border-bottom: 2px solid #aef0c6;
+    border-top: 1px solid #aef0c6;
+    border-bottom: 1px solid #aef0c6;
     font-size: 13px;
     margin-bottom: 15px;
 }
@@ -287,7 +294,7 @@ mingpian-planed {
     }
 
 #page {
-    margin: 15px 0 0 -2px;
+    margin: 15px 0 0 68px;
     padding-top: 6px;
     white-space: nowrap;
 }
@@ -323,9 +330,9 @@ mingpian-planed {
     min-width: 150px;
     border: red solid 0;
     max-height: 20px;
-    margin: 0 auto 0 auto;
-    margin-top: 14px;
     margin-left: 20px;
+    vertical-align: central;
+    vertical-align: middle;
 }
 
 .nav-wrapper-fixed {
@@ -380,7 +387,47 @@ mingpian-planed {
     display: block;
     border: grey 1px solid;
 }
+
 .navbar-inverse-banner {
     background-color: #e8e8e8;
     border-color: #e8e8e8;
+    /*border: red solid 1px;*/
+}
+
+.navbar-form {
+    width: 800px;
+    /*border: red solid 1px;*/
+    margin-left: 0;
+}
+
+
+.search-box {
+    min-width: 550px;
+}
+
+.banner-name {
+    padding-left: 0;
+    /*border: red solid 1px;*/
+}
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 0;
+    padding-right: 15px;
+}
+
+#searchinput {
+    width: 200px;
+}
+
+#searchclear {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 14px;
+    margin: auto;
+    font-size: 14px;
+    cursor: pointer;
+    color: #ccc;
+    padding-right: 10px;
 }

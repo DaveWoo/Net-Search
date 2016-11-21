@@ -1,6 +1,8 @@
 function onLoad() {
     toTop('top', false);
     highlight();
+
+
 }
 
 function toTop(id, show) {
@@ -88,4 +90,21 @@ function hide() {
         document.getElementById(div_tip_ID).style.display = "none";
     }, 50);
 
+}
+function formsubmit() {
+    btnsearch.disabled = "disabled";
+}
+function formfocus() {
+    btnsearch.disabled = undefined;
+}
+
+function ready() {
+    $("#searchinput").keyup(function () {
+        $("#searchclear").toggle(Boolean($(this).val()));
+    });
+    $("#searchclear").toggle(Boolean($("#searchinput").val()));
+    $("#searchclear").click(function () {
+        $("#searchinput").val('').focus();
+        $(this).hide();
+    });
 }

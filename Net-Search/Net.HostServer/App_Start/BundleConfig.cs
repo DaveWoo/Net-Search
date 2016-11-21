@@ -24,10 +24,14 @@ namespace Net.HostServer
 					  "~/Scripts/respond.js"));
 
 			bundles.Add(new ScriptBundle("~/bundles/netserver").Include(
-					  "~/Scripts/searchhome.js"));
+					  "~/Scripts/searchhome.js",
+					  "~/Scripts/pace/pace.min.js"));
+
 
 			bundles.Add(new StyleBundle("~/Content/css").Include(
 					  "~/Content/bootstrap.css",
+					  "~/css/font-awesome.css",
+					  "~/css/pace/dataurl.css",
 					  "~/Content/site.css",
 					  "~/Content/search.css"));
 		}
