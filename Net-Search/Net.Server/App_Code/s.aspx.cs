@@ -10,7 +10,7 @@ namespace Net.Server
 {
 	public partial class Default : System.Web.UI.Page
 	{
-		protected string name = "Net Search";
+		protected string name = Constants.SITE_NAME;
 		protected string relatedSearchCount;
 		protected List<SitePage> pages = new List<SitePage>();
 		List<SitePage> pagesAd = null;

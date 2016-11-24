@@ -26,7 +26,7 @@ body {
 
 
 #body-left {
-    margin-left:70px;
+    margin-left: 70px;
     max-width: 550px;
 }
 
@@ -48,7 +48,7 @@ body {
 }
 
 #so_feb {
-      width: 400px;
+    width: 400px;
 }
 
 #soSafe {
@@ -191,6 +191,7 @@ body {
     font-size: 12px;
     font-family: 'Microsoft YaHei';
     border: 2px solid #eee;
+    z-index: 5;
     /*border-bottom: 2px solid #aef0c6;*/
 }
 
@@ -300,28 +301,9 @@ mingpian-planed {
 }
 
     #page a, #page strong {
-        background: white;
-        border: 1px solid #e5e5e5;
         border-radius: 2px;
         display: inline-block;
-        font-size: 16px;
-        height: 36px;
-        line-height: 36px;
         margin-right: 5px;
-        text-align: center;
-        text-decoration: none;
-        vertical-align: middle;
-        width: 36px;
-    }
-
-        #page a#spre, #page a#snext {
-            font-size: 14px;
-            width: 76px;
-        }
-
-    #page .nums {
-        color: #999;
-        font-size: 12px;
     }
 
 .nums {
@@ -385,7 +367,7 @@ mingpian-planed {
     background: #eee;
     padding: 5px;
     display: block;
-    border: grey 1px solid;
+    border: #CCC 1px solid;
 }
 
 .navbar-inverse-banner {
@@ -403,6 +385,7 @@ mingpian-planed {
 
 .search-box {
     min-width: 550px;
+    border-radius: 1px;
 }
 
 .banner-name {
@@ -419,6 +402,10 @@ mingpian-planed {
     width: 200px;
 }
 
+.btn {
+    border-radius: 1px !important;
+}
+
 #searchclear {
     position: absolute;
     right: 0;
@@ -430,4 +417,8 @@ mingpian-planed {
     cursor: pointer;
     color: #ccc;
     padding-right: 10px;
+}
+
+.header {
+    color: #5bc0de;
 }

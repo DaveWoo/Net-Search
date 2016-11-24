@@ -25,24 +25,16 @@ namespace Net.HostServer.Controllers
 			client = new ManagerClient();
 		}
 
-		public ActionResult Index(string q,string pn)
+		public ActionResult Index(string q, string pn)
 		{
-			string searchString = q;
-			//var pages = from m in client.GetPages(searchString)
-			//			select m;
-
-			//if (!String.IsNullOrEmpty(searchString))
-			//{
-			//	pages = pages.Where(s => s.Title.Contains(searchString));
-			//}
-			List<SitePage> pages = GetPages();
+			List<SitePage> pages = GetPages(q, pn);
 			ViewBag.Pages = pages;
 			ViewBag.PageCount = pages.Count();
-			ViewBag.SiteName = "Net Search";
+			ViewBag.SiteName = Constants.SITE_NAME;
 			return View(pages);
 		}
 
-		private List<SitePage> GetPages()
+		private List<SitePage> GetPages(string name, string pageNumberString)
 		{
 			List<SitePage> pages = new List<SitePage>();
 
@@ -52,8 +44,6 @@ namespace Net.HostServer.Controllers
 
 			Log.Info("Handle parameter start");
 
-			var name = Request["q"];
-			var pageNumberString = Request["pn"];
 			if (string.IsNullOrWhiteSpace(name))
 			{
 				name = "";
@@ -174,11 +164,11 @@ namespace Net.HostServer.Controllers
 		private string GenerateNextPage(string name, int pageNumber)
 		{
 			Log.Info("FilePath:" + Request.FilePath);
-			string pageIndexString = string.Empty;
-			string index = "<a href=\"" + Request.FilePath + "?q={0}&pn={1}\">{2}</a>";
-			string indexCurrent = "<strong>{0}</strong>";
-			string nextIndexStr = "<a id=\"snext\" href=\"" + Request.FilePath + "?q={0}&pn={1}\">Next</a>";
-			string preIndexStr = "<a id=\"spre\" href=\"" + Request.FilePath + "?q={0}&pn={1}\">Previous</a>";
+			string pageIndexString = "<ul class='pagination'>";
+			string index = "<li><a href=\"" + Request.FilePath + "?q={0}&pn={1}\">{2}</a></li>";
+			string indexCurrent = "<li class='active'><a class='#'>{0}</a></li>";
+			string nextIndexStr = "<li><a id=\"snext\" href=\"" + Request.FilePath + "?q={0}&pn={1}\">Next</a></li>";
+			string preIndexStr = "<li><a id=\"spre\" href=\"" + Request.FilePath + "?q={0}&pn={1}\">Previous</a></li>";
 			bool isAddPreindex = false;
 			int pageIndexCount = pageNumber < Constants.PAGEINDEXS ? Constants.PAGEINDEXS : pageNumber;
 			int indexStart = pageNumber < Constants.PAGEINDEXS ? 1 : pageNumber - Constants.PAGEINDEXS + 1;
@@ -201,7 +191,7 @@ namespace Net.HostServer.Controllers
 			}
 			int nextIndex = pageNumber + 1;
 			pageIndexString += string.Format(nextIndexStr, name, nextIndex);
-
+			pageIndexString += "</ul>";
 			return pageIndexString;
 		}
 

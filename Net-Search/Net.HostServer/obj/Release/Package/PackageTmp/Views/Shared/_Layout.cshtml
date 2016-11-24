@@ -14,7 +14,7 @@
             @using (Html.BeginForm())
             {
                 <div class="input-group-btn">
-                    <label class="btn btn-secondary banner-name" type="button"><i class="fa fa-paper-plane-o fa-lg" aria-hidden="true"></i>  @ViewBag.SiteName</label>
+                    <label class="btn btn-secondary banner-name " type="button"><i class="fa fa-paper-plane-o fa-lg header" aria-hidden="true"></i>  @ViewBag.SiteName</label>
                     <div class="btn-group">
                         @Html.TextBox("q", null, new { @class = "form-control search-box", id = "searchinput", type = "text", placeholder = "在" + @ViewBag.SiteName + "上搜索或输入网址" })
                         <span id="searchclear" class="glyphicon glyphicon-remove"></span>
@@ -48,7 +48,7 @@
             }
         </div>
         <div class="navbar-collapse collapse">
-            @Html.Partial("_LoginPartial")
+            @*@Html.Partial("_LoginPartial")*@
         </div>
     </div>
 

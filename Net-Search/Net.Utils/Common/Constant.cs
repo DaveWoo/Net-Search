@@ -27,6 +27,7 @@ namespace Net.Utils
 
 
 		public const string SERVICE_NAME = "NetServer";
+		public const string SITE_NAME = "Net Search";
 		public const string SERVICE_DESCRIPTION = "This service host search engine";
 
 

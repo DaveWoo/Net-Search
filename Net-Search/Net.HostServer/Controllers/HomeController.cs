@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Net.HostServer.ServiceReference;
+using Net.Utils;
 
 namespace Net.HostServer.Controllers
 {
@@ -16,8 +17,14 @@ namespace Net.HostServer.Controllers
 			client = new ManagerClient();
 		}
 
-		public ActionResult Index()
+		public ActionResult Index(string q)
 		{
+			ViewBag.SiteName = Constants.SITE_NAME;
+			if (!string.IsNullOrWhiteSpace(q))
+			{
+				string url = Request.Path + @"\\s?q=" + q;
+				Response.Write(string.Format("<script language='javascript'>window.location='{0}'</script>", url));
+			}
 			return View();
 		}
 

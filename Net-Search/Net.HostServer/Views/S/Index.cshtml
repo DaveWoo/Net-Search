@@ -1,7 +1,4 @@
-﻿@*@{
-        ViewBag.Title = "Home Page";
-    }*@
-@using Net.Models;
+﻿@using Net.Models;
 
 <div id="s_body">
     <div class="flex-container">
@@ -10,7 +7,7 @@
             @foreach (var p in ViewBag.Pages)
             {
                 <h3 class="res-title">
-                    <a class="stext" target="_blank" href="link.aspx?url=<%=p.Url%>">@p.Title</a>
+                    <a class="stext" target="_blank" href="link?url=@p.Url ">@p.Title</a>
                 </h3>
                 <span class="stext">@p.Content </span>
                 <br />
