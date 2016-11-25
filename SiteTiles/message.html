@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="favicon.ico" />
+    <!--jquery库-->
+    <script src="js/jquery.min.js"></script>
+    <!--bootstrap库-->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <script src="js/bootstrap/bootstrap.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="js/bootstrap/html5shiv.min.js"></script>
+      <script src="js/bootstrap/respond.min.js"></script>
+    <![endif]-->
+    <!--font-awesome字体库-->
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <!--平滑滚动到顶部库-->
+    <script src="js/jquery.scrolltopcontrol/scrolltopcontrol.js" type="text/javascript"></script>
+    <!--主要写的jquery拓展方法-->
+    <script src="js/jquery.extend.js" type="text/javascript"></script>
+    <!--主要写的css代码-->
+    <link href="css/default.css" rel="stylesheet" type="text/css" />
+    <!--主要写的js代码-->
+    <script src="js/default.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="maincontent row form-horizontal">
+        <!--我是主要内容 start-->
+        <ul class="breadcrumb">
+            <li class="active">Message库</li>
+        </ul>
+        <div class="col-sm-12">
+            <!--通知插件toastr start-->
+            <div class="row" id="message-toastr">
+                <div class="page-header text-center">
+                    <h2>通知插件1</h2>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">插件名</label>
+                        <div class="col-sm-10">
+                            <p class="form-control-static">
+                                Toastr
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">官网</label>
+                        <div class="col-sm-10">
+                            <a href="http://codeseven.github.io/toastr/" class="btn btn-info" target="_blank">http://codeseven.github.io/toastr/</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-1 control-label">特殊说明</label>
+                        <div class="col-sm-11">
+                            <p class="form-control-static">该插件依赖jquery库</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <link href="css/jquery.toastr/toastr.min.css" rel="stylesheet" />
+                <script src="js/jquery.toastr/toastr.min.js"></script>
+                <style>
+                    .toast-top-right {
+                        top: 62px;
+                    }
+                </style>
+                <script>
+                        $(function () {
+                            $("#btnShowMsg1").click(function () {
+                                toastr.options = {
+                                    "progressBar": true
+                                }
+                                toastr.info('Are you the 6 fingered man?');
+                            })
+                        })
+                </script>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">使用效果</label>
+                        <div class="col-sm-10">
+                            <a class="btn btn-info" id="btnShowMsg1">点我</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--通知插件toastr end-->
+            <!--通知插件sweetalert start-->
+            <div class="row" id="message-sweetalert">
+                <div class="page-header text-center">
+                    <h2>通知插件2</h2>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">插件名</label>
+                        <div class="col-sm-10">
+                            <p class="form-control-static">
+                                SweetAlert for Bootstrap
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">官网</label>
+                        <div class="col-sm-10">
+                            <a href="https://lipis.github.io/bootstrap-sweetalert/" class="btn btn-info" target="_blank">https://lipis.github.io/bootstrap-sweetalert/</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-1 control-label">特殊说明</label>
+                        <div class="col-sm-11">
+                            <p class="form-control-static">该插件依赖bootstrap库</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <link href="css/bootstrap.sweetalert/sweet-alert.css" rel="stylesheet" />
+                <script src="js/bootstrap.sweetalert/sweet-alert.min.js"></script>
+                <script>
+                        $(function () {
+                            $("#btnShowMsg2").click(function () {
+                                swal("Here's a message!");
+                            })
+                        })
+                </script>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">使用效果</label>
+                        <div class="col-sm-10">
+                            <a class="btn btn-info" id="btnShowMsg2">点我</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--通知插件sweetalert end-->
+        </div>
+        <!--我是主要内容 end-->
+    </div>
+
+</body>
+</html>
