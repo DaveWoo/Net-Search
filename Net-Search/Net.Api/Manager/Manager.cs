@@ -133,52 +133,57 @@ namespace Net.Api
 
 		public bool UpdateSitePage(SitePage value)
 		{
-			return Update<SitePage>(value);
+			return Update<SitePage>(value.Id, value);
 		}
 
 		public bool UpdateSiteInfo(SiteInfo value)
 		{
-			return Update<SiteInfo>(value);
+			return Update<SiteInfo>(value.Id, value);
 		}
 
 		public bool UpdateSiteSeverConfig(NetServerConfig value)
 		{
-			return Update<NetServerConfig>(value);
+			return Update<NetServerConfig>(value.ProcessedLinkAnchorId, value);
 		}
 
 		public bool UpdateSiteLink(Link value)
 		{
-			return Update<Link>(value);
+			return Update<Link>(value.Id, value);
 		}
 
 		public bool UpdateSiteAD(SiteAD value)
 		{
-			return Update<SiteAD>(value);
+			return Update<SiteAD>(value.Id, value);
 		}
 
 		public bool UpdateSiteAD(string url, string title, string content, string company, string tag)
 		{
+			var siteAD = SelectSiteADByDefault().Where(p => p.Url == url).FirstOrDefault();
 			if (string.IsNullOrWhiteSpace(tag))
 				throw new ArgumentNullException("tag");
-			SiteAD adSitePage = new SiteAD();
-			adSitePage.Id = SDB.ADBox.NewId();
-			adSitePage.Title = title;
-			adSitePage.Content = content;
-			adSitePage.Url = url;
-			adSitePage.VerifiedSiteName = company;
-			adSitePage.ModifiedTimeStamp = System.DateTime.Now;
-			adSitePage.Tag = tag;
-			return Update<SiteAD>(adSitePage);
+
+			if (siteAD == null)
+				throw new ArgumentNullException("url is incorrect");
+
+
+			siteAD.Title = title;
+			siteAD.Content = content;
+			siteAD.Url = url;
+			siteAD.VerifiedSiteName = company;
+			siteAD.ModifiedTimeStamp = System.DateTime.Now;
+			siteAD.Tag = tag;
+
+			return Update<SiteAD>(siteAD.Id, siteAD);
 		}
 
 		public bool UpdateSiteWords(Words value)
 		{
-			return Update<Words>(value);
+			return Update<Words>(value.Id, value);
 		}
 
 		public bool UpdateSiteLinked(Linked value)
 		{
-			return Update<Linked>(value);
+			return Update<Linked>(value.Id, value);
 		}
 
 		#endregion Update
@@ -281,9 +286,9 @@ namespace Net.Api
 			return false;
 		}
 
-		public bool DeleteSiteInfo(string url)
+		public bool DeleteSiteInfo(object id)
 		{
-			return Delete<SiteInfo>(url);
+			return Delete<SiteInfo>(id);
 		}
 
 		public bool DeleteSiteServerConfig(string name)
@@ -296,9 +301,9 @@ namespace Net.Api
 			return Delete<Link>(url);
 		}
 
-		public bool DeleteSiteAD(string url)
+		public bool DeleteSiteAD(object id)
 		{
-			return Delete<SiteAD>(url);
+			return Delete<SiteAD>(id);
 		}
 
 		public bool DeleteSiteWords(string url)

@@ -15,4 +15,10 @@ namespace Net.Models
 	{
 		string Url { get; set; }
 	}
+
+	interface IEnalbe
+	{
+		string IsEnable { get; set; }
+	}
+	
 }

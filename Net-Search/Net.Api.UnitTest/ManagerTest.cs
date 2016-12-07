@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Net.Api;
 using System.IO;
@@ -100,6 +100,45 @@ namespace Net.Api.UnitTest
 			}
 
 
+		}
+
+		[TestMethod]
+		public void EditSiteAD()
+		{
+			try
+			{
+				var isSucceed = manager.UpdateSiteAD("www.soso.com",
+						"这是您的第一份免费广告5",
+						"这是您的第一份免费广告,我们将竭诚为您服务5",
+						"广告",
+						"新闻;news");
+
+				var dsd = manager.SelectSiteADByDefault();
+
+				Log.Info("End running CreateSiteInfoFromUrl...");
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+
+		[TestMethod]
+		public void DeleteSiteAD()
+		{
+			try
+			{
+				var dsd = manager.SelectSiteADByDefault();
+				var dsd3 = manager.DeleteSiteAD(dsd.FirstOrDefault().Id);
+
+				Log.Info("End running CreateSiteInfoFromUrl...");
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
 		}
 	}
 }

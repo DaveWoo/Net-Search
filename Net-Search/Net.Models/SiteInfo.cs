@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Net.Models
 {
 	[DataContract]
-	public class SiteInfo : IID, IUrl
+	public class SiteInfo : IID, IUrl, IEnalbe
 	{
 		[DataMember]
 		public long Id { get; set; }
@@ -38,6 +38,9 @@ namespace Net.Models
 
 		[DataMember]
 		public int Score { get; set; }
+
+		[DataMember]
+		public int IsEnable { get; set; }
 
 		[DataMember]
 		public DateTime CreatedTimeStamp { get; set; }

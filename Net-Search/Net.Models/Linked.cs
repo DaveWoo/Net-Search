@@ -5,8 +5,11 @@ using Net.Utils.Common;
 namespace Net.Models
 {
 	[DataContract]
-	public class Linked : IUrl
+	public class Linked : IID, IUrl
 	{
+		[DataMember]
+		public long Id { get; set; }
+
 		[DataMember]
 		public String Url { get; set; }
 

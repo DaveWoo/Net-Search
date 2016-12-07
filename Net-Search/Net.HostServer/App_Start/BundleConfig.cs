@@ -34,6 +34,12 @@ namespace Net.HostServer
 					  "~/css/pace/dataurl.css",
 					  "~/Content/site.css",
 					  "~/Content/search.css"));
+
+			bundles.Add(new StyleBundle("~/Content/ace").Include(
+				  "~/css/ace/ace.min.css",
+				  "~/css/ace/ace-rtl.min.css",
+				  "~/css/ace/ace-skins.min.css",
+				  "~/css/ace/ace-ie.min.css"));
 		}
 	}
 }

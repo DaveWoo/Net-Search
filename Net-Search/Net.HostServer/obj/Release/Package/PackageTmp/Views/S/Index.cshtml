@@ -1,7 +1,4 @@
-﻿@*@{
-        ViewBag.Title = "Home Page";
-    }*@
-@using Net.Models;
+﻿@using Net.Models;
 
 <div id="s_body">
     <div class="flex-container">
@@ -10,19 +7,18 @@
             @foreach (var p in ViewBag.Pages)
             {
                 <h3 class="res-title">
-                    <a class="stext" target="_blank" href="link.aspx?url=<%=p.Url%>">@p.Title</a>
+                    <a class="stext" target="_blank" href="link?url=@p.Url ">@p.Title</a>
                 </h3>
                 <span class="stext">@p.Content </span>
                 <br />
-                if (p.Tag != null)
+                if (@p.Tag != null && (@p.VerifiedSiteName != "广告" && @p.VerifiedSiteName != "AD"))
                 {
-                    <div id="tipID_@p.Id>
-                        " class="mingpian-tooltip" onmouseover="show()" onmouseout="this.style.display='none';">
-                        <div class="mingpian-title">@p((SiteInfo)p.Tag).Name</div>
-                        <div class="mingpian-description">@((SiteInfo)p.Tag).Description</div>
+                    <div id="tipID_@p.Id" class="mingpian-tooltip" onmouseover="show()" onmouseout="this.style.display='none';">
+                        <div class="mingpian-title">@p.Tag.Name</div>
+                        <div class="mingpian-description">@p.Tag.Description</div>
                         <div class="mingpian-credit">网站信用 :</div>
 
-                        @if (((SiteInfo)p.Tag).IsGuard)
+                        @if (p.Tag.IsGuard)
                         {
                             <div class="mingpian-planed">
                                 <i class="check circle icon"></i>已加入上网保障计划
@@ -37,7 +33,7 @@
                     </div>
                 }
                 <div class="res-linkinfo">
-                    <cite>@p.Url</cite>&nbsp;&nbsp;@p.Verified
+                    <cite>@p.Url</cite>&nbsp;&nbsp;@Html.Raw(p.Verified)
                 </div>
             }
         </div>
@@ -76,21 +72,21 @@
                         </ul>
                     </div>
                     <script>
-                    function collapsed() {
+                        function collapsed() {
 
-                        if (document.getElementById('collapse-button').textContent.indexOf('收起') != -1) {
-                            document.getElementById('collapse-button').innerHTML = '展开' + "  <i id=\"angle\" class=\"glyphicon glyphicon-menu-up\"></i>";
-                        }
-                        else if (document.getElementById('collapse-button').textContent.indexOf('展开') != -1) {
-                            document.getElementById('collapse-button').innerHTML = '收起' + "  <i id=\"angle\" class=\"glyphicon glyphicon-menu-down\"></i>";
-                        }
-                        var showorhidden = document.getElementById("ad-home");
+                            if (document.getElementById('collapse-button').textContent.indexOf('收起') != -1) {
+                                document.getElementById('collapse-button').innerHTML = '展开' + "  <i id=\"angle\" class=\"glyphicon glyphicon-menu-up\"></i>";
+                            }
+                            else if (document.getElementById('collapse-button').textContent.indexOf('展开') != -1) {
+                                document.getElementById('collapse-button').innerHTML = '收起' + "  <i id=\"angle\" class=\"glyphicon glyphicon-menu-down\"></i>";
+                            }
+                            var showorhidden = document.getElementById("ad-home");
 
-                        if (showorhidden.style.display == 'none') {
-                            showorhidden.style.display = 'block';
+                            if (showorhidden.style.display == 'none') {
+                                showorhidden.style.display = 'block';
+                            }
+                            else { showorhidden.style.display = 'none' }
                         }
-                        else { showorhidden.style.display = 'none' }
-                    }
                     </script>
                 </div>
             }

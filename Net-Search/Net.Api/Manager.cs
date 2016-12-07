@@ -105,68 +105,68 @@ namespace Net.Api
 			return null;
 		}
 
-		public bool Update<T>(params T[] values) where T : class
+		public bool Update<T>(long key, T value) where T : class
 		{
 			if (typeof(T).Name == Constants.TABLE_SITEPAGE)
 			{
-				return SDB.SitePageBox.Update<T>(Constants.TABLE_SITEPAGE, (T[])values);
+				return SDB.SitePageBox.Update<T>(Constants.TABLE_SITEPAGE, key, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_SITEINFO)
 			{
-				return SDB.SiteInfoBox.Update<T>(Constants.TABLE_SITEINFO, (T[])values);
+				return SDB.SiteInfoBox.Update<T>(Constants.TABLE_SITEINFO, key, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_NETSERVERCONFIG)
 			{
-				return SDB.NetServerConfigBox.Update<T>(Constants.TABLE_NETSERVERCONFIG, (T[])values);
+				return SDB.NetServerConfigBox.Update<T>(Constants.TABLE_NETSERVERCONFIG, key, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINK)
 			{
-				return SDB.LinkBox.Update<T>(Constants.TABLE_LINK, (T[])values);
+				return SDB.LinkBox.Update<T>(Constants.TABLE_LINK, key, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_AD)
 			{
-				return SDB.ADBox.Update<T>(Constants.TABLE_AD, (T[])values);
+				return SDB.ADBox.Update<T>(Constants.TABLE_AD, key, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_WORDS)
 			{
-				return SDB.WordsBox.Update<T>(Constants.TABLE_WORDS, (T[])values);
+				return SDB.WordsBox.Update<T>(Constants.TABLE_WORDS, key, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINKED)
 			{
-				return SDB.LinkedBox.Update<T>(Constants.TABLE_LINKED, (T[])values);
+				return SDB.LinkedBox.Update<T>(Constants.TABLE_LINKED, key, value);
 			}
 			return false;
 		}
 
-		public bool Delete<T>(params string[] values) where T : class, new()
+		public bool Delete<T>(object value) where T : class, new()
 		{
 			if (typeof(T).Name == Constants.TABLE_SITEPAGE)
 			{
-				return SDB.SitePageBox.Delete(Constants.TABLE_SITEPAGE, values);
+				return SDB.SitePageBox.Delete(Constants.TABLE_SITEPAGE, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_SITEINFO)
 			{
-				return SDB.SiteInfoBox.Delete(Constants.TABLE_SITEINFO, values);
+				return SDB.SiteInfoBox.Delete(Constants.TABLE_SITEINFO, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_NETSERVERCONFIG)
 			{
-				return SDB.NetServerConfigBox.Delete(Constants.TABLE_NETSERVERCONFIG, values);
+				return SDB.NetServerConfigBox.Delete(Constants.TABLE_NETSERVERCONFIG, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINK)
 			{
-				return SDB.LinkBox.Delete(Constants.TABLE_LINK, values);
+				return SDB.LinkBox.Delete(Constants.TABLE_LINK, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_AD)
 			{
-				return SDB.ADBox.Delete(Constants.TABLE_LINK, values);
+				return SDB.ADBox.Delete(Constants.TABLE_AD, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_WORDS)
 			{
-				return SDB.WordsBox.Delete(Constants.TABLE_WORDS, values);
+				return SDB.WordsBox.Delete(Constants.TABLE_WORDS, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINKED)
 			{
-				return SDB.LinkedBox.Delete(Constants.TABLE_LINKED, values);
+				return SDB.LinkedBox.Delete(Constants.TABLE_LINKED, value);
 			}
 			return false;
 		}

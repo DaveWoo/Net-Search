@@ -11,7 +11,7 @@
                 </h3>
                 <span class="stext">@p.Content </span>
                 <br />
-                if (@p.Tag != null)
+                if (@p.Tag != null && (@p.VerifiedSiteName != "广告" && @p.VerifiedSiteName != "AD"))
                 {
                     <div id="tipID_@p.Id" class="mingpian-tooltip" onmouseover="show()" onmouseout="this.style.display='none';">
                         <div class="mingpian-title">@p.Tag.Name</div>

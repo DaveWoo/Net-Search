@@ -58,6 +58,29 @@ namespace Net.Api
 
 		#endregion
 
+		#region Delete
+		[OperationContract]
+		bool DeleteSitePage(string url);
+
+		[OperationContract]
+		bool DeleteSiteInfo(object id);
+
+		[OperationContract]
+		bool DeleteSiteServerConfig(string name);
+
+		[OperationContract]
+		bool DeleteLink(string url);
+
+		[OperationContract]
+		bool DeleteSiteAD(object id);
+
+		[OperationContract]
+		bool DeleteSiteWords(string url);
+
+		[OperationContract]
+		bool DeleteSiteLinked(string url);
+		#endregion
+
 		#region Site operation
 
 		[OperationContract]
@@ -74,6 +97,12 @@ namespace Net.Api
 
 		[OperationContract]
 		void CreateSiteLinkFromUrl(string url);
+
+		[OperationContract]
+		bool CreateSiteInfo(SiteInfo value);
+
+		[OperationContract]
+		bool UpdateSiteInfo(SiteInfo value);
 
 		[OperationContract]
 		bool AddSiteAD(string url, string title, string content, string company, string tag);

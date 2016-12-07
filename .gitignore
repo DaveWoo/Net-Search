@@ -45,4 +45,17 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-/Net-Search/Net.Server/s.aspx
+/Net-Search/Net.Utils/bin/Debug
+/Net-Search/Net.Utils/obj/Debug
+/Net-Search/packages
+/Net-Search/Net.Spider/obj/Debug
+/Net-Search/Net.Spider/bin/Debug
+/Net-Search/Net.Server/obj/Debug
+/Net-Search/Net.Server/bin
+/Net-Search/Net.Server/Log
+/Net-Search/Net.Models/bin/Debug
+/Net-Search/Net.Models/obj/Debug
+/Net-Search/Net.EngineConsole/bin/Debug
+/Net-Search/Net.Common/bin/Debug
+/Net-Search/Net.Common/obj/Debug
+/Net-Search/Net.Api/bin/Debug
