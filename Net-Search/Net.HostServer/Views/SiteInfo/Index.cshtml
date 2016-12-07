@@ -1,0 +1,111 @@
+﻿@model IEnumerable<Net.Models.SiteInfo>
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<div class="alert alert-block alert-success">
+    <button type="button" class="close" data-dismiss="alert">
+        <i class="fa fa-times" aria-hidden="true"></i>
+    </button>
+    List Group With Site Summary
+</div>
+<p>
+    @Html.ActionLink("Create New", "Create")
+    @*@using (Html.BeginForm("Index", "AD", FormMethod.Get))
+        {
+        <p>
+            Title: @Html.TextBox("SearchString")
+            <input type="submit" value="Filter" />
+        </p>
+        }*@
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/netserver")
+</p>
+<table class="table table-striped table-hover">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Url)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Alexa)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RankBaidu)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsGuard)
+        </th>
+        @*<th>
+                @Html.DisplayNameFor(model => model.PR)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Linked)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LinkedReversed)
+            </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Score)
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Url)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alexa)
+            </td>
+
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.RankBaidu)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PR)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Linked)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.LinkedReversed)
+            </td>
+            <td style="padding-left:30px">
+                @Html.DisplayFor(modelItem => item.IsGuard)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Score)
+            </td>
+            <td style="width:200px">
+
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "search-box" }) |
+                @*@Html.ActionLink("Details", "Details", new { id = item.Id }) |*@
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+
+                @*<a href="@Url.Action("Edit", "SiteInfo", new { id = item.Id }) %">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </a>|
+                    <a href="@Url.Action("Delete", "SiteInfo", new { id = item.Id }) %">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </a>*@
+            </td>
+        </tr>
+    }
+</table>
