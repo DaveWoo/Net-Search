@@ -20,17 +20,17 @@ namespace Net.Api
 				InitNetServerConfigBox();
 				InitADBox();
 				InitWordsBox();
-				InitLinkedBox();
+				InitSiteClickedLinkeBox();
 			}
 		}
 
 		public static DB.AutoBox SitePageBox { get; internal set; }
 		public static DB.AutoBox SiteInfoBox { get; internal set; }
-		public static DB.AutoBox LinkBox { get; internal set; }
+		public static DB.AutoBox SiteLinkBox { get; internal set; }
 		public static DB.AutoBox ADBox { get; internal set; }
 		public static DB.AutoBox NetServerConfigBox { get; internal set; }
-		public static DB.AutoBox WordsBox { get; internal set; }
-		public static DB.AutoBox LinkedBox { get; internal set; }
+		public static DB.AutoBox SearchedWordsBox { get; internal set; }
+		public static DB.AutoBox SiteClickedLinkeBox { get; internal set; }
 
 		public bool IsInit { get; set; }
 
@@ -74,7 +74,7 @@ namespace Net.Api
 			}
 		}
 
-		//link
+		//SiteLinkBox
 		private static void InitLinkBox()
 		{
 			try
@@ -82,8 +82,8 @@ namespace Net.Api
 				DB server = InitServer(3);
 				server.GetConfig().EnsureTable<Link>(Constants.TABLE_LINK, Constants.TABLE_FIELD_ID);
 				server.GetConfig().EnsureIndex<Link>(Constants.TABLE_LINK, true, "Url(" + Constants.MAX_URL_LENGTH + ")");
-				if (LinkBox == null)
-					LinkBox = server.Open();
+				if (SiteLinkBox == null)
+					SiteLinkBox = server.Open();
 			}
 			catch (Exception ex)
 			{
@@ -125,15 +125,15 @@ namespace Net.Api
 			}
 		}
 
-		//NetServerConfigBox
+		//SearchedWordsBox
 		private static void InitWordsBox()
 		{
 			try
 			{
 				DB server = InitServer(6);
-				server.GetConfig().EnsureTable<Words>(Constants.TABLE_WORDS, "Name");
-				if (WordsBox == null)
-					WordsBox = server.Open();
+				server.GetConfig().EnsureTable<Words>(Constants.TABLE_WORDS, Constants.TABLE_FIELD_ID);
+				if (SearchedWordsBox == null)
+					SearchedWordsBox = server.Open();
 			}
 			catch (Exception ex)
 			{
@@ -141,15 +141,15 @@ namespace Net.Api
 			}
 		}
 
-		//InitLinkedBox
-		private static void InitLinkedBox()
+		//SiteClickedLinkeBox
+		private static void InitSiteClickedLinkeBox()
 		{
 			try
 			{
 				DB server = InitServer(7);
-				server.GetConfig().EnsureTable<Linked>(Constants.TABLE_LINKED, "Url");
-				if (LinkedBox == null)
-					LinkedBox = server.Open();
+				server.GetConfig().EnsureTable<Linked>(Constants.TABLE_LINKED, Constants.TABLE_FIELD_ID);
+				if (SiteClickedLinkeBox == null)
+					SiteClickedLinkeBox = server.Open();
 			}
 			catch (Exception ex)
 			{
@@ -208,11 +208,11 @@ namespace Net.Api
 			}
 			SiteInfoBox = null;
 
-			if (LinkBox != null)
+			if (SiteLinkBox != null)
 			{
-				LinkBox.GetDatabase().Close();
+				SiteLinkBox.GetDatabase().Close();
 			}
-			LinkBox = null;
+			SiteLinkBox = null;
 
 			if (NetServerConfigBox != null)
 			{
@@ -226,17 +226,17 @@ namespace Net.Api
 			}
 			ADBox = null;
 
-			if (WordsBox != null)
+			if (SearchedWordsBox != null)
 			{
-				WordsBox.GetDatabase().Close();
+				SearchedWordsBox.GetDatabase().Close();
 			}
-			WordsBox = null;
+			SearchedWordsBox = null;
 
-			if (LinkedBox != null)
+			if (SiteClickedLinkeBox != null)
 			{
-				LinkedBox.GetDatabase().Close();
+				SiteClickedLinkeBox.GetDatabase().Close();
 			}
-			LinkedBox = null;
+			SiteClickedLinkeBox = null;
 
 			Log.Info("DBClosed");
 		}

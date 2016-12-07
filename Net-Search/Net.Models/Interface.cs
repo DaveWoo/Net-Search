@@ -18,7 +18,7 @@ namespace Net.Models
 
 	interface IEnalbe
 	{
-		string IsEnable { get; set; }
+		bool Enabled { get; set; }
 	}
-	
+
 }

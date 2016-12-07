@@ -105,6 +105,9 @@ namespace Net.Api
 		bool UpdateSiteInfo(SiteInfo value);
 
 		[OperationContract]
+		bool UpdateSitePage(SitePage value);
+
+		[OperationContract]
 		bool AddSiteAD(string url, string title, string content, string company, string tag);
 
 		[OperationContract]

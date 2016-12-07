@@ -1,7 +1,20 @@
 ﻿@using Net.HostServer;
 @{
     ViewBag.Title = "Dashboard";
+    Layout = null;
 }
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@Styles.Render("~/Content/css")
+@Styles.Render("~/Content/ace")
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/netserver")
+
+<style>
+    body {
+        background-color: #ffffff;
+    }
+</style>
 <div id="s_body">
     <div id="body_right">
 
@@ -11,27 +24,107 @@
         }
 
         <div class="container">
-            <div class="form-horizontal" style="max-width:400px;">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" style="padding-top:0">Time:</label>
-                    <div class="col-sm-10">
-                        <span class="label label-default">@time</span>
+
+            <div class="row">
+                <div class="space-6"></div>
+                <div class="col-sm-7 infobox-container">
+                    <div class="alert alert-block alert-success">
+                        <button type="button" class="close" data-dismiss="alert">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </button>
+                        List Group With Site Summary
+                    </div>
+                    <div class="infobox infobox-green  ">
+                        <div class="infobox-icon">
+                            <i class="icon-comments"></i>
+                        </div>
+                        <div class="infobox-data">
+                            <span class="infobox-data-number">@ViewBag.ProcessLinksCount</span>
+                            <div class="infobox-content">Collected links</div>
+                        </div>
+                        <div class="stat stat-success">8%</div>
+                    </div>
+                    <div class="infobox infobox-blue  ">
+                        <div class="infobox-icon">
+                            <i class="icon-twitter"></i>
+                        </div>
+                        <div class="infobox-data">
+                            <span class="infobox-data-number">@ViewBag.SiteInfoCount</span>
+                            <div class="infobox-content">Verified site</div>
+                        </div>
+                        <div class="badge badge-success">
+                            +32%
+                            <i class="icon-arrow-up"></i>
+                        </div>
+                    </div>
+                    <div class="infobox infobox-pink  ">
+                        <div class="infobox-icon">
+                            <i class="icon-shopping-cart"></i>
+                        </div>
+                        <div class="infobox-data">
+                            <span class="infobox-data-number">@ViewBag.SitePageCount</span>
+                            <div class="infobox-content">SuccessCollected pages</div>
+                        </div>
+                        <div class="stat stat-important">4%</div>
+                    </div>
+                    <div class="infobox infobox-red  ">
+                        <div class="infobox-icon">
+                            <i class="icon-beaker"></i>
+                        </div>
+                        <div class="infobox-data">
+                            <span class="infobox-data-number">@ViewBag.WordsCount</span>
+                            <div class="infobox-content">Searched words</div>
+                        </div>
+                    </div>
+                    <div class="infobox infobox-orange2  ">
+                        <div class="infobox-icon">
+                            <i class="icon-comments"></i>
+                        </div>
+                        <div class="infobox-data">
+                            <span class="infobox-data-number">@ViewBag.linkedCount</span>
+                            <div class="infobox-content">Linked url</div>
+                        </div>
+                        <div class="badge badge-success">
+                            7.2%
+                            <i class="icon-arrow-up"></i>
+                        </div>
+                    </div>
+                    <div class="infobox infobox-blue2  ">
+                        <div class="infobox-progress">
+                            <div class="easy-pie-chart percentage" data-percent="42" data-size="46">
+                                <span class="percent"></span>
+                            </div>
+                        </div>
+                        <div class="infobox-data">
+                            <span class="infobox-text"></span>
+                            <div class="infobox-content">
+                                <span class="bigger-110"></span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-6"></div>
+                    <div class="infobox infobox-green infobox-small infobox-dark">
+                        <div class="infobox-progress">
+                            <div class="easy-pie-chart percentage" data-percent="61" data-size="39">
+                                <span class="percent">61</span>%
+                            </div>
+                        </div>
+                        <div class="infobox-data">
+                            <div class="infobox-content">Memory</div>
+                            <div class="infobox-content">@mem</div>
+                        </div>
+                    </div>
+                    <div class="infobox infobox-blue infobox-small infobox-dark">
+                        <div class="infobox-chart">
+                            <span class="sparkline" data-values="3,4,2,3,4,4,2,2"></span>
+                        </div>
+                        <div class="infobox-data">
+                            <div class="infobox-content">Time</div>
+                            <div class="infobox-content">@time</div>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" style="padding-top:0">MEM:</label>
-                    <div class="col-sm-10">
-                        <span class="label label-default">@mem</span>
-                    </div>
-                </div>
-            </div>
-            <h3>List Group With Site Summary</h3>
-            <div class="list-group" style="max-width:400px;">
-                <a class="list-group-item">Collected links:  <span class="badge">@ViewBag.ProcessLinksCount</span></a>
-                <a class="list-group-item">Verified site: <span class="badge">@ViewBag.SiteInfoCount</span></a>
-                <a class="list-group-item">SuccessCollected pages: <span class="badge">@ViewBag.SitePageCount</span></a>
-                <a class="list-group-item">Searched words: <span class="badge">>@ViewBag.WordsCount</span></a>
-                <a class="list-group-item">Linked url: <span class="badge">@ViewBag.linkedCount</span></a>
             </div>
         </div>
     </div>

@@ -119,11 +119,13 @@ namespace Net.Api
 
 		public bool CreateSiteSearchWords(Words value)
 		{
+			value.Id = SDB.SearchedWordsBox.NewId();
 			return Insert<Words>(value);
 		}
 
 		public bool CreateSiteClickedLink(Linked value)
 		{
+			value.Id = SDB.SiteClickedLinkeBox.NewId();
 			return Insert<Linked>(value);
 		}
 
@@ -696,7 +698,7 @@ namespace Net.Api
 						#endregion Handle non-valid url
 
 						link = new Link();
-						link.Id = SDB.LinkBox.NewId();
+						link.Id = SDB.SiteLinkBox.NewId();
 						link.Url = contenetUrl;
 						link.CreatedTimeStamp = System.DateTime.Now;
 						link.ModifiedTimeStamp = System.DateTime.Now;

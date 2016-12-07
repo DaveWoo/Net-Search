@@ -6,6 +6,7 @@ using System.Reflection;
 using Net.Utils.Common;
 using Net.Utils;
 using System.Linq;
+using Net.Models;
 
 namespace Net.Api.UnitTest
 {
@@ -139,6 +140,31 @@ namespace Net.Api.UnitTest
 
 				throw;
 			}
+		}
+
+
+		[TestMethod]
+		public void CreateLinked()
+		{
+			try
+			{
+				Log.Info("Begin running CreateLinked...");
+
+				Linked linked = new Linked();
+				linked.IP = HttpHelper.GetIp();
+				linked.Url = "http://news.cctv.com/special/jujiao/2016/529/index.shtml";
+				linked.CreatedTimeStamp = System.DateTime.Now;
+				var single = manager.CreateSiteClickedLink(linked);
+				var sds = manager.SelectLinkedByDefault();
+				Log.Info("End running CreateLinked...");
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+
+
 		}
 	}
 }

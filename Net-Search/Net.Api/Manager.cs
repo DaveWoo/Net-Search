@@ -6,35 +6,35 @@ namespace Net.Api
 {
 	public partial class Manager
 	{
-		public bool Insert<T>(params T[] values) where T : class
+		public bool Insert<T>(T value) where T : class
 		{
 			if (typeof(T).Name == Constants.TABLE_SITEPAGE)
 			{
-				return SDB.SitePageBox.Insert<T>(Constants.TABLE_SITEPAGE, (T[])values);
+				return SDB.SitePageBox.Insert<T>(Constants.TABLE_SITEPAGE, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_SITEINFO)
 			{
-				return SDB.SiteInfoBox.Insert<T>(Constants.TABLE_SITEINFO, (T[])values);
+				return SDB.SiteInfoBox.Insert<T>(Constants.TABLE_SITEINFO, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_NETSERVERCONFIG)
 			{
-				return SDB.NetServerConfigBox.Insert<T>(Constants.TABLE_NETSERVERCONFIG, (T[])values);
+				return SDB.NetServerConfigBox.Insert<T>(Constants.TABLE_NETSERVERCONFIG, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINK)
 			{
-				return SDB.LinkBox.Insert<T>(Constants.TABLE_LINK, (T[])values);
+				return SDB.SiteLinkBox.Insert<T>(Constants.TABLE_LINK, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_AD)
 			{
-				return SDB.ADBox.Insert<T>(Constants.TABLE_AD, (T[])values);
+				return SDB.ADBox.Insert<T>(Constants.TABLE_AD, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_WORDS)
 			{
-				return SDB.WordsBox.Insert<T>(Constants.TABLE_WORDS, (T[])values);
+				return SDB.SearchedWordsBox.Insert<T>(Constants.TABLE_WORDS, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINKED)
 			{
-				return SDB.LinkedBox.Insert<T>(Constants.TABLE_LINKED, (T[])values);
+				return SDB.SiteClickedLinkeBox.Insert<T>(Constants.TABLE_LINKED, value);
 			}
 			return false;
 		}
@@ -55,7 +55,7 @@ namespace Net.Api
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINK)
 			{
-				return SDB.LinkBox.Select<T>(string.Format(Constants.SQLLIKE, Constants.TABLE_LINK));
+				return SDB.SiteLinkBox.Select<T>(string.Format(Constants.SQLLIKE, Constants.TABLE_LINK));
 			}
 			else if (typeof(T).Name == Constants.TABLE_AD)
 			{
@@ -63,11 +63,11 @@ namespace Net.Api
 			}
 			else if (typeof(T).Name == Constants.TABLE_WORDS)
 			{
-				return SDB.WordsBox.Select<T>(string.Format(Constants.SQLLIKE, Constants.TABLE_WORDS));
+				return SDB.SearchedWordsBox.Select<T>(string.Format(Constants.SQLLIKE, Constants.TABLE_WORDS));
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINKED)
 			{
-				return SDB.LinkedBox.Select<T>(string.Format(Constants.SQLLIKE, Constants.TABLE_LINKED));
+				return SDB.SiteClickedLinkeBox.Select<T>(string.Format(Constants.SQLLIKE, Constants.TABLE_LINKED));
 			}
 			return null;
 		}
@@ -88,7 +88,7 @@ namespace Net.Api
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINK)
 			{
-				return SDB.LinkBox.Select<T>(sqlLike, args);
+				return SDB.SiteLinkBox.Select<T>(sqlLike, args);
 			}
 			else if (typeof(T).Name == Constants.TABLE_AD)
 			{
@@ -96,11 +96,11 @@ namespace Net.Api
 			}
 			else if (typeof(T).Name == Constants.TABLE_WORDS)
 			{
-				return SDB.WordsBox.Select<T>(sqlLike, args);
+				return SDB.SearchedWordsBox.Select<T>(sqlLike, args);
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINKED)
 			{
-				return SDB.LinkedBox.Select<T>(sqlLike, args);
+				return SDB.SiteClickedLinkeBox.Select<T>(sqlLike, args);
 			}
 			return null;
 		}
@@ -121,7 +121,7 @@ namespace Net.Api
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINK)
 			{
-				return SDB.LinkBox.Update<T>(Constants.TABLE_LINK, key, value);
+				return SDB.SiteLinkBox.Update<T>(Constants.TABLE_LINK, key, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_AD)
 			{
@@ -129,11 +129,11 @@ namespace Net.Api
 			}
 			else if (typeof(T).Name == Constants.TABLE_WORDS)
 			{
-				return SDB.WordsBox.Update<T>(Constants.TABLE_WORDS, key, value);
+				return SDB.SearchedWordsBox.Update<T>(Constants.TABLE_WORDS, key, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINKED)
 			{
-				return SDB.LinkedBox.Update<T>(Constants.TABLE_LINKED, key, value);
+				return SDB.SiteClickedLinkeBox.Update<T>(Constants.TABLE_LINKED, key, value);
 			}
 			return false;
 		}
@@ -154,7 +154,7 @@ namespace Net.Api
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINK)
 			{
-				return SDB.LinkBox.Delete(Constants.TABLE_LINK, value);
+				return SDB.SiteLinkBox.Delete(Constants.TABLE_LINK, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_AD)
 			{
@@ -162,11 +162,11 @@ namespace Net.Api
 			}
 			else if (typeof(T).Name == Constants.TABLE_WORDS)
 			{
-				return SDB.WordsBox.Delete(Constants.TABLE_WORDS, value);
+				return SDB.SearchedWordsBox.Delete(Constants.TABLE_WORDS, value);
 			}
 			else if (typeof(T).Name == Constants.TABLE_LINKED)
 			{
-				return SDB.LinkedBox.Delete(Constants.TABLE_LINKED, value);
+				return SDB.SiteClickedLinkeBox.Delete(Constants.TABLE_LINKED, value);
 			}
 			return false;
 		}

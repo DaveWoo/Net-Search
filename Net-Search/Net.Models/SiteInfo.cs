@@ -40,7 +40,7 @@ namespace Net.Models
 		public int Score { get; set; }
 
 		[DataMember]
-		public int IsEnable { get; set; }
+		public bool Enabled { get; set; }
 
 		[DataMember]
 		public DateTime CreatedTimeStamp { get; set; }

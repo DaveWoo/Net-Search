@@ -36,7 +36,12 @@ namespace Net.HostServer.Controllers
 				linked.CreatedTimeStamp = System.DateTime.Now;
 
 				var isSuccessed = client.CreateSiteClickedLink(linked);
-
+				var single = client.SelectSitePage(string.Format(Constants.SQLLIKEURL, Constants.TABLE_SITEPAGE), url).FirstOrDefault();
+				if (single != null)
+				{
+					single.Linked = single.Linked + 1;
+					client.UpdateSitePage(single);
+				}
 				Response.Write(string.Format("<script language='javascript'>window.location='{0}'</script>", url));
 			}
 			catch (Exception ex)

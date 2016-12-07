@@ -10,7 +10,7 @@ using Net.Utils.Common;
 namespace Net.Models
 {
 	[DataContract]
-	public class SitePage : IID, IUrl
+	public class SitePage : IID, IUrl, IEnalbe
 	{
 		[DataMember]
 		public long Id { get; set; }
@@ -41,6 +41,9 @@ namespace Net.Models
 
 		[DataMember]
 		public bool Enabled { get; set; }
+
+		[DataMember]
+		public long Linked { get; set; }
 
 		[NotColumn]
 		public string Host
