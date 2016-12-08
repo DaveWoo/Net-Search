@@ -198,6 +198,11 @@
     <Content Include="css\ace\ace-rtl.min.css" />
     <Content Include="css\ace\ace-skins.min.css" />
     <Content Include="css\ace\ace.min.css" />
+    <Content Include="Scripts\ace\ace-elements.min.js" />
+    <Content Include="Scripts\ace\ace-extra.min.js" />
+    <Content Include="Scripts\ace\ace.min.js" />
+    <Content Include="Scripts\jquery.easypiechart.js" />
+    <Content Include="Scripts\jquery.easypiechart.min.js" />
     <Content Include="Scripts\pace\pace.min.js" />
     <Content Include="Content\Search.css" />
     <Content Include="css\font-awesome.css" />

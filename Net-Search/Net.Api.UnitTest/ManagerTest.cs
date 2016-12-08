@@ -166,5 +166,41 @@ namespace Net.Api.UnitTest
 
 
 		}
+
+		[TestMethod]
+		public void GetPages()
+		{
+			try
+			{
+				Log.Info("Begin running GetPages...");
+
+				var single = manager.GetPages("新闻");
+
+				Log.Info("End running GetPages...");
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+
+		[TestMethod]
+		public void SelectWordsByDefault()
+		{
+			try
+			{
+				Log.Info("Begin running SelectSiteADByDefault...");
+
+				var single = manager.SelectWordsByDefault();
+
+				Log.Info("End running SelectWordsByDefault...");
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+
 	}
 }

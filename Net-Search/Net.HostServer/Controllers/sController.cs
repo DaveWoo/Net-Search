@@ -78,7 +78,7 @@ namespace Net.HostServer.Controllers
 			word.Name = name;
 			word.CreatedTimeStamp = System.DateTime.Now;
 
-			client.CreateSiteSearchWords(word);
+			client.CreateSiteSearchWordsAsync(word);
 
 			#endregion Search words
 

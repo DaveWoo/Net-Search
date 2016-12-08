@@ -24,9 +24,14 @@ namespace Net.HostServer
 					  "~/Scripts/respond.js"));
 
 			bundles.Add(new ScriptBundle("~/bundles/netserver").Include(
-					  "~/Scripts/searchhome.js",
-					  "~/Scripts/pace/pace.min.js"));
+						"~/Scripts/searchhome.js",
+						"~/Scripts/jquery.easypiechart.js",
+						"~/Scripts/pace/pace.min.js"));
 
+			bundles.Add(new ScriptBundle("~/bundles/ace").Include(
+				  "~/Scripts/ace/ace-elements.min.js",
+				  "~/Scripts/ace/ace-extra.min.js",
+				  "~/Scripts/ace/ace.min.js"));
 
 			bundles.Add(new StyleBundle("~/Content/css").Include(
 					  "~/Content/bootstrap.css",
