@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Net.HostServer.ServiceReference;
 using Net.Models;
@@ -13,12 +12,12 @@ namespace Net.HostServer.Controllers
 	public class SController : Controller
 	{
 		protected string relatedSearchCount;
-		List<SitePage> pagesAd = null;
+		private List<SitePage> pagesAd = null;
 		protected string pageIndexString;
 		protected string processLinksCount;
 		protected string siteInfoCount;
 		protected string sitePageCount;
-		static ManagerClient client = null;
+		private static ManagerClient client = null;
 
 		static SController()
 		{
@@ -91,7 +90,7 @@ namespace Net.HostServer.Controllers
 			var ads = client.SelectSiteADByDefault();
 			if (ads != null)
 			{
-				pagesAd = ads.Where(p => (p.Tag != null) && p.Tag.ToString().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Contains(name)).ToList<SitePage>();
+				pagesAd = ads.Where(p => (!p.Disabled && p.Tag != null) && p.Tag.ToString().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Contains(name)).ToList<SitePage>();
 			}
 
 			#endregion Ad query
@@ -194,6 +193,5 @@ namespace Net.HostServer.Controllers
 			pageIndexString += "</ul>";
 			return pageIndexString;
 		}
-
 	}
 }

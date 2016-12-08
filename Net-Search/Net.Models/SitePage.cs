@@ -10,7 +10,7 @@ using Net.Utils.Common;
 namespace Net.Models
 {
 	[DataContract]
-	public class SitePage : IID, IUrl, IEnalbe
+	public class SitePage : IID, IUrl, IDisabled
 	{
 		[DataMember]
 		public long Id { get; set; }
@@ -40,7 +40,7 @@ namespace Net.Models
 		public DateTime ModifiedTimeStamp { get; set; }
 
 		[DataMember]
-		public bool Enabled { get; set; }
+		public bool Disabled { get; set; }
 
 		[DataMember]
 		public long Linked { get; set; }

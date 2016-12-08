@@ -111,7 +111,7 @@ namespace Net.Api
 		bool AddSiteAD(string url, string title, string content, string company, string tag);
 
 		[OperationContract]
-		bool UpdateSiteAD(string url, string title, string content, string company, string tag);
+		bool UpdateSiteAD(string url, string title, string content, string company, bool disabled, string tag);
 
 		[OperationContract]
 		bool CreateSitePage(SitePage value, bool isDeleteCurrentThenAddNew);

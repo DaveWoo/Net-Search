@@ -6,37 +6,41 @@ using Net.Models;
 
 namespace Net.HostServer.Controllers
 {
-	public class ADController : Controller
+	public class SitePagesController : Controller
 	{
 		private ManagerClient client = new ManagerClient();
 
-		// GET: AD
+		// GET: SitePages
 		public ActionResult Index(string searchString)
 		{
-			var ads = client.SelectSiteADByDefault();
-			return View(ads);
+			var pages = client.SelectSitePageByDefault();
+			if (!String.IsNullOrWhiteSpace(searchString))
+			{
+				return View(pages.Where(p => p.Title.IndexOf(searchString) > -1));
+			}
+			return View(pages);
 		}
 
-		// GET: AD/Details/5
+		// GET: SitePages/Details/5
 		public ActionResult Details(int id)
 		{
 			return View();
 		}
 
-		// GET: AD/Create
+		// GET: SitePages/Create
 		public ActionResult Create()
 		{
 			return View();
 		}
 
-		// POST: AD/Create
+		// POST: SitePages/Create
 		[HttpPost]
-		public ActionResult Create([Bind(Include = "Id,Url,Title,Content,Tag")] Net.Models.SiteAD ad)
+		public ActionResult Create(SitePage page)
 		{
 			try
 			{
 				// TODO: Add insert logic here
-				client.AddSiteAD(ad.Url, ad.Title, ad.Content, "AD", ad.Tag);
+				client.CreateSitePageAsync(page, false);
 				return RedirectToAction("Index");
 			}
 			catch
@@ -45,27 +49,27 @@ namespace Net.HostServer.Controllers
 			}
 		}
 
-		// GET: AD/Edit/5
+		// GET: SitePages/Edit/5
 		public ActionResult Edit(int id)
 		{
-			var ads = client.SelectSiteADByDefault();
-			SiteAD ad = null;
-			if (ads != null)
+			var pages = client.SelectSitePageByDefault();
+			SitePage page = null;
+			if (pages != null)
 			{
-				ad = ads.Where(p => p.Id == id).FirstOrDefault();
+				page = pages.Where(p => p.Id == id).FirstOrDefault();
 			}
 
-			return View(ad);
+			return View(page);
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, Net.Models.SiteAD ad)
+		public ActionResult Edit(int id, SitePage ad)
 		{
 			try
 			{
 				// TODO: Add update logic here
-				bool isSucceed = client.UpdateSiteAD(ad.Url, ad.Title, ad.Content, "AD", ad.Disabled, ad.Tag);
+				bool isSucceed = client.UpdateSitePage(ad);
 				return RedirectToAction("Index");
 			}
 			catch
@@ -74,14 +78,14 @@ namespace Net.HostServer.Controllers
 			}
 		}
 
-		// GET: AD/Delete/5
+		// GET: SitePages/Delete/5
 		public ActionResult Delete(int id)
 		{
-			var ads = client.SelectSiteADByDefault();
+			var pages = client.SelectSiteADByDefault();
 			SiteAD ad = null;
-			if (ads != null)
+			if (pages != null)
 			{
-				ad = ads.Where(p => p.Id == id).FirstOrDefault();
+				ad = pages.Where(p => p.Id == id).FirstOrDefault();
 			}
 
 			return View(ad);
@@ -89,7 +93,7 @@ namespace Net.HostServer.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int id, [Bind(Include = "Id,Url,Title,Content,Tag")] Net.Models.SiteAD ad)
+		public ActionResult Delete(int id, SitePage ad)
 		{
 			try
 			{

@@ -16,9 +16,9 @@ namespace Net.Models
 		string Url { get; set; }
 	}
 
-	interface IEnalbe
+	interface IDisabled
 	{
-		bool Enabled { get; set; }
+		bool Disabled { get; set; }
 	}
 
 }

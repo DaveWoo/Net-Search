@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Net.HostServer.ServiceReference;
 using Net.Models;
@@ -50,6 +48,7 @@ namespace Net.HostServer.Controllers
 			}
 
 			#endregion Handle parameter
+
 			return View();
 		}
 	}

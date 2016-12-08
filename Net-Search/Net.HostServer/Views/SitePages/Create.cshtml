@@ -1,20 +1,24 @@
-﻿@model Net.Models.SiteAD
+﻿@model Net.Models.SitePage
+
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Create";
     Layout = null;
 }
 @Styles.Render("~/Content/css")
 @Scripts.Render("~/bundles/modernizr")
 @Scripts.Render("~/bundles/netserver")
-<h2>Edit</h2>
-@using (Html.BeginForm())
+<h2>Create</h2>
+
+
+@using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
+    
     <div class="form-horizontal">
         <h4>AD</h4>
         <hr />
         @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.Id)
+
         <div class="form-group">
             @Html.LabelFor(model => model.Url, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -22,6 +26,7 @@
                 @Html.ValidationMessageFor(model => model.Url)
             </div>
         </div>
+        @*Fields removed for brevity.*@
         <div class="form-group">
             @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -29,18 +34,12 @@
                 @Html.ValidationMessageFor(model => model.Title)
             </div>
         </div>
+
         <div class="form-group">
             @Html.LabelFor(model => model.Content, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Content)
                 @Html.ValidationMessageFor(model => model.Content)
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.Disabled, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Disabled)
-                @Html.ValidationMessageFor(model => model.Disabled)
             </div>
         </div>
         <div class="form-group">
@@ -50,16 +49,19 @@
                 @Html.ValidationMessageFor(model => model.Tag)
             </div>
         </div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
+
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

@@ -158,7 +158,7 @@ namespace Net.Api
 			return Update<SiteAD>(value.Id, value);
 		}
 
-		public bool UpdateSiteAD(string url, string title, string content, string company, string tag)
+		public bool UpdateSiteAD(string url, string title, string content, string company, bool disabled, string tag)
 		{
 			var siteAD = SelectSiteADByDefault().Where(p => p.Url == url).FirstOrDefault();
 			if (string.IsNullOrWhiteSpace(tag))
@@ -174,6 +174,7 @@ namespace Net.Api
 			siteAD.VerifiedSiteName = company;
 			siteAD.ModifiedTimeStamp = System.DateTime.Now;
 			siteAD.Tag = tag;
+			siteAD.Disabled = disabled;
 
 			return Update<SiteAD>(siteAD.Id, siteAD);
 		}
@@ -377,8 +378,10 @@ namespace Net.Api
 						p.Content = content;
 
 						#endregion Clac page body contents
-
-						pageList.Add(p);
+						if (!p.Disabled)
+						{
+							pageList.Add(p);
+						}
 						if (pageList.Count >= Constants.PAGECOUNTLIMIT)
 						{
 							break;

@@ -3,56 +3,68 @@
     ViewBag.Title = "Index";
     Layout = null;
 }
-<h2>Index</h2>
+<h2>AD Management</h2>
+<div class="alert alert-block alert-success">
+    <button type="button" class="close" data-dismiss="alert">
+        <i class="fa fa-times" aria-hidden="true"></i>
+    </button>
+    Manage AD from current page
+</div>
 <p>
     @Html.ActionLink("Create New", "Create")
     @*@using (Html.BeginForm("Index", "AD", FormMethod.Get))
-    {
-    <p>
-        Title: @Html.TextBox("SearchString")
-        <input type="submit" value="Filter" />
-    </p>
-    }*@
+        {
+        <p>
+            Title: @Html.TextBox("SearchString")
+            <input type="submit" value="Filter" />
+        </p>
+        }*@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/netserver")
-    </p>
-    <table class="table">
+</p>
+<table class="table table-striped table-hover">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Url)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Disabled)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Tag)
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Url)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tag)
-            </th>
-            <th></th>
+            <td>
+                @Html.DisplayFor(modelItem => item.Url)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td style="padding-left:30px">
+                @Html.DisplayFor(modelItem => item.Disabled)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tag)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @*@Html.ActionLink("Details", "Details", new { id = item.Id }) |*@
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
         </tr>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Url)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Content)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tag)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @*@Html.ActionLink("Details", "Details", new { id = item.Id }) |*@
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id})
-                </td>
-            </tr>
-        }
-    </table>
+    }
+</table>

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Net.HostServer.ServiceReference;
 using Net.Models;
@@ -10,11 +8,11 @@ namespace Net.HostServer.Controllers
 {
 	public class SiteInfoController : Controller
 	{
-		ManagerClient client = new ManagerClient();
+		private ManagerClient client = new ManagerClient();
+
 		// GET: AD
 		public ActionResult Index(string searchString)
 		{
-
 			var siteInfo = client.SelectSiteInfoByDefault();
 			return View(siteInfo);
 		}
@@ -95,7 +93,7 @@ namespace Net.HostServer.Controllers
 		{
 			try
 			{
-				// TODO: Add delete logic here		
+				// TODO: Add delete logic here
 				var isSucceed = client.DeleteSiteInfo((Int64)id);
 
 				return RedirectToAction("Index");

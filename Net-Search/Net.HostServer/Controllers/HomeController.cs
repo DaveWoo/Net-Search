@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Net.HostServer.ServiceReference;
 using Net.Utils;
@@ -10,7 +6,7 @@ namespace Net.HostServer.Controllers
 {
 	public class HomeController : Controller
 	{
-		static ManagerClient client = null;
+		private static ManagerClient client = null;
 
 		static HomeController()
 		{
