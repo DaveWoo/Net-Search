@@ -49,19 +49,18 @@
                 @Html.EditorFor(model => model.LinkedReversed)
                 @Html.ValidationMessageFor(model => model.LinkedReversed)
             </div>
+        </div><div class="form-group">
+            @Html.LabelFor(model => model.Score, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Score, new { @class = "col-md-6" })
+                @Html.ValidationMessageFor(model => model.Score)
+            </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Description)
+                @Html.TextAreaFor(model => model.Description, new { @class = "col-md-6" })
                 @Html.ValidationMessageFor(model => model.Description)
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.Score, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Score)
-                @Html.ValidationMessageFor(model => model.Score)
             </div>
         </div>
         <div class="form-group">

@@ -3,6 +3,16 @@
     ViewBag.Title = "Index";
     Layout = null;
 }
+<style>
+    .td-ellipsis {
+        -ms-text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 300px;
+    }
+</style>
 <h2>Site information Management</h2>
 <div class="alert alert-block alert-success">
     <button type="button" class="close" data-dismiss="alert">
@@ -63,7 +73,9 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Url)
+                <div class="td-ellipsis">
+                    @Html.DisplayFor(modelItem => item.Url)
+                </div>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)

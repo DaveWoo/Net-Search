@@ -3,6 +3,16 @@
     ViewBag.Title = "Site Pages Management";
     Layout = null;
 }
+<style>
+    .td-ellipsis {
+        -ms-text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 300px;
+    }
+</style>
 <h2>Site Pages Management</h2>
 <div class="alert alert-block alert-success">
     <button type="button" class="close" data-dismiss="alert">
@@ -33,23 +43,35 @@
             <th>
                 @Html.DisplayNameFor(model => model.Disabled)
             </th>
-            <th></th>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th style="width:100px">
                 @Html.DisplayNameFor(model => model.Description)
             </th>
-
+            <th></th>
         </tr>
         @foreach (var item in Model)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Url)
+                    <div class="td-ellipsis">
+                        @Html.DisplayFor(modelItem => item.Url)
+                    </div>
                 </td>
                 <td style="padding-left:30px">
                     @Html.DisplayFor(modelItem => item.Disabled)
+                </td>
+
+                <td>
+                    <div class="td-ellipsis">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </div>
+                </td>
+                <td>
+                    <div class="td-ellipsis">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </div>
                 </td>
                 <td style="width:200px">
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id })
@@ -60,12 +82,6 @@
                         <a href="@Url.Action("Delete", "SiteInfo", new { id = item.Id }) %">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>*@
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td style="width:100px">
-                    @Html.DisplayFor(modelItem => item.Description)
                 </td>
             </tr>
         }
