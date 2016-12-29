@@ -1,0 +1,48 @@
+<publishData>
+  <publishTarget publishUrl="http://localhost/NetServer">
+    <file relUrl="Web.config" publishTime="10/12/2016 09:26:28" />
+    <file relUrl="bin/Net.Models.dll" publishTime="10/12/2016 09:07:51" />
+    <file relUrl="bin/Net.Api.dll" publishTime="10/12/2016 10:00:53" />
+    <file relUrl="bin/log4net.dll" publishTime="10/06/2016 08:33:34" />
+    <file relUrl="bin/Net.Utils.dll" publishTime="10/12/2016 09:07:51" />
+    <file relUrl="bin/CsQuery.xml" publishTime="10/11/2016 10:37:10" />
+    <file relUrl="bin/Net.Models.pdb" publishTime="10/12/2016 09:07:51" />
+    <file relUrl="bin/log4net.xml" publishTime="10/06/2016 08:33:34" />
+    <file relUrl="api.svc" publishTime="10/12/2016 09:57:24" />
+    <file relUrl="bin/CsQuery.dll" publishTime="10/11/2016 10:37:10" />
+    <file relUrl="bin/Net.Utils.pdb" publishTime="10/12/2016 09:07:51" />
+    <file relUrl="bin/Net.Api.dll.config" publishTime="10/12/2016 09:26:28" />
+    <file relUrl="bin/iBoxDB.dll" publishTime="10/11/2016 10:37:10" />
+    <file relUrl="bin/Net.Api.pdb" publishTime="10/12/2016 10:00:53" />
+  </publishTarget>
+  <publishTarget publishUrl="http://localhost/">
+    <file relUrl="Web.config" publishTime="10/12/2016 08:40:36" />
+    <file relUrl="bin/Net.Models.dll" publishTime="10/12/2016 08:51:40" />
+    <file relUrl="bin/Net.Api.dll" publishTime="10/12/2016 08:59:32" />
+    <file relUrl="bin/log4net.dll" publishTime="10/06/2016 08:33:34" />
+    <file relUrl="bin/Net.Utils.dll" publishTime="10/12/2016 08:51:40" />
+    <file relUrl="bin/CsQuery.xml" publishTime="10/11/2016 10:37:10" />
+    <file relUrl="bin/Net.Models.pdb" publishTime="10/12/2016 08:51:40" />
+    <file relUrl="bin/log4net.xml" publishTime="10/06/2016 08:33:34" />
+    <file relUrl="bin/CsQuery.dll" publishTime="10/11/2016 10:37:10" />
+    <file relUrl="bin/Net.Utils.pdb" publishTime="10/12/2016 08:51:40" />
+    <file relUrl="bin/Net.Api.dll.config" publishTime="10/12/2016 08:40:36" />
+    <file relUrl="bin/iBoxDB.dll" publishTime="10/11/2016 10:37:10" />
+    <file relUrl="bin/Net.Api.pdb" publishTime="10/12/2016 08:59:32" />
+  </publishTarget>
+  <publishTarget publishUrl="http://localhost:49442/">
+    <file relUrl="Web.config" publishTime="10/12/2016 08:40:36" />
+    <file relUrl="bin/Net.Models.dll" publishTime="10/12/2016 08:51:40" />
+    <file relUrl="bin/Net.Api.dll" publishTime="10/12/2016 08:51:41" />
+    <file relUrl="bin/log4net.dll" publishTime="10/06/2016 08:33:34" />
+    <file relUrl="bin/Net.Utils.dll" publishTime="10/12/2016 08:51:40" />
+    <file relUrl="bin/CsQuery.xml" publishTime="10/11/2016 10:37:10" />
+    <file relUrl="bin/Net.Models.pdb" publishTime="10/12/2016 08:51:40" />
+    <file relUrl="bin/log4net.xml" publishTime="10/06/2016 08:33:34" />
+    <file relUrl="bin/CsQuery.dll" publishTime="10/11/2016 10:37:10" />
+    <file relUrl="bin/Net.Utils.pdb" publishTime="10/12/2016 08:51:40" />
+    <file relUrl="bin/Net.Api.dll.config" publishTime="10/12/2016 08:40:36" />
+    <file relUrl="bin/iBoxDB.dll" publishTime="10/11/2016 10:37:10" />
+    <file relUrl="bin/Net.Api.pdb" publishTime="10/12/2016 08:51:41" />
+  </publishTarget>
+</publishData>

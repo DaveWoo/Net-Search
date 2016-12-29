@@ -1,0 +1,1 @@
+cmd sc stop NetServer
