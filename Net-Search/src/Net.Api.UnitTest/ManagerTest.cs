@@ -112,6 +112,7 @@ namespace Net.Api.UnitTest
 						"这是您的第一份免费广告5",
 						"这是您的第一份免费广告,我们将竭诚为您服务5",
 						"广告",
+						false,
 						"新闻;news");
 
 				var dsd = manager.SelectSiteADByDefault();

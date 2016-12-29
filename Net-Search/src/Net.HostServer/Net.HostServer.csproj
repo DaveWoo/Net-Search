@@ -44,9 +44,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Net.Models">
-      <HintPath>D:\GitHub\Net-Search\Net.Server\bin\Net.Models.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -344,6 +341,10 @@
     <WCFMetadataStorage Include="Service References\ServiceReference\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Net.Models\Net.Models.csproj">
+      <Project>{b8ed198d-b0da-4055-8cdd-441df17728e6}</Project>
+      <Name>Net.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Net.Utils\Net.Utils.csproj">
       <Project>{a10fd44e-d6bd-4db7-ba77-771982e85c28}</Project>
       <Name>Net.Utils</Name>
